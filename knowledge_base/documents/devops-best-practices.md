@@ -1,9 +1,9 @@
 # DevOps Best Practices
 
-- Use multi-stage Docker builds to keep images small.
-- Always include vulnerability scanning in CI/CD pipelines.
-- Cache aggressively (node_modules, Docker layers, etc.).
-- Keep pipelines fast and reliable.
+- Use multi-stage Docker builds to minimize image size.
+- Always include security scanning (e.g., Trivy) in CI/CD pipelines.
+- Cache aggressively (dependencies, Docker layers, build artifacts).
+- Keep pipelines fast and reliable — aim for under 5 minutes for normal builds.
 - Use Conventional Commits for all changes.
-- Document deployment steps clearly in the knowledge base.
-- Prefer simple solutions over complex orchestration when sufficient.
+- Document deployment procedures clearly in the knowledge base.
+- Prefer simple, understandable solutions over complex orchestration tools when they suffice.

@@ -1,20 +1,21 @@
 # Architecture Principles
 
-## Core Tenets
+## Foundational Rules
 
-- Keep things as simple as possible, but no simpler.
-- Strictly follow Single Responsibility Principle.
+- Keep solutions as simple as possible, but no simpler.
+- Strictly follow the Single Responsibility Principle.
 - Prefer composition over inheritance.
-- Design for long-term maintainability.
+- Design for long-term maintainability, not just short-term speed.
 
-## Decision Guidelines
+## Decision Framework
 
-- Document major decisions in this knowledge base.
-- Evaluate trade-offs between simplicity, performance, and future maintenance cost.
+- Evaluate every design against simplicity, performance, and future maintenance cost.
+- Document major architectural decisions in this knowledge base.
 - Favor built-in language features over heavy external libraries when reasonable.
 
-## Common Patterns
+## Common Patterns Used by the Team
 
-- Use clear separation of concerns (presentation, business logic, data access).
-- Prefer stateless services where possible.
-- Make components easily testable.
+- Clear separation of concerns (UI, business logic, data access)
+- Stateless services where possible
+- Components should be easily testable
+- Use established patterns rather than inventing new ones

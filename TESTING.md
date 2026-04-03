@@ -2,4 +2,4 @@
 
 ## How to Start a Session
 
-In a new Cline chat, always begin with this prompt:
+In every new Cline chat, begin with this prompt:

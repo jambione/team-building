@@ -1,15 +1,17 @@
 # Past Lessons Learned
 
-## 2026-03-20 - Theme Implementation
+## 2026-03-20 - Dark Mode Implementation
 
-- Using CSS variables + single `dark` class on `<html>` proved much simpler than multiple theme providers.
-- Storing user preference in both localStorage and backend works well.
+- Lesson: CSS variables + single `dark` class on `<html>` is far simpler and more maintainable than multiple theme providers.
+- Decision: Store user preference in both localStorage and backend profile.
 
 ## 2026-02-28 - CI/CD Performance
 
-- Adding caching for dependencies reduced build time by over 60%.
-- Lesson: Always evaluate caching opportunities early.
+- Problem: Long build times due to repeated dependency installation.
+- Solution: Added caching for node_modules and Docker layers.
+- Result: Build time reduced by ~65%.
 
-## 2026-02-10 - Rally Stories
+## 2026-02-10 - Rally Story Handling
 
-- Always fetch full acceptance criteria from Rally before starting implementation to avoid scope creep.
+- Lesson: Always fetch and review full acceptance criteria from Rally before starting implementation.
+- Outcome: Reduced scope creep and rework.
