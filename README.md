@@ -1,23 +1,23 @@
 # kc- Agent Team
 
-A specialized multi-agent team for software development, orchestrated by kc-dave.
+A specialized multi-agent development team orchestrated by kc-dave, designed for Cline with Ollama.
 
-## Team Members
+## Team Overview
 
-- **kc-dave** — Orchestrator and team lead
-- **kc-rally** — Rally requirements specialist
-- **kc-michael** — Architect
-- **kc-matt, kc-kevin, kc-jonathan** — Senior Developers
-- **kc-hang, kc-shawn** — DevOps Engineers
-- **kc-git** — Git operations specialist
-- **kc-swarna, kc-kathy, kc-kalpita, kc-jairo** — QA/Testers
-
-## Structure
-
-- `.clinerules/` — Agent definitions
-- `knowledge_base/documents/` — Shared team knowledge
+- kc-dave: Orchestrator and team lead
+- Specialists: kc-rally, kc-michael, senior developers, DevOps engineers, testers, and kc-git
 
 ## How to Use
 
-1. Open Cline
-2. Start every session with:
+1. Open Cline with your Ollama model
+2. Start every session with the startup prompt in `TESTING.md`
+3. Give kc-dave your task (mention Rally stories when applicable)
+
+## Structure
+
+- `.clinerules/` → Agent definitions
+- `knowledge_base/documents/` → Shared team knowledge
+
+## Testing
+
+See `TESTING.md` for test prompts and success criteria.
