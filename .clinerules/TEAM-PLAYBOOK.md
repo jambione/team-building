@@ -9,7 +9,7 @@
 - Use parallel execution when tasks are independent.
 - Maintain and consult the shared knowledge base at `knowledge_base/documents/`.
 
-## Standard Workflow (kc-dave must enforce unless task is trivial)
+## Standard Workflow (kc-dave enforces)
 
 1. Gather Requirements → kc-rally
 2. Check Knowledge Base (`knowledge_base/documents/`)
@@ -20,4 +20,4 @@
 7. Final Review, Integration & Polish → kc-dave
 8. Reflect & Improve → suggest additions to the knowledge base
 
-Every specialist must return results to kc-dave in clear, structured format.
+Every specialist must return results to kc-dave in clear, structured format and hand control back.
