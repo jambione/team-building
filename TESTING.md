@@ -1,3 +1,5 @@
 # Testing the kc- Agent Team
 
-## Startup Prompt (use every time)
+## Startup Prompt (Use This Every Time)
+
+In every new Cline chat, **always start** with this exact prompt:

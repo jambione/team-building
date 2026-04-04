@@ -10,6 +10,7 @@
 - [Team Conventions](./team-conventions.md)
 - [Past Lessons Learned](./past-lessons-learned.md)
 - [Rally Integration Patterns](./rally-patterns.md)
+- [Best Practices](./best-practices.md)
 
 ## How Agents Should Use This Knowledge Base
 
@@ -28,3 +29,4 @@
 | team-conventions.md        | Team workflows, communication, and third-person rules | General operations and handoffs                |
 | past-lessons-learned.md    | Real outcomes from previous tasks                     | When facing similar problems or features       |
 | rally-patterns.md          | Common Rally story handling patterns                  | When implementing or breaking down stories     |
+| best-practices.md          | General development and team practices                | Before starting any new task                   |
