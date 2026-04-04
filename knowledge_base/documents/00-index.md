@@ -11,6 +11,7 @@
 - [Past Lessons Learned](./past-lessons-learned.md)
 - [Rally Integration Patterns](./rally-patterns.md)
 - [Best Practices](./best-practices.md)
+- [Github Actions Best Practices](./github-actions-best-practices.md)
 
 ## How Agents Should Use This Knowledge Base
 
