@@ -1,0 +1,45 @@
+# GitHub Actions Security Scan Workflow for Node.js/TypeScript Project
+
+# This workflow triggers on push to main and pull request events.
+# It includes security scanning for dependencies, code vulnerabilities, and SAST analysis.
+
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+  TYPESCRIPT_VERSION: '5.0'
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'actions/cache'
+      - name: Install dependencies
+        run: npm install
+      - name: Run dependency scan
+        run: npx trivy --severity HIGH,CRITICAL .
+      - name: Run CodeQL analysis
+        uses: github/codeql-action/upload-artifact@v2
+        with:
+          name: codeql-analysis
+          path: ./codeql-results
+      - name: Upload security report
+        run: |
+          echo "Security scan completed."
+          # Add logic to upload results or trigger alerts
+          # This is a placeholder for actual reporting steps

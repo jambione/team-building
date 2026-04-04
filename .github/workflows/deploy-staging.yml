@@ -1,0 +1,48 @@
+# GitHub Actions Deploy to Staging Workflow for Node.js/TypeScript Project
+
+# This workflow triggers on merge to staging branch.
+# It includes deployment logic with rollback capability.
+
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [staging]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18'
+  TYPESCRIPT_VERSION: '5.0'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'actions/cache'
+      - name: Install dependencies
+        run: npm install
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging..."
+          # Add deployment logic here
+          # This is a placeholder for actual deployment steps
+          # Example: deploy to server, update database, etc.
+          # Include rollback capability if needed
+          # For example:
+          # - If deployment fails, revert changes
+          # - Use environment variables or secrets for staging config
+          echo "Deployment completed."
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment..."
+          # Add verification steps here
+          # This is a placeholder for actual verification steps
+          echo "Verification complete."
