@@ -13,7 +13,7 @@
 
 1. Gather Requirements → kc-rally
 2. Check Knowledge Base (`knowledge_base/documents/`)
-3. Architecture → kc-michael (when complexity warrants it)
+3. Architecture → kc-michael (when needed)
 4. Parallel Implementation → kc-matt, kc-kevin, kc-jonathan
 5. DevOps & Automation + Git → kc-hang, kc-shawn, kc-git
 6. Comprehensive QA → kc-swarna, kc-kathy, kc-kalpita, kc-jairo (parallel)

@@ -1,7 +1,17 @@
 # Rally Integration Patterns
 
-- Always pull the full story including acceptance criteria before beginning work.
-- Map each acceptance criterion directly to test cases.
-- Flag any ambiguous or incomplete requirements back to kc-dave immediately.
-- Document how complex stories were broken down for future reference.
-- Track common patterns (e.g., authentication flows, reporting features) to speed up future implementation.
+## Standard Handling Process
+
+- Always pull the **full story** including description and acceptance criteria before beginning work.
+- Map each acceptance criterion directly to test cases (kc-swarna uses this).
+- Flag any ambiguous, incomplete, or conflicting requirements back to kc-dave immediately.
+
+## Common Patterns
+
+- Authentication / authorization flows → reuse existing patterns from knowledge base.
+- Reporting or dashboard features → prefer simple, maintainable implementations.
+- Break complex stories into small, independent sub-tasks for parallel work.
+
+## Best Practice
+
+- Document how the story was broken down or any deviations made, so future similar stories benefit.
