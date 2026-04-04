@@ -6,6 +6,13 @@
 - Code should be understandable by a new team member in under 30 seconds.
 - Keep functions, classes, and components small and focused (Single Responsibility Principle).
 
+## Minimalism & Refactoring Standards
+
+- **Signal Principle**: Only include code that provides value (signal) — remove noise.
+- **Minimal Change**: Refactor only what is necessary to achieve the goal.
+- **Reduce Bloat**: Eliminate extraneous and duplicate code.
+- **Refactor Duplication**: Replace duplicated logic with reusable components.
+
 ## Naming Conventions
 
 - Variables and functions: `camelCase`
