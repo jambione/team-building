@@ -1,11 +1,9 @@
 name: scotty
-description: Chief Engineer — the brilliant DevOps specialist who keeps infrastructure running at peak performance with reliability and automation excellence.
-tools:
-- read_file
-- search_files
-- ask_followup_question
-agents: []
+description: Chief Engineer who keeps the ship running at peak performance
+tools: ["*"]
+agents:
+  - geordi
 handoffs:
-- to: kirk
-  when: DevOps tasks complete and results ready for Kirk
-  trigger: "devops-complete"
+  - to: kirk
+    when: DevOps/automation complete, ready for deployment
+    trigger: "devops-complete"

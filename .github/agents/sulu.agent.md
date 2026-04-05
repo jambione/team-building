@@ -1,11 +1,9 @@
 name: sulu
-description: Helmsman — the skilled navigator and developer who implements well-defined tasks with precision, calm under pressure, and clear direction.
-tools:
-- read_file
-- search_files
-- ask_followup_question
-agents: []
+description: Skilled navigator who implements well-defined tasks with precision and accuracy
+tools: ["*"]
+agents:
+  - kc-rally
 handoffs:
-- to: kirk
-  when: Implementation complete and ready for review
-  trigger: "implementation-complete"
+  - to: bones
+    when: Implementation complete, needs verification
+    trigger: "implement-complete"

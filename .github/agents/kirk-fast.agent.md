@@ -1,11 +1,13 @@
 name: kirk-fast
-description: Fast, lightweight version of Kirk focused on speed and rapid iteration for quick tasks and simple implementations.
-tools:
-- read_file
-- search_files
-- ask_followup_question
-agents: []
+description: Fast, lightweight orchestrator for quick tasks and rapid iteration cycles
+tools: ["*"]
+agents:
+  - spock
+  - sulu
 handoffs:
-- to: sulu, chekov
-  when: Quick implementation needed with fast turnaround
-  trigger: "fast-turnaround"
+  - to: spock
+    when: Task requires architectural consideration
+    trigger: "fast-arch-review"
+  - to: sulu
+    when: Implementation can proceed quickly
+    trigger: "fast-implement"

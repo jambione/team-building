@@ -1,11 +1,9 @@
 name: bones
-description: Chief Medical Officer (Borg) — the meticulous QA specialist who ensures team wellness, code health, comprehensive testing, and system integrity monitoring.
-tools:
-- read_file
-- search_files
-- ask_followup_question
-agents: []
+description: Meticulous QA specialist ensuring comprehensive testing and system health monitoring
+tools: ["*"]
+agents:
+  - kc-rally
 handoffs:
-- to: kirk
-  when: Testing complete and results ready for Kirk in structured format
-  trigger: "qa-complete"
+  - to: kirk
+    when: All tests passed, ready for deployment review
+    trigger: "qa-signoff"
