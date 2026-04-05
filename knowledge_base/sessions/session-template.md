@@ -62,6 +62,16 @@ _Record any `[CONFLICT]` items raised, their resolution, and who decided._
 
 ---
 
+## PRIORITY Items
+
+_All `[PRIORITY]` tags raised during the Ready Room. P1 items block `[READY-ROOM-CLOSED]`._
+
+| ID | Level | Raised By | Summary | Resolution | Status |
+|----|-------|-----------|---------|------------|--------|
+| P-01 | P1/P2/P3 | | | | open / resolved / mitigated / accepted-risk |
+
+---
+
 ## [NEW DISCOVERY] Flags
 
 _All new discoveries raised this session. Must be resolved or explicitly deferred before session close._
@@ -98,13 +108,28 @@ _picard's closing summary — what was accomplished, what was learned, what was 
 
 ---
 
+## WES Proposals
+
+_All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
+
+| Proposal ID | Summary | Status | Rationale |
+|-------------|---------|--------|-----------|
+| WES-PROPOSAL-1 | | awaiting-approval / approved / rejected / deferred | |
+
+---
+
 ## Session Close
 
+- [ ] Ready Room closed with `[READY-ROOM-CLOSED]` before execution began
+- [ ] All P1 PRIORITY items resolved before Ready Room closed
+- [ ] Mission Decision Record (MDR) produced by picard-thinking
 - [ ] All crew have updated their domain KB documents
 - [ ] All `[NEW DISCOVERY]` flags resolved or explicitly deferred with owner + sprint
+- [ ] All WES proposals dispositioned (approved / rejected / deferred)
 - [ ] All open items recorded with owner + sprint
 - [ ] Conflict resolution log updated
 - [ ] Agent performance log updated
+- [ ] Mission Debrief filled (`mission-debrief-template.md`)
 - [ ] guinan notified of session journal availability for cross-session continuity
 
 **Session Status**: open / **closed**
