@@ -1,7 +1,8 @@
 # Monitoring & Observability — Logging, Metrics, Alerting Standards
 
 ## Purpose
-Standardized monitoring practices for production systems. Maintained by kc-dave, reviewed quarterly.
+
+Standardized monitoring practices for production systems. Maintained by kirk, reviewed quarterly.
 
 ---
 
@@ -14,11 +15,11 @@ graph LR
     E[Apm Agent] -->|Traces| F[Distributed Trace Store]
     G[Alert Manager] -.->|Rules| D
     H[Dashboard Layer] -.->|Queries| D & Time-Series DB
-    
+
     subgraph Logging Stack
         B[ELK/Fluentd]
     end
-    
+
     subgraph Metrics Stack
         C[Prometheus Node Exporter]
         D[Prometheus TSDB]
@@ -29,12 +30,12 @@ graph LR
 
 ## 2. Log Level Standards
 
-| Level | When to Use | Example |
-|-------|-------------|---------|
-| `DEBUG` | Development, detailed flow tracing | `user_id=123 entering checkout()` |
-| `INFO` | Key business events, state changes | `order #456 created successfully` |
-| `WARN` | Recoverable issues, deprecation notices | `Cache miss for user profile, falling back to DB` |
-| `ERROR` | Failures requiring attention | `Failed to process payment: timeout` |
+| Level   | When to Use                             | Example                                           |
+| ------- | --------------------------------------- | ------------------------------------------------- |
+| `DEBUG` | Development, detailed flow tracing      | `user_id=123 entering checkout()`                 |
+| `INFO`  | Key business events, state changes      | `order #456 created successfully`                 |
+| `WARN`  | Recoverable issues, deprecation notices | `Cache miss for user profile, falling back to DB` |
+| `ERROR` | Failures requiring attention            | `Failed to process payment: timeout`              |
 
 ---
 
@@ -53,11 +54,11 @@ memory_usage_bytes{gc="young"}                       # Gauge
 
 ## 4. Alerting Rules (Severity Matrix)
 
-| Severity | Response Time | Notification Channels | Example |
-|----------|---------------|----------------------|----------|
-| **P1 - Critical** | < 5 minutes | PagerDuty + Slack + Email | Database down, 0% uptime |
-| **P2 - High** | < 30 minutes | Slack + Email | Error rate > 5% |
-| **P3 - Medium** | < 4 hours | Slack (channel) | Latency p99 > 2s |
+| Severity          | Response Time | Notification Channels     | Example                  |
+| ----------------- | ------------- | ------------------------- | ------------------------ |
+| **P1 - Critical** | < 5 minutes   | PagerDuty + Slack + Email | Database down, 0% uptime |
+| **P2 - High**     | < 30 minutes  | Slack + Email             | Error rate > 5%          |
+| **P3 - Medium**   | < 4 hours     | Slack (channel)           | Latency p99 > 2s         |
 
 ---
 
@@ -84,10 +85,10 @@ memory_usage_bytes{gc="young"}                       # Gauge
 ```markdown
 ---
 Version History:
-- 2026-04-05: kc-dave — Initial monitoring and observability standards document
+    - 2026-04-05: kirk — Initial monitoring and observability standards document
 ---
 ```
 
 ---
 
-*Created: 2026-04-05 | Owner: kc-dave (orchestrator) | Review cadence: Quarterly*
+_Created: 2026-04-05 | Owner: kirk (orchestrator) | Review cadence: Quarterly_

@@ -1,15 +1,11 @@
 name: kc-git
-description: Handles Git branching strategies, conventional commits, PR creation, and clean history maintenance.
+description: Lightweight Git operations specialist — handles creating properly named branches, Conventional Commits, PR management, and clean history maintenance.
 tools:
-  - execute_command
-  - read_file
-agents:
-  - kc-hang
-  - kc-shawn
+- read_file
+- search_files
+- ask_followup_question
+agents: []
 handoffs:
-  - to: kc-dave
-    when: Git operations complete
-    trigger: "git-complete"
-  - to: kc-michael
-    when: Branching strategy requires architectural review
-    trigger: "arch-review-needed"
+- to: kirk
+  when: Git operations complete and summary ready for Kirk
+  trigger: "git-complete"

@@ -1,17 +1,18 @@
-# Team Tools & Utilities — Recommended Stack for kc- Agent Operations
+# Team Tools & Utilities — Recommended Stack for IT Agent Operations
 
 ## Purpose
-Curated tool recommendations to help the kc- team work more efficiently. Maintained by kc-dave, reviewed quarterly.
+
+Curated tool recommendations to help the IT team work more efficiently. Maintained by kirk, reviewed quarterly.
 
 ---
 
 ## 1. Knowledge Base Management Tools
 
-| Tool | Use Case | Command/Integration | Priority |
-|------|----------|---------------------|----------|
-| **GitHub Actions** | Automated index updates | `gh api /repos/:owner/:repo/actions` | HIGH |
-| **Text Processing CLI** | Document parsing, validation | `jq`, `sed`, `awk` | MEDIUM |
-| **Markdown Linter** | Consistent formatting | `markdownlint-cli2` | LOW |
+| Tool                    | Use Case                     | Command/Integration                  | Priority |
+| ----------------------- | ---------------------------- | ------------------------------------ | -------- |
+| **GitHub Actions**      | Automated index updates      | `gh api /repos/:owner/:repo/actions` | HIGH     |
+| **Text Processing CLI** | Document parsing, validation | `jq`, `sed`, `awk`                   | MEDIUM   |
+| **Markdown Linter**     | Consistent formatting        | `markdownlint-cli2`                  | LOW      |
 
 ```bash
 # Example: Automated index verification script
@@ -30,30 +31,30 @@ chmod +x verify-index.sh
 
 ## 2. Documentation Generation Tools
 
-| Tool | Use Case | Integration | Priority |
-|------|----------|--------------|----------|
-| **Docdash** | Auto-generate API docs | CLI, GitHub Action | MEDIUM |
-| **MkDocs** | Static site generation | Python package | LOW |
-| **Pandoc** | Format conversion | `pandoc --from markdown --to html` | LOW |
+| Tool        | Use Case               | Integration                        | Priority |
+| ----------- | ---------------------- | ---------------------------------- | -------- |
+| **Docdash** | Auto-generate API docs | CLI, GitHub Action                 | MEDIUM   |
+| **MkDocs**  | Static site generation | Python package                     | LOW      |
+| **Pandoc**  | Format conversion      | `pandoc --from markdown --to html` | LOW      |
 
 ---
 
 ## 3. Collaboration & Communication Tools
 
-| Tool | Use Case | Team Member | Priority |
-|------|----------|-------------|----------|
-| **GitHub Issues Templates** | Standardized bug reports | All team members | HIGH |
-| **Pull Request Reviewers** | Code review assignment | Senior developers (kc-matt, kc-kevin, kc-jonathan) | HIGH |
-| **Wiki/Notion Integration** | Cross-referencing docs | kc-dave (orchestrator) | MEDIUM |
+| Tool                        | Use Case                 | Team Member                      | Priority |
+| --------------------------- | ------------------------ | -------------------------------- | -------- |
+| **GitHub Issues Templates** | Standardized bug reports | All team members                 | HIGH     |
+| **Pull Request Reviewers**  | Code review assignment   | Senior developers (sulu, chekov) | HIGH     |
+| **Wiki/Notion Integration** | Cross-referencing docs   | kirk (orchestrator)              | MEDIUM   |
 
 ---
 
 ## 4. Version Control & History Tools
 
-| Tool | Use Case | Command | Priority |
-|------|----------|---------|----------|
-| **git-blame-ignore-revs** | Cleaner blame output | `npm install -g git-blame-ignore-revs` | LOW |
-| **conventional-changelog-cli** | Generate changelogs from commits | `npx conventional-changelog` | MEDIUM |
+| Tool                           | Use Case                         | Command                                | Priority |
+| ------------------------------ | -------------------------------- | -------------------------------------- | -------- |
+| **git-blame-ignore-revs**      | Cleaner blame output             | `npm install -g git-blame-ignore-revs` | LOW      |
+| **conventional-changelog-cli** | Generate changelogs from commits | `npx conventional-changelog`           | MEDIUM   |
 
 ```bash
 # Example: Generate team documentation changelog
@@ -65,10 +66,10 @@ cat docs-changelog.txt
 
 ## 5. Search & Discovery Tools
 
-| Tool | Use Case | Integration | Priority |
-|------|----------|--------------|----------|
-| **DocSearch** | Full-text search across docs | GitHub Action, custom indexer | HIGH |
-| **mdsearch** | Markdown file search | CLI tool | MEDIUM |
+| Tool          | Use Case                     | Integration                   | Priority |
+| ------------- | ---------------------------- | ----------------------------- | -------- |
+| **DocSearch** | Full-text search across docs | GitHub Action, custom indexer | HIGH     |
+| **mdsearch**  | Markdown file search         | CLI tool                      | MEDIUM   |
 
 ```bash
 # Example: Quick knowledge base search
@@ -79,10 +80,10 @@ mdsearch "incident" knowledge_base/documents/*.md
 
 ## 6. Quality Assurance Tools
 
-| Tool | Use Case | Team Member | Priority |
-|------|----------|-------------|----------|
-| **markdown-toc-cli** | Generate TOC for docs | All team members | LOW |
-| **shellcheck** | Verify CLI scripts | DevOps (kc-hang, kc-shawn) | MEDIUM |
+| Tool                 | Use Case              | Team Member      | Priority |
+| -------------------- | --------------------- | ---------------- | -------- |
+| **markdown-toc-cli** | Generate TOC for docs | All team members | LOW      |
+| **shellcheck**       | Verify CLI scripts    | DevOps (scotty)  | MEDIUM   |
 
 ---
 
@@ -115,10 +116,10 @@ chmod +x check-kb-completeness.sh
 ```markdown
 ---
 Version History:
-- 2026-04-05: kc-dave — Initial team tools and utilities recommendations document
+    - 2026-04-05: kirk — Initial team tools and utilities recommendations document
 ---
 ```
 
 ---
 
-*Created: 2026-04-05 | Owner: kc-dave (orchestrator) | Review cadence: Quarterly*
+_Created: 2026-04-05 | Owner: kirk (orchestrator) | Review cadence: Quarterly_
