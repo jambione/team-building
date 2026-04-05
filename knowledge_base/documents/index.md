@@ -68,11 +68,42 @@ Central navigation for all team knowledge base documents. Updated quarterly by k
 
 ---
 
+## Technical Debt & Quality
+
+| Document | Description | Last Updated | Owner |
+| -------- | ----------- | ------------ | ----- |
+| `tech-debt-register.md` | Debt registry by severity; velocity impact tracking; resolution log | 2026-04-05 | barclay |
+
+---
+
+## Observability & Operations
+
+| Document | Description | Last Updated | Owner |
+| -------- | ----------- | ------------ | ----- |
+| `monitoring-observability.md` | Logging, metrics, alerting standards, SLO definitions, observability gaps | 2026-04-05 | obrien |
+
+---
+
+## Agent Governance
+
+| Document | Description | Last Updated | Owner |
+| -------- | ----------- | ------------ | ----- |
+| `agent-performance-log.md` | Per-agent sprint metrics; utilization signals; conflict resolution log | 2026-04-05 | picard |
+
+---
+
+## Session Continuity
+
+| Location | Description | Maintained By |
+| -------- | ----------- | ------------- |
+| `knowledge_base/sessions/` | Per-mission session journals for cross-session continuity | guinan |
+| `knowledge_base/sessions/session-template.md` | Template for opening new session journals | picard |
+
+---
+
 ## Pending Additions (Backlog)
 
-- [ ] `onboarding-guide.md` — New team member checklist
 - [ ] `database-migration-strategies.md` — Zero-downtime migration patterns
-- [ ] `monitoring-observability.md` — Logging, metrics, alerting standards (flagged P2 in 2026-04-05 health assessment)
 
 ---
 
@@ -83,9 +114,10 @@ Central navigation for all team knowledge base documents. Updated quarterly by k
 Version History:
     - 2026-04-04: kirk — Updated index; marked incident-response-playbook.md as complete (now ~75% knowledge base coverage)
     - 2026-04-05: picard — Added team-health-assessment-github-agents.md; 15 remediation items identified across CI/CD, security, testing, and reliability domains
+    - 2026-04-05: picard — Added tech-debt-register (barclay), monitoring-observability enhancements (obrien), agent-performance-log (picard), session journal infrastructure (guinan); removed resolved pending items
 ---
 ```
 
 ---
 
-_Managed by kirk (orchestrator) | Review cadence: Quarterly_
+_Managed by picard (orchestrator) | Review cadence: Quarterly_
