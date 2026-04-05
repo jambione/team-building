@@ -56,9 +56,9 @@ _Record every significant decision with rationale. These become candidates for A
 
 _Record any `[CONFLICT]` items raised, their resolution, and who decided._
 
-| Conflict ID | Agents | Topic | Resolution | Decided By |
-|-------------|--------|-------|-----------|------------|
-| — | — | No conflicts | — | — |
+| Conflict ID | Agents | Topic | Raised At (step #) | Resolution | Decided By |
+|-------------|--------|-------|-------------------|-----------|------------|
+| — | — | No conflicts | — | — | — |
 
 ---
 
@@ -79,6 +79,16 @@ _All new discoveries raised this session. Must be resolved or explicitly deferre
 | Flag | Raised By | KB Document to Update | Status |
 |------|-----------|-----------------------|--------|
 | | | | pending / resolved / deferred |
+
+---
+
+## External Events
+
+_`[EXTERNAL-EVENT]` signals raised against this mission's MDR — at any point, including post-close. Each must be logged here AND in `agent-performance-log.md` External Event Log._
+
+| Date | Raised By | Event Summary | Severity | picard Response Signal | Status |
+|------|-----------|---------------|----------|----------------------|--------|
+| — | — | None | — | — | — |
 
 ---
 
@@ -120,11 +130,14 @@ _All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
 
 ## Session Close
 
-- [ ] Ready Room closed with `[READY-ROOM-CLOSED]` before execution began
-- [ ] All P1 PRIORITY items resolved before Ready Room closed
+- [ ] Ready Room closed with `[READY-ROOM-CLOSED]` or `[READY-ROOM-CONDITIONAL-CLOSE]` before execution began
+- [ ] If conditional close: Pre-req Checklist recorded with owner + sprint for every item
+- [ ] If conditional close: Full `[READY-ROOM-CLOSED]` issued after all checklist items verified before riker engaged
+- [ ] All P1 PRIORITY items resolved (or conditionally resolved with checklist) before Ready Room closed
 - [ ] Mission Decision Record (MDR) produced by picard-thinking
 - [ ] All crew have updated their domain KB documents
 - [ ] All `[NEW DISCOVERY]` flags resolved or explicitly deferred with owner + sprint
+- [ ] All `[EXTERNAL-EVENT]` signals raised during this session logged in `agent-performance-log.md` External Event Log
 - [ ] All WES proposals dispositioned (approved / rejected / deferred)
 - [ ] All open items recorded with owner + sprint
 - [ ] Conflict resolution log updated

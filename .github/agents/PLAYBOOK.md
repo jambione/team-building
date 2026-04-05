@@ -62,6 +62,8 @@ See `.github/prompts/ready-room.prompt.md` for the full activation template.
 
 When in doubt: **Ready Room first. Bridge second.**
 
+**guinan Mid-Session Interrupt**: Any crew member may call `[guinan-consult: <topic>]` at any point during a Ready Room session to request a focused historical scan on a specific topic. guinan runs only steps 1–3 of the structured query protocol (keyword scan, PRIORITY pattern check, conflict history) scoped to that topic, then returns findings immediately. This is not a full historical review — it is a targeted lookup triggered by a mid-session signal. picard ACKs with `[guinan-consult-received ✓ picard]`.
+
 ---
 
 ## PRIORITY Tag Protocol
@@ -69,6 +71,7 @@ When in doubt: **Ready Room first. Bridge second.**
 Any crew member may raise a PRIORITY flag during the Ready Room:
 
 ```
+[PRIORITY: P0 | <agent> | <summary>]
 [PRIORITY: P1 | <agent> | <summary>]
 [PRIORITY: P2 | <agent> | <summary>]
 [PRIORITY: P3 | <agent> | <summary>]
@@ -76,13 +79,34 @@ Any crew member may raise a PRIORITY flag during the Ready Room:
 
 | Level | Meaning | Gate |
 |-------|---------|------|
+| **P0** | Mission abort — feature cannot be built safely with current infrastructure; requires re-scope | Blocks the entire mission. picard must close the Ready Room without an MDR and escalate to re-scope. |
 | **P1** | Critical — must resolve before execution begins | Blocks `[READY-ROOM-CLOSED]` |
 | **P2** | High — address with documented mitigation before sprint close | Does not block execution, but mitigation must be logged in MDR |
 | **P3** | Medium/Low — log and track; review next sprint | No gate; logged in session journal |
 
 **picard aggregates all PRIORITY tags** into a PRIORITY Triage Summary before closing the Ready Room.
 
-No `[READY-ROOM-CLOSED]` may be issued while any **P1** item remains unresolved.
+No `[READY-ROOM-CLOSED]` may be issued while any **P0** or **P1** item remains unresolved. A P0 cannot be resolved in the Ready Room — it triggers a mission re-scope.
+
+**Conditional Close**: When P1 items are resolved in principle but depend on pre-requisite work in a future sprint, picard may issue a conditional close instead of a hard close:
+
+```
+[READY-ROOM-CONDITIONAL-CLOSE: <mission-slug>]
+
+Pre-req Checklist (riker may NOT engage until all items are ✅):
+- [ ] <item> — Owner: <agent> — Due: Sprint N
+      Verification: <objectively checkable condition — a passing CI job, a metric threshold, a reviewed artifact>
+- [ ] <item> — Owner: <agent> — Due: Sprint N
+      Verification: <objectively checkable condition>
+```
+
+Each checklist item **must** include a Verification line — an observable, objectively checkable condition that proves the item is complete, not just claimed complete. "Agent says it's done" is not a verification. A passing CI job, a metric reading, a reviewed document, or a demo in staging is.
+
+riker is **not authorized to engage** until every item on the Pre-req Checklist is checked off and picard issues a full `[READY-ROOM-CLOSED: <mission-slug>]`. If any pre-req slips past its sprint target, picard must reopen the Ready Room before execution begins.
+
+**Conditional Close Expiry**: If a conditional close's Pre-req Checklist is not fully completed within **2 sprints** of the conditional close date, the Ready Room expires automatically. picard must re-run the full Ready Room from Step 1 before execution may begin. Rationale: after 2 sprints, the MDR context is stale, crew KB documents have drifted, and the analysis is no longer valid.
+
+**Sprint-Close Pre-req Review**: At every sprint close, picard reviews all open conditional close checklists in `agent-performance-log.md`. For each unchecked item: picard confirms status with the owning agent and either verifies completion or escalates the slip.
 
 ---
 
@@ -104,6 +128,42 @@ wes never implements without explicit picard approval:
 - `[WES-APPROVED: WES-PROPOSAL-<N>]` — picard approves; wes may implement
 - `[WES-REJECTED: WES-PROPOSAL-<N>: <reason>]` — documented and closed
 - `[WES-DEFERRED: WES-PROPOSAL-<N>: sprint-N]` — added to backlog
+
+---
+
+## External Event Protocol
+
+An external event is anything outside the codebase that can invalidate a closed MDR mid-sprint: a CVE, a breaking upstream dependency change, a vendor outage or deprecation notice, a regulatory change, or an infrastructure incident. Any crew member who detects a relevant external event must raise it immediately — do not wait for the next sprint close.
+
+**Signal format**:
+```
+[EXTERNAL-EVENT: <mission-slug> | <agent> | <event-summary> | severity: critical/significant/informational]
+```
+
+Any crew member may raise this signal at any time — including against missions that are already closed. worf and obrien are the most likely first-raisers (CVEs and infrastructure respectively), but any agent who detects a relevant event is expected to raise it.
+
+**picard's three response tiers**:
+
+| Severity | Meaning | picard's Response |
+|----------|---------|-------------------|
+| **critical** | The MDR decision is now invalid — executing against it would cause harm, security exposure, or data loss | Halt execution immediately. Re-open the Ready Room. Issue `[MDR-INVALIDATED: <mission-slug>: <reason>]`. Re-run from Step 1. |
+| **significant** | The MDR decision is still valid but a specific assumption or constraint has changed | Pause execution on the affected task. Issue an MDR Amendment: `[MDR-AMENDMENT: <mission-slug>-AMD-N]` with revised rationale. riker may continue unaffected tasks. |
+| **informational** | External context has changed but does not affect the current MDR | Acknowledge and log. Issue `[EXTERNAL-EVENT-ACKNOWLEDGED: <mission-slug>: <reason>]`. No execution halt. |
+
+**MDR Amendment format** (for significant events):
+```
+## MDR Amendment — <mission-slug>-AMD-N
+**Date**: YYYY-MM-DD
+**Raised By**: <agent>
+**External Event**: <description>
+**Original MDR Decision Affected**: <quote the affected decision>
+**Revised Decision**: <what changes>
+**Tasks Halted**: <which riker/crew tasks are paused>
+**Tasks Unaffected**: <which may continue>
+**Logged In**: agent-performance-log.md > External Event Log
+```
+
+**Tracking**: All external events and MDR amendments are logged in `agent-performance-log.md` under the External Event Log.
 
 ---
 

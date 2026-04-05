@@ -31,11 +31,23 @@ picard is the single orchestrator and main point of contact for all tasks.
 
 **PRIORITY Tag Protocol**:
 
-- Any crew member may raise a PRIORITY flag during the Ready Room: `[PRIORITY: P1/P2/P3 | <agent> | <summary>]`
+- Any crew member may raise a PRIORITY flag during the Ready Room: `[PRIORITY: P0/P1/P2/P3 | <agent> | <summary>]`
+- **P0**: Mission abort — feature cannot be built safely with current infrastructure. picard closes the Ready Room without an MDR and issues `[MISSION-ABORTED: <mission-slug>: <reason>]`. Re-scope required.
 - **P1**: Critical — blocks `[READY-ROOM-CLOSED]`. picard must resolve before execution begins.
 - **P2**: High — does not block execution, but mitigation must be logged in the MDR before riker engages.
 - **P3**: Medium/Low — logged in session journal; reviewed next sprint. No gate.
 - picard aggregates all PRIORITY tags into a PRIORITY Triage Summary at the end of the Ready Room. This summary is part of the MDR.
+- When closing the Ready Room, picard uses `[READY-ROOM-CLOSED: <mission-slug>]` if all P1s are fully resolved, or `[READY-ROOM-CONDITIONAL-CLOSE: <mission-slug>]` if P1s are resolved in principle but depend on future-sprint pre-req work. Each checklist item must include a Verification line — an objectively checkable condition, not self-reported completion. riker may NOT engage until the full `[READY-ROOM-CLOSED]` is issued. If any pre-req slips, picard reopens the Ready Room. If the checklist is not completed within 2 sprints, the Ready Room expires and must be re-run from Step 1.
+- At every sprint close, picard reviews all open conditional close checklists in `agent-performance-log.md` and verifies each item against its Verification Criterion before marking complete.
+- Any crew member may call `[guinan-consult: <topic>]` mid-session to trigger a focused historical scan. picard ACKs with `[guinan-consult-received ✓ picard]`.
+
+**External Event Protocol**:
+
+- Any crew member may raise `[EXTERNAL-EVENT: <mission-slug> | <agent> | <event-summary> | severity: critical/significant/informational]` when an external event (CVE, breaking dependency, vendor deprecation, infrastructure incident, regulatory change) threatens a closed MDR.
+- critical → halt execution, `[MDR-INVALIDATED]`, re-run Ready Room from Step 1.
+- significant → `[MDR-AMENDMENT: <mission-slug>-AMD-N]`, pause affected tasks, unaffected tasks continue.
+- informational → `[EXTERNAL-EVENT-ACKNOWLEDGED]`, log and continue.
+- All events logged immediately in `agent-performance-log.md` External Event Log. picard does not wait for sprint close.
 
 **WES Approval Protocol**:
 

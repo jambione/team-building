@@ -31,19 +31,24 @@
 
 ## Crew Performance Summary
 
-| Agent | Tasks Completed | KB Updated | New Discoveries | Priority Flags | Notes |
-|-------|----------------|-----------|-----------------|----------------|-------|
-| picard | | | | | |
-| data | | | | | |
-| riker | | | | | |
-| geordi | | | | | |
-| worf | | | | | |
-| troi | | | | | |
-| crusher | | | | | |
-| barclay | | | | | |
-| guinan | | | | | |
-| obrien | | | | | |
-| wes | | | | | |
+> **Scoring guide — Contribution Quality (1–5)**:
+> 5 = decisive contribution that changed the mission outcome; 4 = substantive, domain-specific value; 3 = present and correct, no surprises; 2 = contributed but findings were shallow or late; 1 = invoked but no meaningful output.
+> Score only agents that were active this mission. Leave inactive agents blank.
+
+| Agent | Contribution Quality (1–5) | PRIORITY Items Raised | Conflicts Raised | Conflicts Resolved | KB Updated | New Discoveries | Notes |
+|-------|---------------------------|----------------------|------------------|--------------------|-----------|-----------------|-------|
+| picard | | — | | | | | |
+| picard-thinking | | — | — | — | | | |
+| data | | | | — | | | |
+| riker | | — | — | — | | | |
+| geordi | | | — | — | | | |
+| worf | | | | — | | | |
+| troi | | | — | — | | | |
+| crusher | | | — | — | | | |
+| barclay | | | — | — | | | |
+| guinan | | — | — | — | | | |
+| obrien | | | — | — | | | |
+| wes | | — | — | — | | | |
 
 ---
 

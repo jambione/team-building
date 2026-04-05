@@ -79,7 +79,8 @@ picard is the single orchestrator and main point of contact for all tasks.
 
 **PRIORITY Tag Protocol**:
 
-- Any crew member may raise a PRIORITY flag during the Ready Room: `[PRIORITY: P1/P2/P3 | <agent> | <summary>]`
+- Any crew member may raise a PRIORITY flag during the Ready Room: `[PRIORITY: P0/P1/P2/P3 | <agent> | <summary>]`
+- **P0**: Mission abort — feature cannot be built safely with current infrastructure. picard closes the Ready Room without an MDR and issues `[MISSION-ABORTED: <mission-slug>: <reason>]`. Re-scope required.
 - **P1**: Critical — blocks `[READY-ROOM-CLOSED]`. picard must resolve before execution begins.
 - **P2**: High — does not block execution, but mitigation must be logged in the MDR before riker engages.
 - **P3**: Medium/Low — logged in session journal; reviewed next sprint. No gate.
@@ -107,7 +108,21 @@ The Ready Room is where all decisions are made before action begins. No crew mem
    - barclay flags debt impact of proposed approach
 3. picard synthesizes a **Mission Decision Record (MDR)** capturing: decision made, options considered, risks acknowledged, crew assignments.
 4. picard closes the Ready Room: `[READY-ROOM-CLOSED: <mission-slug>]`
-5. Only after `[READY-ROOM-CLOSED]` does riker coordinate execution on the Bridge.
+   - If P1 items are resolved in principle but depend on future-sprint pre-requisite work, picard issues `[READY-ROOM-CONDITIONAL-CLOSE: <mission-slug>]` instead, with an explicit Pre-req Checklist. Each checklist item must include a Verification line — an objectively checkable condition (passing CI job, metric threshold, reviewed artifact, staging demo). "Agent says it's done" is not a verification. riker may NOT engage until picard issues the full `[READY-ROOM-CLOSED]` after all checklist items are verified.
+   - If any pre-req slips past its sprint target, picard must reopen the Ready Room before execution begins.
+   - **Conditional Close Expiry**: If the Pre-req Checklist is not fully completed within 2 sprints of the conditional close date, the Ready Room expires. picard must re-run the full Ready Room from Step 1 — the MDR is considered stale.
+   - **Sprint-Close Review**: At every sprint close, picard reviews all open conditional close checklists in `agent-performance-log.md`, verifies each item against its Verification Criterion, and marks slipped items before any execution proceeds.
+5. Only after `[READY-ROOM-CLOSED]` (not conditional) does riker coordinate execution on the Bridge.
+
+**External Event Protocol**:
+
+- Any crew member who detects an external event (CVE, breaking dependency change, vendor deprecation, infrastructure incident, regulatory change) that affects a closed MDR must immediately raise: `[EXTERNAL-EVENT: <mission-slug> | <agent> | <event-summary> | severity: critical/significant/informational]`
+- picard assesses severity and responds with one of three signals:
+  - **critical** → `[MDR-INVALIDATED: <mission-slug>: <reason>]` — halt execution, re-open Ready Room, re-run from Step 1
+  - **significant** → `[MDR-AMENDMENT: <mission-slug>-AMD-N]` — pause affected tasks, issue amended rationale, unaffected tasks continue
+  - **informational** → `[EXTERNAL-EVENT-ACKNOWLEDGED: <mission-slug>: <reason>]` — log and continue
+- picard logs all external events in `agent-performance-log.md` under the External Event Log regardless of severity.
+- picard does not wait for a sprint close to respond to a critical or significant event. Response is immediate.
 
 **When to Use picard-fast vs picard-thinking**:
 

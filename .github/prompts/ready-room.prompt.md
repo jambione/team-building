@@ -44,6 +44,9 @@ End with: `guinan returns control to picard. [context-retrieval-complete]`
 
 picard ACKs: `[context-retrieval-received ✓ picard]`
 
+> **guinan Mid-Session Interrupt** — available at any point during Steps 3–5:
+> Any crew member may call `[guinan-consult: <topic>]` to trigger a focused historical scan on a specific topic. guinan runs steps 1–3 of the structured query protocol scoped to that topic and returns findings immediately. picard ACKs with `[guinan-consult-received ✓ picard]`. Use when a conflict, a PRIORITY flag, or a new proposal warrants a quick historical check before picard decides.
+
 ---
 
 ## STEP 3 — Ready Room Analysis (parallel crew)
@@ -136,13 +139,29 @@ picard synthesizes the Mission Decision Record using picard-thinking's analysis:
 
 ## STEP 6 — Close the Ready Room
 
-Once the MDR is complete and all P1 items are resolved, picard announces:
+Once the MDR is complete, picard chooses one of two close signals:
 
+**Hard Close** — all P1 items fully resolved right now:
 ```
 [READY-ROOM-CLOSED: <mission-slug>]
 ```
+riker may engage immediately.
 
-picard updates the session journal with the MDR and PRIORITY Triage Summary.
+**Conditional Close** — P1 items resolved in principle but depend on future-sprint pre-req work:
+```
+[READY-ROOM-CONDITIONAL-CLOSE: <mission-slug>]
+
+Pre-req Checklist (riker may NOT engage until all items are ✅):
+- [ ] <item> — Owner: <agent> — Due: Sprint N
+      Verification: <objectively checkable condition>
+- [ ] <item> — Owner: <agent> — Due: Sprint N
+      Verification: <objectively checkable condition>
+```
+Each Verification line must be an observable, objectively checkable condition — a passing CI job, a metric threshold, a reviewed artifact, or a staging demo. "Agent says it's done" is not a verification.
+
+riker is NOT authorized to engage until picard verifies all checklist items and issues a full `[READY-ROOM-CLOSED: <mission-slug>]`. If any item slips past its sprint target, picard reopens the Ready Room before any execution begins.
+
+picard updates the session journal with the MDR, PRIORITY Triage Summary, and close signal used.
 
 picard addresses riker:
 

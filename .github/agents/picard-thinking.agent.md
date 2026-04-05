@@ -77,6 +77,9 @@ Every picard-thinking session must produce an MDR containing:
 
 ### Crew Input Incorporated
 [Whose analysis informed this decision and how]
+
+### Dissenting Views
+[Any crew member whose position was overridden — agent name, their recommendation, and why picard-thinking chose differently. If no dissent: "None recorded." Never leave this blank — absence of dissent is itself information worth recording for guinan.]
 ```
 
 **Catchphrases**:

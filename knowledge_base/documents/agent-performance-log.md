@@ -17,10 +17,24 @@ Tracks per-agent mission metrics across sprints to surface utilization imbalance
 | **Tasks Completed** | Number of missions or sub-tasks completed in sprint |
 | **KB Updates Made** | Number of KB document updates committed |
 | **New Discoveries Flagged** | `[NEW DISCOVERY]` items raised |
-| **Conflicts Escalated** | `[CONFLICT]` items escalated to picard |
-| **Handoff ACKs Sent** | Confirmed handoff receipts issued |
-| **Handoff ACKs Received** | Confirmed handoff receipts received from picard |
+| **PRIORITY Items Raised** | Total PRIORITY flags raised (broken down by P0/P1/P2/P3) |
+| **Conflicts Raised** | `[CONFLICT]` items escalated to picard |
+| **Conflicts Resolved** | `[CONFLICT-RESOLVED]` items picard decided in this agent's favor or via synthesis |
+| **Contribution Quality (avg)** | Average 1–5 score from mission debriefs this sprint (see debrief template for scoring guide) |
+| **Handoff ACK Miss Rate** | Handoffs sent without a confirmed picard ACK — should be 0 |
 | **Open Items Carried Forward** | Unresolved items passed to next sprint |
+
+---
+
+## Open Conditional Close Checklists
+
+*Tracks all active `[READY-ROOM-CONDITIONAL-CLOSE]` pre-req items. Reviewed by picard at every sprint close. Items not completed by their sprint target trigger a Ready Room re-open.*
+
+| Mission Slug | Item | Owner | Due Sprint | Verification Criterion | Status |
+|--------------|------|-------|------------|----------------------|--------|
+| — | — | — | — | — | pending |
+
+> **Sprint-Close Review Protocol**: At each sprint close, picard reviews every `pending` item in this table. For each item: picard confirms the Verification Criterion is met (not just that the agent says it is). If met: mark ✅ and note date verified. If not met and sprint target has passed: mark ⚠️ SLIPPED and reopen the corresponding Ready Room before any execution on that mission begins.
 
 ---
 
@@ -79,6 +93,23 @@ Tracks per-agent mission metrics across sprints to surface utilization imbalance
 | — | — | — | — | — | — |
 
 *No conflicts recorded as of 2026-04-05.*
+
+---
+
+## External Event Log
+
+*Records all `[EXTERNAL-EVENT]` signals raised against closed MDRs. Maintained by picard. Updated immediately on receipt — do not batch to sprint close.*
+
+| Date | Mission Slug | Raised By | Event Summary | Severity | picard Response | Signal Issued | Status |
+|------|-------------|-----------|---------------|----------|----------------|---------------|--------|
+| — | — | — | — | — | — | — | open / resolved |
+
+**Response signals**:
+- `[MDR-INVALIDATED: <mission-slug>: <reason>]` — Ready Room re-opened, execution halted
+- `[MDR-AMENDMENT: <mission-slug>-AMD-N]` — partial halt, amended rationale issued
+- `[EXTERNAL-EVENT-ACKNOWLEDGED: <mission-slug>: <reason>]` — logged, no halt
+
+*No external events recorded as of 2026-04-05.*
 
 ---
 
