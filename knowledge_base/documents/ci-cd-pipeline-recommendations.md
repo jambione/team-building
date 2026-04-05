@@ -28,11 +28,11 @@ graph TD
 
 ### Single Responsibility Boundaries
 
-| Component | Responsibility | Workflow File |
-|-----------|----------------|---------------|
-| `ci.yml` | Build, test, linting | `.github/workflows/ci.yml` |
-| `security-scan.yml` | SCA, code scanning | `.github/workflows/security-scan.yml` |
-| `deploy-staging.yml` | Staging deployment | `.github/workflows/deploy-staging.yml` |
+| Component               | Responsibility        | Workflow File                             |
+| ----------------------- | --------------------- | ----------------------------------------- |
+| `ci.yml`                | Build, test, linting  | `.github/workflows/ci.yml`                |
+| `security-scan.yml`     | SCA, code scanning    | `.github/workflows/security-scan.yml`     |
+| `deploy-staging.yml`    | Staging deployment    | `.github/workflows/deploy-staging.yml`    |
 | `deploy-production.yml` | Production with gates | `.github/workflows/deploy-production.yml` |
 
 ---
@@ -59,33 +59,33 @@ restore-keys: |
 
 ```yaml
 jobs:
-  test-matrix:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [16, 18, 20]
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            min-node-version: 16
-          - os: macos-latest
-            min-node-version: 18
-      fail-fast: false  # Allow all matrix combinations to run
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      
-      - run: npm ci --prefer-offline
-      
-      - name: Run tests (with timeout protection)
-        env:
-          NODE_OPTIONS: --max-old-space-size=4096
-        run: npm test --timeout=300000
+    test-matrix:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                node-version: [16, 18, 20]
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                include:
+                    - os: ubuntu-latest
+                      min-node-version: 16
+                    - os: macos-latest
+                      min-node-version: 18
+            fail-fast: false # Allow all matrix combinations to run
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "npm"
+
+            - run: npm ci --prefer-offline
+
+            - name: Run tests (with timeout protection)
+              env:
+                  NODE_OPTIONS: --max-old-space-size=4096
+              run: npm test --timeout=300000
 ```
 
 ### 2.3 Artifact Management with Integrity Verification
@@ -94,13 +94,13 @@ jobs:
 - name: Upload build artifacts
   uses: actions/upload-artifact@v3
   with:
-    name: build-output-${{ github.sha }}
-    path: |
-      dist/
-      .next/
-      build/
-    retention-days: 7
-    if-no-files-found: warn
+      name: build-output-${{ github.sha }}
+      path: |
+          dist/
+          .next/
+          build/
+      retention-days: 7
+      if-no-files-found: warn
 ```
 
 ---
@@ -111,21 +111,21 @@ jobs:
 
 ```yaml
 permissions:
-  contents: read           # Only checkout code
-  actions: read            # Read workflows only
-  pull-requests: read      # Review PRs, not modify
-  checks: write            # Post build status
-  security-events: write   # Upload SARIF files
+    contents: read # Only checkout code
+    actions: read # Read workflows only
+    pull-requests: read # Review PRs, not modify
+    checks: write # Post build status
+    security-events: write # Upload SARIF files
 ```
 
 ### 3.2 SOC 2 / ISO 27001 Compliance Checklist
 
-| Requirement | Status | Action Required |
-|-------------|--------|-----------------|
-| Access controls | ✅ Implemented | Verify RBAC in container registry |
-| Workflow retention policies | ❌ Incomplete | Add `retention-days: 30` to artifacts |
-| Secret rotation (90-day) | ⚠️ Partial | Configure scheduled secret refresh |
-| Deployment approval gates | ✅ Implemented | Verify 2+ approver requirement |
+| Requirement                 | Status         | Action Required                       |
+| --------------------------- | -------------- | ------------------------------------- |
+| Access controls             | ✅ Implemented | Verify RBAC in container registry     |
+| Workflow retention policies | ❌ Incomplete  | Add `retention-days: 30` to artifacts |
+| Secret rotation (90-day)    | ⚠️ Partial     | Configure scheduled secret refresh    |
+| Deployment approval gates   | ✅ Implemented | Verify 2+ approver requirement        |
 
 ### 3.3 Secret Rotation Policy
 
@@ -146,28 +146,28 @@ schedule: '0 4 * * 1'  # Weekly on Monday at 4 AM UTC
 ```yaml
 # Production deployment requiring multi-PR reviewer approval
 jobs:
-  deploy-production:
-    needs: [security-scan, staging-deploy]
-    
-    # Environment protection rules (configured in GitHub Settings)
-    environment: production
-    
-    steps:
-      - name: Request Deployment Approval
-        run: |
-          echo "Waiting for ${{ github.event.pull_request.merged == true ? 2 : 1 }} approver(s)"
+    deploy-production:
+        needs: [security-scan, staging-deploy]
+
+        # Environment protection rules (configured in GitHub Settings)
+        environment: production
+
+        steps:
+            - name: Request Deployment Approval
+              run: |
+                  echo "Waiting for ${{ github.event.pull_request.merged == true ? 2 : 1 }} approver(s)"
 ```
 
 ---
 
 ## 4. Performance Benchmarks & Expected Improvements
 
-| Metric | Before | After Optimization | Improvement |
-|--------|--------|---------------------|-------------|
-| Build Time (Medium Project) | ~8 min | ~2.5 min | **69% reduction** |
-| Cache Hit Rate | ~45% | ~85% | **+40%** |
-| Matrix Test Coverage | Node 16 only | Nodes 16, 18, 20 × 3 OS | **9-combo coverage** |
-| Security Scan Duration | ~12 min | ~8 min (parallelized) | **33% reduction** |
+| Metric                      | Before       | After Optimization      | Improvement          |
+| --------------------------- | ------------ | ----------------------- | -------------------- |
+| Build Time (Medium Project) | ~8 min       | ~2.5 min                | **69% reduction**    |
+| Cache Hit Rate              | ~45%         | ~85%                    | **+40%**             |
+| Matrix Test Coverage        | Node 16 only | Nodes 16, 18, 20 × 3 OS | **9-combo coverage** |
+| Security Scan Duration      | ~12 min      | ~8 min (parallelized)   | **33% reduction**    |
 
 ---
 
@@ -177,11 +177,11 @@ jobs:
 
 1. **`ci-cd-pipeline-recommendations.md`** - This document (newly created above)
 2. **Update `github-actions-best-practices.md`**:
-   - Add matrix build fail-fast configuration example
-   - Include artifact retention best practices
+    - Add matrix build fail-fast configuration example
+    - Include artifact retention best practices
 3. **Update `devops-best-practices.md`**:
-   - Document TypeScript-specific caching patterns
-   - Add Node.js version compatibility matrix recommendations
+    - Document TypeScript-specific caching patterns
+    - Add Node.js version compatibility matrix recommendations
 
 ---
 
@@ -205,14 +205,14 @@ gh api /orgs/:org/teams/:team/members?role=member --limit 100 | grep -i "admin"
 
 ## Summary of Recommendations
 
-| Category | Priority | Action Item |
-|----------|----------|-------------|
-| Architecture | HIGH | Implement modular composite actions |
-| Caching | HIGH | Add lockfile-hash to cache keys |
-| Security | CRITICAL | Add `permissions:` blocks to all workflows |
-| Compliance | HIGH | Configure artifact retention policies |
-| Performance | MEDIUM | Enable matrix builds with fail-fast: false |
+| Category     | Priority | Action Item                                |
+| ------------ | -------- | ------------------------------------------ |
+| Architecture | HIGH     | Implement modular composite actions        |
+| Caching      | HIGH     | Add lockfile-hash to cache keys            |
+| Security     | CRITICAL | Add `permissions:` blocks to all workflows |
+| Compliance   | HIGH     | Configure artifact retention policies      |
+| Performance  | MEDIUM   | Enable matrix builds with fail-fast: false |
 
 ---
 
-*Generated by kc-dave orchestration on 2026-04-04*
+_Generated by kirk orchestration on 2026-04-04_

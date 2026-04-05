@@ -1,17 +1,18 @@
 # Database Migration Strategies — Zero-Downtime Patterns
 
 ## Purpose
-Database migration patterns and strategies for production systems. Maintained by kc-dave, reviewed quarterly.
+
+Database migration patterns and strategies for production systems. Maintained by kirk, reviewed quarterly.
 
 ---
 
 ## 1. Migration Types & Risk Levels
 
-| Type | Downtime Required | Risk Level | Rollback Complexity |
-|------|------------------|------------|---------------------|
-| Schema Evolution (Backward Compatible) | None | Low | Simple revert |
-| Data Transformation | Minimal (<5 min) | Medium | Data restore |
-| Table Switchover | Planned window | High | Point-in-time restore |
+| Type                                   | Downtime Required | Risk Level | Rollback Complexity   |
+| -------------------------------------- | ----------------- | ---------- | --------------------- |
+| Schema Evolution (Backward Compatible) | None              | Low        | Simple revert         |
+| Data Transformation                    | Minimal (<5 min)  | Medium     | Data restore          |
+| Table Switchover                       | Planned window    | High       | Point-in-time restore |
 
 ---
 
@@ -28,13 +29,13 @@ graph TD
     G --> H{Migration Success?}
     H -->|Yes| I[Deprecate Old Schema]
     H -->|No| J[Rollback to Old Schema]
-    
+
     subgraph Pre-Migration Checklist
         K[Backup verified]
         L[Feature flag ready]
         M[Rollback plan documented]
     end
-    
+
     A -.-> K & L & M
 ```
 
@@ -67,7 +68,7 @@ EOF
 # 2. Copy data with transformation
 COPY_DATA=$(cat <<EOF
 INSERT INTO ${NEW_TABLE} (id, username, email, created_at, migration_verified)
-SELECT id, username, email, created_at, TRUE 
+SELECT id, username, email, created_at, TRUE
 FROM ${OLD_TABLE}
 WHERE migration_verified IS NULL;
 EOF
@@ -99,11 +100,11 @@ done
 
 ## 5. Verification Checklist
 
-| Check | Command/Tool | Expected Result |
-|-------|--------------|-----------------|
-| Data parity | `SELECT COUNT(*) FROM old JOIN new` | Counts match within 1% |
-| Query performance | `EXPLAIN ANALYZE <query>` | < 10ms for simple queries |
-| Application health | Health check endpoint | 200 OK, all endpoints responsive |
+| Check              | Command/Tool                        | Expected Result                  |
+| ------------------ | ----------------------------------- | -------------------------------- |
+| Data parity        | `SELECT COUNT(*) FROM old JOIN new` | Counts match within 1%           |
+| Query performance  | `EXPLAIN ANALYZE <query>`           | < 10ms for simple queries        |
+| Application health | Health check endpoint               | 200 OK, all endpoints responsive |
 
 ---
 
@@ -112,10 +113,10 @@ done
 ```markdown
 ---
 Version History:
-- 2026-04-05: kc-dave — Initial database migration strategies document
+    - 2026-04-05: kirk — Initial database migration strategies document
 ---
 ```
 
 ---
 
-*Created: 2026-04-05 | Owner: kc-dave (orchestrator) | Review cadence: Quarterly*
+_Created: 2026-04-05 | Owner: kirk (orchestrator) | Review cadence: Quarterly_

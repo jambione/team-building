@@ -1,7 +1,8 @@
-# Architecture Decision Records (ADRs) — kc- Team Template
+# Architecture Decision Records (ADRs) — IT Team Template
 
 ## Purpose
-Document significant architectural decisions with context, alternatives considered, and rationale. Updated quarterly by kc-michael.
+
+Document significant architectural decisions with context, alternatives considered, and rationale. Updated quarterly by spock.
 
 ---
 
@@ -11,30 +12,36 @@ Document significant architectural decisions with context, alternatives consider
 # [Short Title] — [Date]
 
 ## Status
+
 [Proposed | Accepted | Superseded | Deprecated]
 
 ## Context
+
 - Problem we're solving
 - Relevant decisions that preceded this one
 - Limitations of existing approaches
 
 ## Decision
+
 [Clear statement of the chosen direction]
 
 ## Consequences
+
 - Positive outcomes expected
 - Compromises made
 - Future implications
 
 ## References
+
 - Links to related documentation, RFCs, or external resources
 ```
 
 ---
 
-## Historical ADRs — kc-michael's Contributions
+## Historical ADRs — spock's Contributions
 
 ### ADR-001: Composition Over Inheritance Pattern (2026-03-15)
+
 **Status:** Accepted
 
 **Context:** Team was using deep inheritance hierarchies causing fragile base class problems.
@@ -44,6 +51,7 @@ Document significant architectural decisions with context, alternatives consider
 ---
 
 ### ADR-002: Stateless Component Design (2026-03-20)
+
 **Status:** Accepted
 
 **Context:** Components were maintaining state internally, causing testing difficulties and memory leaks.
@@ -53,6 +61,7 @@ Document significant architectural decisions with context, alternatives consider
 ---
 
 ### ADR-003: Built-in Language Features First (2026-04-01)
+
 **Status:** Accepted
 
 **Context:** Heavy dependency on utility libraries for basic operations.
@@ -73,4 +82,4 @@ git log --since="1 month ago" --oneline -- "*arch*" | head -20
 
 ---
 
-*Created: 2026-04-04 | Owner: kc-michael (Architect) | Review Cadence: Quarterly*
+_Created: 2026-04-04 | Owner: spock (Architect) | Review Cadence: Quarterly_

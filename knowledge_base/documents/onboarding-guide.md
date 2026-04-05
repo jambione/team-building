@@ -1,7 +1,8 @@
-# Onboarding Guide — kc- Team New Member Checklist
+# Onboarding Guide — IT Team New Member Checklist
 
 ## Purpose
-Standardized onboarding procedures for new team members. Maintained by kc-dave, reviewed quarterly.
+
+Standardized onboarding procedures for new team members. Maintained by kirk, reviewed quarterly.
 
 ---
 
@@ -23,11 +24,11 @@ cat knowledge_base/documents/index.md
 
 ### Checklist — Must Complete Before EOD Day 1
 
-| Task | Resource | Status |
-|------|----------|--------|
-| Read `team-conventions.md` | Third-person communication rules | ☐ |
-| Review `coding-standards.md` | Code quality expectations | ☐ |
-| Check out knowledge base index | Understand documentation structure | ☐ |
+| Task                           | Resource                           | Status |
+| ------------------------------ | ---------------------------------- | ------ |
+| Read `team-conventions.md`     | Third-person communication rules   | ☐      |
+| Review `coding-standards.md`   | Code quality expectations          | ☐      |
+| Check out knowledge base index | Understand documentation structure | ☐      |
 
 ---
 
@@ -44,11 +45,11 @@ cat knowledge_base/documents/index.md
 
 ### DevOps & CI/CD Fundamentals
 
-| Document | Focus Area | Priority |
-|----------|------------|----------|
-| `github-actions-best-practices.md` | Workflow optimization | HIGH |
-| `devops-best-practices.md` | Speed targets, caching | HIGH |
-| `ci-cd-pipeline-recommendations.md` | Production setup patterns | MEDIUM |
+| Document                            | Focus Area                | Priority |
+| ----------------------------------- | ------------------------- | -------- |
+| `github-actions-best-practices.md`  | Workflow optimization     | HIGH     |
+| `devops-best-practices.md`          | Speed targets, caching    | HIGH     |
+| `ci-cd-pipeline-recommendations.md` | Production setup patterns | MEDIUM   |
 
 ---
 
@@ -85,12 +86,12 @@ gh api /repos/jambione/team-building/contents/knowledge_base/documents | jq '.[]
 
 ## Mentorship Pairing (First Week)
 
-| Day | Activity | Mentor Role |
-|-----|----------|-------------|
-| 1 | Environment setup verification | DevOps Lead |
-| 2 | Code review of sample PR | Senior Developer |
-| 3 | Architecture walkthrough | Architect |
-| 4 | CI/CD pipeline demo | DevOps Engineer |
+| Day | Activity                       | Mentor Role      |
+| --- | ------------------------------ | ---------------- |
+| 1   | Environment setup verification | DevOps Lead      |
+| 2   | Code review of sample PR       | Senior Developer |
+| 3   | Architecture walkthrough       | Architect        |
+| 4   | CI/CD pipeline demo            | DevOps Engineer  |
 
 ---
 
@@ -103,4 +104,4 @@ grep -l "onboarding-guide.md" knowledge_base/documents/*.md > /dev/null && echo 
 
 ---
 
-*Created: 2026-04-04 | Owner: kc-dave (orchestrator) | Review cadence: Quarterly*
+_Created: 2026-04-04 | Owner: kirk (orchestrator) | Review cadence: Quarterly_

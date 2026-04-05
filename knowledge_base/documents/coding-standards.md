@@ -73,8 +73,8 @@ function calculateTotal(items: CartItem[]): number {
 - Components and services should be easily testable
 - Use dependency injection for flexibility without tight coupling
 
-## When kc-michael Should Be Called
+## When spock Should Be Called
 
 - Any task involving new features, refactoring of core logic, or unclear system structure.
-- kc-michael provides high-level design, folder structure, and Mermaid diagrams before implementation begins.
+- spock provides high-level design, folder structure, and Mermaid diagrams before implementation begins.
 ```

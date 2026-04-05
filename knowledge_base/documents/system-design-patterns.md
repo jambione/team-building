@@ -1,7 +1,8 @@
-# System Design Patterns — kc- Team Knowledge Base
+# System Design Patterns — IT Team Knowledge Base
 
 ## Purpose
-Document scalable, maintainable system design patterns the team uses consistently. Updated quarterly by kc-michael.
+
+Document scalable, maintainable system design patterns the team uses consistently. Updated quarterly by spock.
 
 ---
 
@@ -23,6 +24,7 @@ Document scalable, maintainable system design patterns the team uses consistentl
 **When to use:** Multi-tier applications with clear separation of concerns
 
 **Structure:**
+
 ```
 ┌─────────────┐
 │   UI Layer │ — Presentation, user interaction
@@ -42,6 +44,7 @@ Document scalable, maintainable system design patterns the team uses consistentl
 **When to use:** External service calls with timeout/retry requirements
 
 **Implementation notes:**
+
 - Prevent cascading failures
 - Allow periodic health checks even when circuit is open
 - Document fallback behaviors
@@ -53,6 +56,7 @@ Document scalable, maintainable system design patterns the team uses consistentl
 **When to use:** Audit trails, temporal queries, domain-driven design
 
 **Key considerations:**
+
 - Command vs Query responsibility separation
 - Read model projection strategy
 - Event schema evolution handling
@@ -77,6 +81,7 @@ Document scalable, maintainable system design patterns the team uses consistentl
 ### 5. Strangler Fig Pattern
 
 **For migrating monoliths to microservices:**
+
 1. Identify bounded contexts
 2. Create API gateway routes to new services
 3. Gradually shift traffic
@@ -96,4 +101,4 @@ git log --since="1 month ago" --oneline -- "*arch*" | head -20
 
 ---
 
-*Created: 2026-04-04 | Owner: kc-michael (Architect) | Review Cadence: Quarterly*
+_Created: 2026-04-04 | Owner: spock (Architect) | Review Cadence: Quarterly_

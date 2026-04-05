@@ -31,3 +31,13 @@
 - **Lesson**: Implementing mobile-specific components requires careful validation and testing on real devices to ensure usability.
 - **Decision**: Use a simple, maintainable approach with clear error handling and mobile-friendly form layout.
 - **Outcome**: Good performance and easy future extensions. Code follows clean architecture principles.
+
+## 2026-04-05 – CI/CD Pipeline Sprint 1 Remediation
+
+- **Lesson**: Omitting `permissions:` blocks in GitHub Actions workflows defaults to `write-all` token scope — a critical security misconfiguration that exposes the entire repo to any compromised action or step.
+- **Lesson**: `cache: 'actions/cache'` is not a valid value for `actions/setup-node`; the correct value is `cache: 'npm'`. Always verify action input schemas against official documentation.
+- **Lesson**: CodeQL requires a precise 3-step sequence: `init` → `autobuild` → `analyze`. Using only `upload-artifact` is not a substitute and produces no security analysis whatsoever.
+- **Lesson**: Rollback jobs using `git rev-parse HEAD^1` require `fetch-depth: 0` on the checkout step. The default shallow clone will not have the parent commit available, causing rollback to fail at the worst possible moment.
+- **Lesson**: `security-events: write` is the specific GitHub token permission required for any workflow step that uploads SARIF results (Trivy, CodeQL). Without it, scan results silently fail to appear in the Security tab.
+- **Decision**: All deployment workflows now use real rsync+SSH+systemctl logic with health-check polling loops rather than placeholder `echo` statements.
+- **Outcome**: All 13 critical/high/medium issues from the Sprint 1 remediation plan resolved in a single mission. Health rating upgraded from AMBER to GREEN.

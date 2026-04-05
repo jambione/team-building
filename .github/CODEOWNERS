@@ -1,0 +1,90 @@
+# CODEOWNERS — TNG Agent Team Domain Ownership
+#
+# Maps repository paths to responsible agents for review routing.
+# Each line: <path-pattern> <github-user-or-team>
+#
+# Agent Domain Map:
+#   picard   → orchestration, governance, top-level config
+#   data     → architecture, design, system patterns
+#   geordi   → CI/CD workflows, DevOps automation
+#   worf     → security hardening, compliance
+#   troi     → testing, QA, user experience
+#   crusher  → reliability, health, edge-case coverage
+#   barclay  → technical debt, refactoring, code quality
+#   guinan   → session journals, ADRs, institutional history
+#   obrien   → monitoring, observability, operational config
+#   riker    → execution coordination, cross-team tasks
+#
+# Replace @jambione/<agent> with actual GitHub team names when teams are configured.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Default owner (picard) ────────────────────────────────────────────────────
+*                                           @jambione
+
+# ── CI/CD Workflows (geordi) ──────────────────────────────────────────────────
+.github/workflows/                          @jambione/geordi
+.github/workflows/ci.yml                   @jambione/geordi
+.github/workflows/kb-staleness-check.yml   @jambione/geordi
+.github/workflows/adr-workflow.yml         @jambione/geordi @jambione/data
+
+# ── Security Configuration (worf) ─────────────────────────────────────────────
+.github/workflows/security-scan.yml        @jambione/worf @jambione/geordi
+.github/CODEOWNERS                         @jambione/worf @jambione/picard
+
+# ── Agent Definitions (picard + domain owner) ─────────────────────────────────
+.github/agents/                            @jambione
+.github/agents/picard*.agent.md            @jambione
+.github/agents/data.agent.md               @jambione/data
+.github/agents/geordi.agent.md             @jambione/geordi
+.github/agents/worf.agent.md               @jambione/worf
+.github/agents/troi.agent.md               @jambione/troi
+.github/agents/crusher.agent.md            @jambione/crusher
+.github/agents/riker.agent.md              @jambione/riker
+.github/agents/barclay.agent.md            @jambione/barclay
+.github/agents/guinan.agent.md             @jambione/guinan
+.github/agents/obrien.agent.md             @jambione/obrien
+
+# ── Prompt Templates (picard + requesting domain) ─────────────────────────────
+.github/prompts/                           @jambione
+
+# ── Clinerules (mirrors agent ownership) ──────────────────────────────────────
+.clinerules/                               @jambione
+
+# ── Knowledge Base (domain specialist per document) ───────────────────────────
+knowledge_base/                            @jambione
+knowledge_base/documents/index.md          @jambione
+
+# Architecture domain → data
+knowledge_base/documents/architecture-*.md            @jambione/data
+knowledge_base/documents/system-design-*.md           @jambione/data
+knowledge_base/documents/architecture-decision-*.md   @jambione/data @jambione/guinan
+
+# DevOps domain → geordi
+knowledge_base/documents/ci-cd-*.md                   @jambione/geordi
+knowledge_base/documents/devops-*.md                  @jambione/geordi
+knowledge_base/documents/github-actions-*.md          @jambione/geordi
+
+# Security domain → worf
+knowledge_base/documents/github-actions-security-*.md @jambione/worf @jambione/geordi
+
+# Testing domain → troi
+knowledge_base/documents/best-practices.md            @jambione/troi
+knowledge_base/documents/defect-*.md                  @jambione/troi
+
+# Reliability domain → crusher
+knowledge_base/documents/incident-*.md                @jambione/crusher
+
+# Technical debt → barclay
+knowledge_base/documents/tech-debt-*.md               @jambione/barclay
+
+# Observability → obrien
+knowledge_base/documents/monitoring-*.md              @jambione/obrien
+
+# Session journals → guinan
+knowledge_base/sessions/                              @jambione/guinan
+
+# Governance → picard
+knowledge_base/documents/knowledge-base-governance.md @jambione
+knowledge_base/documents/team-conventions.md          @jambione
+knowledge_base/documents/past-lessons-learned.md      @jambione/guinan
+knowledge_base/documents/agent-performance-log.md     @jambione

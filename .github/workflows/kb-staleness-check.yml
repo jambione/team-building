@@ -1,0 +1,136 @@
+name: KB Staleness Check
+
+on:
+  schedule:
+    # Run every Monday at 09:00 UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      staleness_days:
+        description: 'Flag documents older than N days'
+        required: false
+        default: '90'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-staleness:
+    name: Detect Stale KB Documents
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect stale KB documents
+        id: detect
+        env:
+          STALENESS_DAYS: ${{ github.event.inputs.staleness_days || '90' }}
+        run: |
+          CUTOFF_DATE=$(date -d "-${STALENESS_DAYS} days" +%Y-%m-%d)
+          echo "Checking for KB documents not updated since: ${CUTOFF_DATE}"
+
+          STALE_DOCS=""
+          STALE_COUNT=0
+
+          while IFS= read -r -d '' file; do
+            # Get last commit date for this file
+            LAST_COMMIT=$(git log -1 --format="%ad" --date=short -- "$file" 2>/dev/null)
+
+            if [[ -z "$LAST_COMMIT" ]]; then
+              continue
+            fi
+
+            if [[ "$LAST_COMMIT" < "$CUTOFF_DATE" ]]; then
+              DOC_NAME=$(basename "$file")
+              STALE_DOCS="${STALE_DOCS}\n- \`${DOC_NAME}\` — last updated: ${LAST_COMMIT}"
+              STALE_COUNT=$((STALE_COUNT + 1))
+            fi
+          done < <(find knowledge_base/documents -name "*.md" -not -name "index.md" -print0)
+
+          echo "stale_count=${STALE_COUNT}" >> "$GITHUB_OUTPUT"
+
+          if [[ $STALE_COUNT -gt 0 ]]; then
+            # Write stale docs to a file for use in next step
+            printf "%b" "$STALE_DOCS" > /tmp/stale_docs.txt
+            echo "stale_found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "stale_found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open GitHub Issue for stale documents
+        if: steps.detect.outputs.stale_found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STALENESS_DAYS: ${{ github.event.inputs.staleness_days || '90' }}
+          STALE_COUNT: ${{ steps.detect.outputs.stale_count }}
+        run: |
+          STALE_LIST=$(cat /tmp/stale_docs.txt)
+
+          # Check if a staleness issue already exists (avoid duplicates)
+          EXISTING_ISSUE=$(gh issue list \
+            --label "kb-staleness" \
+            --state open \
+            --json number \
+            --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [[ -n "$EXISTING_ISSUE" ]]; then
+            echo "Staleness issue #${EXISTING_ISSUE} already open — adding comment"
+            gh issue comment "$EXISTING_ISSUE" \
+              --body "## KB Staleness Re-check — $(date +%Y-%m-%d)
+
+          **${STALE_COUNT} document(s)** still stale (>${STALENESS_DAYS} days without update):
+
+          ${STALE_LIST}
+
+          Please review and update or explicitly mark as \`[reviewed: no changes needed]\` with today's date."
+          else
+            gh issue create \
+              --title "KB Staleness Alert: ${STALE_COUNT} document(s) require review" \
+              --label "kb-staleness,documentation" \
+              --body "## Knowledge Base Staleness Alert
+
+          **${STALE_COUNT} KB document(s)** have not been updated in more than **${STALENESS_DAYS} days** and require review.
+
+          ### Stale Documents
+
+          ${STALE_LIST}
+
+          ### Required Actions
+
+          For each document listed above, the **assigned owner** should:
+
+          1. Review the document for accuracy
+          2. Update with any new findings or standards
+          3. Update the \`Last Updated\` field and version history
+          4. If no changes are needed, add \`[reviewed: no changes needed — YYYY-MM-DD]\` to the version history
+
+          ### Ownership Reference
+
+          Consult \`knowledge_base/documents/index.md\` for document ownership assignments.
+
+          ### Agent Assignments
+
+          | Document Prefix | Responsible Agent |
+          |-----------------|-------------------|
+          | architecture-* | data |
+          | devops-*, github-actions-* | geordi |
+          | security-* | worf |
+          | testing-*, defect-* | troi |
+          | monitoring-*, reliability-* | obrien |
+          | tech-debt-* | barclay |
+          | incident-* | crusher |
+          | team-*, coding-*, best-practices* | picard |
+
+          ---
+          *Automated by KB Staleness Check workflow | Threshold: ${STALENESS_DAYS} days*"
+          fi
+
+      - name: Report no stale documents
+        if: steps.detect.outputs.stale_found == 'false'
+        run: |
+          echo "All KB documents are current (updated within ${STALENESS_DAYS:-90} days). No action required."

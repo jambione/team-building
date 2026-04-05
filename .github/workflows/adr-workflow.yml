@@ -1,0 +1,219 @@
+name: ADR Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Short ADR title (e.g., "Use PostgreSQL for primary datastore")'
+        required: true
+        type: string
+      context:
+        description: 'Problem context — what decision needs to be made and why'
+        required: true
+        type: string
+      options_considered:
+        description: 'Comma-separated list of options considered (e.g., "PostgreSQL, MySQL, SQLite")'
+        required: false
+        type: string
+        default: ''
+      agent:
+        description: 'Requesting agent (who triggered this ADR)'
+        required: false
+        type: string
+        default: 'picard'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-adr:
+    name: Generate ADR Draft
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate ADR number and slug
+        id: meta
+        env:
+          TITLE: ${{ github.event.inputs.title }}
+        run: |
+          # Find next ADR number
+          EXISTING=$(find knowledge_base/documents -name "adr-*.md" 2>/dev/null | wc -l)
+          ADR_NUM=$(printf "%04d" $((EXISTING + 1)))
+
+          # Generate slug from title
+          SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
+
+          echo "adr_number=${ADR_NUM}" >> "$GITHUB_OUTPUT"
+          echo "adr_slug=${SLUG}" >> "$GITHUB_OUTPUT"
+          echo "adr_filename=adr-${ADR_NUM}-${SLUG}.md" >> "$GITHUB_OUTPUT"
+          echo "branch_name=adr/${ADR_NUM}-${SLUG}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate ADR document
+        env:
+          ADR_NUMBER: ${{ steps.meta.outputs.adr_number }}
+          ADR_FILENAME: ${{ steps.meta.outputs.adr_filename }}
+          TITLE: ${{ github.event.inputs.title }}
+          CONTEXT: ${{ github.event.inputs.context }}
+          OPTIONS: ${{ github.event.inputs.options_considered }}
+          REQUESTING_AGENT: ${{ github.event.inputs.agent }}
+        run: |
+          DATE=$(date +%Y-%m-%d)
+
+          # Build options section
+          OPTIONS_SECTION=""
+          if [[ -n "$OPTIONS" ]]; then
+            IFS=',' read -ra OPT_ARRAY <<< "$OPTIONS"
+            for opt in "${OPT_ARRAY[@]}"; do
+              OPT_TRIM=$(echo "$opt" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              OPTIONS_SECTION="${OPTIONS_SECTION}### ${OPT_TRIM}\n\n- **Pros**: _To be filled by data or domain specialist_\n- **Cons**: _To be filled by data or domain specialist_\n\n"
+            done
+          else
+            OPTIONS_SECTION="### Option A — _To be defined_\n\n- **Pros**:\n- **Cons**:\n\n### Option B — _To be defined_\n\n- **Pros**:\n- **Cons**:\n\n"
+          fi
+
+          cat > "knowledge_base/documents/${ADR_FILENAME}" << EOF
+          # ADR-${ADR_NUMBER}: ${TITLE}
+
+          ## Status
+
+          **proposed** — Awaiting review and decision
+
+          | Field | Value |
+          |-------|-------|
+          | **ADR Number** | ${ADR_NUMBER} |
+          | **Date Proposed** | ${DATE} |
+          | **Requested By** | ${REQUESTING_AGENT} |
+          | **Decider** | picard |
+          | **Status** | proposed |
+
+          ---
+
+          ## Context
+
+          ${CONTEXT}
+
+          ---
+
+          ## Decision Drivers
+
+          _To be filled during review — what are the most important criteria for this decision?_
+
+          - [ ] Criterion 1
+          - [ ] Criterion 2
+          - [ ] Criterion 3
+
+          ---
+
+          ## Options Considered
+
+          $(printf "%b" "${OPTIONS_SECTION}")
+          ---
+
+          ## Decision
+
+          **_Pending_** — This ADR is open for review. picard will record the decision here after crew review.
+
+          ---
+
+          ## Consequences
+
+          ### Positive
+          _To be filled after decision_
+
+          ### Negative / Trade-offs
+          _To be filled after decision_
+
+          ### Neutral
+          _To be filled after decision_
+
+          ---
+
+          ## Review Notes
+
+          _Crew members: add your analysis below before this ADR is decided._
+
+          | Agent | Input | Date |
+          |-------|-------|------|
+          | data | | |
+          | worf | | |
+          | geordi | | |
+
+          ---
+
+          ## Version History
+
+          \`\`\`
+          - ${DATE}: ${REQUESTING_AGENT} — ADR proposed via automated workflow
+          \`\`\`
+          EOF
+
+          echo "ADR document generated: knowledge_base/documents/${ADR_FILENAME}"
+
+      - name: Create ADR branch and push
+        id: push
+        env:
+          BRANCH_NAME: ${{ steps.meta.outputs.branch_name }}
+          ADR_FILENAME: ${{ steps.meta.outputs.adr_filename }}
+          ADR_NUMBER: ${{ steps.meta.outputs.adr_number }}
+          TITLE: ${{ github.event.inputs.title }}
+          REQUESTING_AGENT: ${{ github.event.inputs.agent }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH_NAME"
+          git add "knowledge_base/documents/${ADR_FILENAME}"
+          git commit -m "adr: propose ADR-${ADR_NUMBER} — ${TITLE}
+
+          Proposed by: ${REQUESTING_AGENT}
+          Status: proposed"
+
+          git push -u origin "$BRANCH_NAME"
+
+      - name: Create Pull Request for ADR review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADR_NUMBER: ${{ steps.meta.outputs.adr_number }}
+          ADR_FILENAME: ${{ steps.meta.outputs.adr_filename }}
+          TITLE: ${{ github.event.inputs.title }}
+          REQUESTING_AGENT: ${{ github.event.inputs.agent }}
+          BRANCH_NAME: ${{ steps.meta.outputs.branch_name }}
+        run: |
+          gh pr create \
+            --title "ADR-${ADR_NUMBER}: ${TITLE}" \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --label "adr,needs-review" \
+            --body "## ADR-${ADR_NUMBER}: ${TITLE}
+
+          This pull request introduces a new **Architecture Decision Record** for team review.
+
+          ### Review Instructions
+
+          1. **data** — Provide architectural analysis and option evaluation
+          2. **worf** — Flag any security implications
+          3. **geordi** — Flag any DevOps/infrastructure implications
+          4. **picard** — Record final decision in the \`## Decision\` section before merging
+
+          ### Acceptance Criteria
+
+          - [ ] All relevant crew members have added input to the Review Notes table
+          - [ ] \`## Decision\` section is populated with the chosen option and rationale
+          - [ ] \`## Consequences\` section is filled in
+          - [ ] Status updated from \`proposed\` to \`accepted\` or \`rejected\`
+          - [ ] Version history updated with decision date
+
+          ### Merge Policy
+
+          Only picard may merge ADR pull requests. Merging signals the decision is **accepted** and locked.
+
+          ---
+          *Generated by ADR Workflow | Requested by: ${REQUESTING_AGENT}*"
+
+          echo "ADR PR created successfully."

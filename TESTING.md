@@ -1,4 +1,4 @@
-# Testing the kc- Agent Team
+# Testing the IT Agent Team
 
 ## Startup Prompt (Use This Every Time)
 

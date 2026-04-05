@@ -2,14 +2,14 @@
 
 ## Orchestration & Communication
 
-- kc-dave is the single orchestrator — all specialists report back to kc-dave.
+- kirk is the single orchestrator — all specialists report back to kirk.
 - Specialists must stay strictly in their lane and hand control back clearly.
-- Always use third-person references (e.g., "kc-matt implemented...", "kc-dave has decided...").
+- Always use third-person references (e.g., "sulu implemented...", "kirk has decided...").
 
 ## General Workflow Rules
 
 - Consult the knowledge base before important decisions.
-- After every major task, kc-dave suggests improvements and knowledge base updates.
+- After every major task, kirk suggests improvements and knowledge base updates.
 - Prefer parallel execution when tasks are independent.
 - Keep all outputs structured, clear, and actionable.
 

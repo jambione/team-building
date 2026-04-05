@@ -1,4 +1,4 @@
-# kc- Team Best Practices
+# IT Team Best Practices
 
 ## General Development Guidelines
 
