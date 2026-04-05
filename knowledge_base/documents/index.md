@@ -52,7 +52,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by k
 
 ---
 
-## Incident Response & Operations (NEW)
+## Incident Response & Operations
 
 | Document                        | Description                                             | Last Updated | Owner |
 | ------------------------------- | ------------------------------------------------------- | ------------ | ----- |
@@ -60,11 +60,19 @@ Central navigation for all team knowledge base documents. Updated quarterly by k
 
 ---
 
+## Health Assessments (NEW)
+
+| Document                                | Description                                                                                 | Last Updated | Owner   |
+| --------------------------------------- | ------------------------------------------------------------------------------------------- | ------------ | ------- |
+| `team-health-assessment-github-agents.md` | Full-spectrum health review: CI/CD, security, test coverage, reliability — AMBER status | 2026-04-05   | picard  |
+
+---
+
 ## Pending Additions (Backlog)
 
 - [ ] `onboarding-guide.md` — New team member checklist
 - [ ] `database-migration-strategies.md` — Zero-downtime migration patterns
-- [ ] `monitoring-observability.md` — Logging, metrics, alerting standards
+- [ ] `monitoring-observability.md` — Logging, metrics, alerting standards (flagged P2 in 2026-04-05 health assessment)
 
 ---
 
@@ -74,6 +82,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by k
 ---
 Version History:
     - 2026-04-04: kirk — Updated index; marked incident-response-playbook.md as complete (now ~75% knowledge base coverage)
+    - 2026-04-05: picard — Added team-health-assessment-github-agents.md; 15 remediation items identified across CI/CD, security, testing, and reliability domains
 ---
 ```
 

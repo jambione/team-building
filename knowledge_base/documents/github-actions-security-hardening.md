@@ -2,10 +2,25 @@
 
 ## Critical Items (Must-Have)
 
-- [ ] **Least-Privilege Permissions**: Add `permissions: {}` block to restrict each workflow's default permissions
-- [ ] **Environment Protection Rules**: Require 2+ PR reviewers for production deployments
-- [ ] **Dependency Scanning**: Integrate Trivy with scheduled runs (`cron: '0 4 * * 1'`)
-- [ ] **CodeQL Security Analysis**: Enable in GitHub Settings → Code Security → CodeQL
+- [x] **Least-Privilege Permissions**: `permissions:` block added to all 4 workflows (2026-04-05)
+- [ ] **Environment Protection Rules**: Require 2+ PR reviewers for production deployments (GitHub Settings — manual step)
+- [x] **Dependency Scanning**: Trivy integrated via `aquasecurity/trivy-action@master` with weekly cron `0 4 * * 1` (2026-04-05)
+- [x] **CodeQL Security Analysis**: Correct `init` → `autobuild` → `analyze@v3` sequence implemented in security-scan.yml (2026-04-05)
+
+### Permissions Model Reference (implemented 2026-04-05)
+
+| Workflow | permissions | Notes |
+|---|---|---|
+| ci.yml | contents: read, actions: read, checks: write, pull-requests: read | checks: write for CI status posting |
+| security-scan.yml | contents: read, actions: read, security-events: write | security-events: write required for SARIF upload |
+| deploy-staging.yml | contents: read, actions: read, deployments: write | deployments: write for GitHub deployment records |
+| deploy-production.yml | contents: read, actions: read, deployments: write | Same as staging; environment gate adds approval layer |
+
+### Critical Pattern: Rollback Jobs Require Full Git History
+
+Any rollback job using `git rev-parse HEAD^1` MUST set `fetch-depth: 0` on `actions/checkout`. The default
+shallow clone does not include parent commits. Failure to set this causes rollback to fail exactly when it
+is needed most.
 
 ## Compliance Requirements
 
