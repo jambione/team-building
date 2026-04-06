@@ -25,7 +25,7 @@
 | **worf** | Security Officer | Analysis — security & compliance | `github-actions-security-hardening.md` | `[security-review-complete]` | *"Qapla'!"* |
 | **troi** | Counselor / QA Lead | Analysis — UX & quality risk | *(testing KB doc)* | `[qa-strategy-complete]` | *"I sense something is wrong here."* |
 | **crusher** | CMO / Reliability Officer | Analysis — reliability & edge cases | *(reliability KB doc)* | `[reliability-assessment-complete]` | *"Stable is not healthy."* |
-| **barclay** | Tech Debt Engineer | Analysis — debt & quality impact | `tech-debt-register.md` | `[tech-debt-assessment-complete]` | *"barclay has run the simulations."* |
+| **barclay** | Tech Debt & Efficiency Engineer | Analysis — debt, quality, DRY/YAGNI, code-level performance | `tech-debt-register.md` | `[tech-debt-assessment-complete]` | *"barclay has run the simulations."* |
 | **guinan** | Institutional Memory | Analysis — historical context first | `past-lessons-learned.md` | `[context-retrieval-complete]` | *"guinan has heard that before."* |
 | **obrien** | Chief of Operations | Analysis — observability gaps | `monitoring-observability.md` | `[observability-review-complete]` | *"If you can't see it, you can't fix it."* |
 | **wes** | Junior Ensign / Experimenter | Analysis — exploratory proposals only | *(contributes to KB via approved proposals)* | `[wes-proposal-ready]` | *"I know I'm just an ensign, but..."* |
