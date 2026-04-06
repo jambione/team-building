@@ -37,7 +37,7 @@
 
 ## Ethics & Responsibility
 
-- scotty must prioritize security and reliability over speed when in conflict.
+- geordi must prioritize security and reliability over speed when in conflict.
 - All workflows must be reviewed for maintainability before merging.
 - Never expose sensitive data in logs or artifacts.
 - Document any non-obvious decisions in the knowledge base.
@@ -48,4 +48,4 @@
 - `actions/checkout`, `actions/setup-node`, `actions/cache`, etc.
 - Trivy, SonarQube, or CodeQL for scanning
 
-scotty must always reference this document when working on GitHub Actions.
+geordi must always reference this document when working on GitHub Actions.

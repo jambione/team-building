@@ -1,4 +1,5 @@
 # Team Health Assessment — TNG Crew Evaluation
+
 ## Project: team-building | Stardate: 2026-04-05
 
 **Orchestrator:** picard  
@@ -11,7 +12,7 @@
 
 The TNG crew conducted a full-spectrum health evaluation of the project at
 `c:\Users\jonmb\Desktop\Claude\team-building`. The project possesses a well-intentioned
-architectural foundation and a strong knowledge base built by the prior kirk-era crew.
+architectural foundation and a strong knowledge base built by the prior picard-era crew.
 However, a consistent and critical gap exists between documented best practices and
 actual workflow implementation. Placeholder logic pervades the deployment, verification,
 and rollback systems. Multiple high-priority security and reliability issues require
@@ -24,6 +25,7 @@ immediate remediation before this project can be considered production-ready.
 ## 1. Architecture & System Design (data)
 
 ### Findings
+
 - Four active workflow files present: `ci.yml`, `deploy-staging.yml`, `deploy-production.yml`,
   `security-scan.yml`. Structure aligns with the single-responsibility boundary model in the
   knowledge base.
@@ -36,6 +38,7 @@ immediate remediation before this project can be considered production-ready.
   suggesting this repository is a workflow/documentation template rather than a deployed application.
 
 ### Recommendations
+
 - Remove `ci.yml.tmp` immediately.
 - Upgrade all workflows to `actions/setup-node@v4` and `NODE_VERSION: '20'`.
 - Implement matrix builds as specified in `ci-cd-pipeline-recommendations.md`.
@@ -45,6 +48,7 @@ immediate remediation before this project can be considered production-ready.
 ## 2. Operational Readiness (riker)
 
 ### Findings
+
 - CI pipeline job graph is well-structured: `prepare` → `build` → parallel (`test`, `lint`,
   `security-scan`) → `deploy-staging`. Dependency chain is logical.
 - `deploy-staging` in `ci.yml` runs without any environment protection gate or manual approval
@@ -57,6 +61,7 @@ immediate remediation before this project can be considered production-ready.
 - `post-deploy-verification` runs with `if: always()` — correct — but is also a placeholder.
 
 ### Recommendations
+
 - Define and document the `main` → `production` branch promotion process.
 - Add an environment protection rule to `deploy-staging` requiring at least one reviewer.
 - Implement real rollback logic (e.g., previous container tag promotion or blue/green switch).
@@ -67,6 +72,7 @@ immediate remediation before this project can be considered production-ready.
 ## 3. CI/CD Engineering (geordi)
 
 ### Findings
+
 - **Critical bug:** All jobs in `ci.yml` set `cache: 'actions/cache'` in `setup-node`. The correct
   value is `cache: 'npm'`. This means npm dependency caching is broken, causing full reinstall on
   every run. Estimated unnecessary overhead: 2-3 minutes per workflow execution.
@@ -79,6 +85,7 @@ immediate remediation before this project can be considered production-ready.
 - No step-level `timeout-minutes` values are set in active workflows (only job-level in the draft).
 
 ### Recommendations
+
 - Fix `cache: 'npm'` in all `setup-node` steps immediately.
 - Replace all `npm install` with `npm ci --ignore-scripts`.
 - Add step-level timeouts to all long-running steps.
@@ -90,6 +97,7 @@ immediate remediation before this project can be considered production-ready.
 ## 4. Security Posture (worf)
 
 ### Findings
+
 - **Critical:** `ci.yml` and `deploy-staging.yml` have NO `permissions:` block. They execute with
   GitHub's default permissions, which grant write access to repository contents and packages.
   This is a known attack surface for supply-chain compromise.
@@ -105,6 +113,7 @@ immediate remediation before this project can be considered production-ready.
   SARIF results to GitHub Security tab.
 
 ### Recommendations
+
 - Add `permissions:` blocks to ALL workflows, restricting to minimum required scope.
 - Fix CodeQL action reference: `github/codeql-action/analyze@v3`.
 - Remove `--legacy-peer-deps` flag; resolve peer dependency conflicts properly.
@@ -117,6 +126,7 @@ immediate remediation before this project can be considered production-ready.
 ## 5. Test Coverage & QA (troi)
 
 ### Findings
+
 - `TESTING.md` exists but contains only Cline chat startup instructions — not a test specification,
   test plan, or coverage strategy.
 - No `package.json` is present; the actual test framework, test scripts, and test files cannot be
@@ -129,6 +139,7 @@ immediate remediation before this project can be considered production-ready.
 - No test results are uploaded as workflow artifacts in the active `ci.yml` test job.
 
 ### Recommendations
+
 - Establish a formal test strategy document in the knowledge base.
 - Implement coverage reporting (e.g., `nyc`, `c8`, or Jest `--coverage`) with artifact upload.
 - Define and enforce a minimum coverage threshold (recommended: 80%).
@@ -141,6 +152,7 @@ immediate remediation before this project can be considered production-ready.
 ## 6. System Reliability & Long-Term Health (crusher)
 
 ### Findings
+
 - Knowledge base contains `incident-response-playbook.md` and `monitoring-observability.md` —
   strategically sound foundations that exist at the documentation layer.
 - **All deployment verification is placeholder.** `post-deploy-verification` in production,
@@ -157,6 +169,7 @@ immediate remediation before this project can be considered production-ready.
 - No `CODEOWNERS` file detected; there is no enforced review ownership for sensitive workflow files.
 
 ### Recommendations
+
 - Implement real smoke tests in post-deploy verification (health endpoint checks, critical
   path validation).
 - Implement real rollback logic (e.g., previous deployment tag promotion).
@@ -169,25 +182,25 @@ immediate remediation before this project can be considered production-ready.
 
 ## Consolidated Priority Matrix
 
-| Priority | Finding | Owner | Action |
-|----------|---------|-------|--------|
-| CRITICAL | No `permissions:` blocks on `ci.yml`, `deploy-staging.yml` | worf / geordi | Add least-privilege blocks immediately |
-| CRITICAL | `cache: 'actions/cache'` broken — caching non-functional | geordi | Fix to `cache: 'npm'` |
-| CRITICAL | CodeQL action misconfigured — security analysis non-functional | worf | Fix to `github/codeql-action/analyze@v3` |
-| HIGH | `npm install` instead of `npm ci` throughout | geordi | Replace all instances |
-| HIGH | Placeholder rollback logic in production deploy | riker / crusher | Implement real rollback |
-| HIGH | No test coverage reporting or enforcement | troi | Add coverage step + threshold gate |
-| HIGH | `ci.yml.tmp` technical debt file present | data | Delete file |
-| HIGH | `setup-node@v3` — outdated action version | data / geordi | Upgrade to `@v4` |
-| HIGH | No branch promotion gate `main` → `production` | riker | Define promotion workflow |
-| MEDIUM | No scheduled security scans | worf | Add weekly cron scan |
-| MEDIUM | No observability hooks in deployments | crusher | Add notification/metrics steps |
-| MEDIUM | No matrix builds implemented | data | Implement per knowledge base spec |
-| MEDIUM | `--legacy-peer-deps` flag in prepare job | worf | Remove; resolve conflicts properly |
-| MEDIUM | No step-level timeouts | geordi | Add timeouts to all long-running steps |
-| LOW | `README.md` empty of operational content | crusher | Populate with runbook and overview |
-| LOW | No `CODEOWNERS` file | worf | Create with workflow file assignments |
-| LOW | Third-party actions not SHA-pinned | worf / geordi | Pin all to digest hashes |
+| Priority | Finding                                                        | Owner           | Action                                   |
+| -------- | -------------------------------------------------------------- | --------------- | ---------------------------------------- |
+| CRITICAL | No `permissions:` blocks on `ci.yml`, `deploy-staging.yml`     | worf / geordi   | Add least-privilege blocks immediately   |
+| CRITICAL | `cache: 'actions/cache'` broken — caching non-functional       | geordi          | Fix to `cache: 'npm'`                    |
+| CRITICAL | CodeQL action misconfigured — security analysis non-functional | worf            | Fix to `github/codeql-action/analyze@v3` |
+| HIGH     | `npm install` instead of `npm ci` throughout                   | geordi          | Replace all instances                    |
+| HIGH     | Placeholder rollback logic in production deploy                | riker / crusher | Implement real rollback                  |
+| HIGH     | No test coverage reporting or enforcement                      | troi            | Add coverage step + threshold gate       |
+| HIGH     | `ci.yml.tmp` technical debt file present                       | data            | Delete file                              |
+| HIGH     | `setup-node@v3` — outdated action version                      | data / geordi   | Upgrade to `@v4`                         |
+| HIGH     | No branch promotion gate `main` → `production`                 | riker           | Define promotion workflow                |
+| MEDIUM   | No scheduled security scans                                    | worf            | Add weekly cron scan                     |
+| MEDIUM   | No observability hooks in deployments                          | crusher         | Add notification/metrics steps           |
+| MEDIUM   | No matrix builds implemented                                   | data            | Implement per knowledge base spec        |
+| MEDIUM   | `--legacy-peer-deps` flag in prepare job                       | worf            | Remove; resolve conflicts properly       |
+| MEDIUM   | No step-level timeouts                                         | geordi          | Add timeouts to all long-running steps   |
+| LOW      | `README.md` empty of operational content                       | crusher         | Populate with runbook and overview       |
+| LOW      | No `CODEOWNERS` file                                           | worf            | Create with workflow file assignments    |
+| LOW      | Third-party actions not SHA-pinned                             | worf / geordi   | Pin all to digest hashes                 |
 
 ---
 
@@ -199,7 +212,7 @@ immediate remediation before this project can be considered production-ready.
 - `post-deploy-verification` uses `if: always()` — correct sentinel pattern.
 - `rollback-on-failure` uses `if: failure()` — correct trigger condition.
 - Knowledge base is comprehensive, well-organized, and provides a clear remediation roadmap.
-- Prior crew (kirk-era) left actionable recommendations that remain valid and applicable.
+- Prior crew (picard-era) left actionable recommendations that remain valid and applicable.
 
 ---
 

@@ -147,6 +147,8 @@ _Was the Ready Room protocol followed? Did it surface what it needed to?_
 - [ ] All KB updates confirmed from crew
 - [ ] Lessons learned added to `past-lessons-learned.md`
 - [ ] `agent-performance-log.md` updated
+- [ ] Mission log filed at `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md`
+- [ ] Mission index updated at `knowledge_base/missions/mission-index.md`
 - [ ] guinan notified: session journal + debrief available for cross-session synthesis
 - [ ] ADR candidates handed to data for Sprint N
 

@@ -46,7 +46,8 @@
 10. **Mission Debrief** → picard fills `mission-debrief-template.md`
 11. **Session journal close** → picard marks `status: closed`; notifies guinan
 12. **Performance log update** → picard updates `agent-performance-log.md`
-13. **Close with "Make it so!"** — picard
+13. **Mission log** → picard files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
+14. **Close with "Make it so!"** — picard
 
 ---
 

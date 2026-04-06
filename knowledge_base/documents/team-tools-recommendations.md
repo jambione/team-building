@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Curated tool recommendations to help the IT team work more efficiently. Maintained by kirk, reviewed quarterly.
+Curated tool recommendations to help the IT team work more efficiently. Maintained by picard, reviewed quarterly.
 
 ---
 
@@ -45,7 +45,7 @@ chmod +x verify-index.sh
 | --------------------------- | ------------------------ | -------------------------------- | -------- |
 | **GitHub Issues Templates** | Standardized bug reports | All team members                 | HIGH     |
 | **Pull Request Reviewers**  | Code review assignment   | Senior developers (sulu, chekov) | HIGH     |
-| **Wiki/Notion Integration** | Cross-referencing docs   | kirk (orchestrator)              | MEDIUM   |
+| **Wiki/Notion Integration** | Cross-referencing docs   | picard (orchestrator)            | MEDIUM   |
 
 ---
 
@@ -83,7 +83,7 @@ mdsearch "incident" knowledge_base/documents/*.md
 | Tool                 | Use Case              | Team Member      | Priority |
 | -------------------- | --------------------- | ---------------- | -------- |
 | **markdown-toc-cli** | Generate TOC for docs | All team members | LOW      |
-| **shellcheck**       | Verify CLI scripts    | DevOps (scotty)  | MEDIUM   |
+| **shellcheck**       | Verify CLI scripts    | DevOps (geordi)  | MEDIUM   |
 
 ---
 
@@ -116,10 +116,10 @@ chmod +x check-kb-completeness.sh
 ```markdown
 ---
 Version History:
-    - 2026-04-05: kirk — Initial team tools and utilities recommendations document
+    - 2026-04-05: picard — Initial team tools and utilities recommendations document
 ---
 ```
 
 ---
 
-_Created: 2026-04-05 | Owner: kirk (orchestrator) | Review cadence: Quarterly_
+_Created: 2026-04-05 | Owner: picard (orchestrator) | Review cadence: Quarterly_

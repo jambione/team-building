@@ -1,5 +1,13 @@
 # Technical Debt Register
 
+## Current State
+
+**As of**: 2026-04-05  
+**Health**: GREEN  
+**Top active item**: TD-001 — `ci.yml.tmp` stray file (Low severity, geordi, Sprint 2). Net debt trend: stable after Sprint 1 remediation resolved all Critical and High items.
+
+---
+
 ## Purpose
 
 Centralized registry of known technical debt items across the codebase and infrastructure. Maintained by barclay. Reviewed by picard at each sprint close. Items are categorized by severity and tracked to resolution.

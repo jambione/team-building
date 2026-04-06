@@ -1,8 +1,30 @@
 # Architecture Decision Records (ADRs) — IT Team Template
 
+## Current State
+
+**As of**: 2026-04-05  
+**Health**: GREEN  
+**Top active item**: ADR-003 (Built-in Language Features First) is newest — verify all new dependency introductions against it. Owner is data for Sprint 2 onward.
+
+---
+
+## ADR Index
+
+Agents: scan this table before beginning architecture analysis. Do not propose or implement anything that contradicts an Accepted ADR without explicitly flagging and resolving the conflict first.
+
+| ID | Title | Status | Date | Domain | Owner |
+|----|-------|--------|------|--------|-------|
+| ADR-001 | Composition Over Inheritance Pattern | Accepted | 2026-03-15 | Architecture | data |
+| ADR-002 | Stateless Component Design | Accepted | 2026-03-20 | Architecture | data |
+| ADR-003 | Built-in Language Features First | Accepted | 2026-04-01 | Architecture | data |
+
+> data adds a row here when picard approves a new ADR. The full ADR text lives in the sections below.
+
+---
+
 ## Purpose
 
-Document significant architectural decisions with context, alternatives considered, and rationale. Updated quarterly by spock.
+Document significant architectural decisions with context, alternatives considered, and rationale. Updated quarterly by data.
 
 ---
 
@@ -38,7 +60,7 @@ Document significant architectural decisions with context, alternatives consider
 
 ---
 
-## Historical ADRs — spock's Contributions
+## Historical ADRs — data's Contributions
 
 ### ADR-001: Composition Over Inheritance Pattern (2026-03-15)
 
@@ -82,4 +104,4 @@ git log --since="1 month ago" --oneline -- "*arch*" | head -20
 
 ---
 
-_Created: 2026-04-04 | Owner: spock (Architect) | Review Cadence: Quarterly_
+_Created: 2026-04-04 | Owner: data (Architect) | Review Cadence: Quarterly_

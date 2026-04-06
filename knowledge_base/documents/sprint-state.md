@@ -1,0 +1,77 @@
+# Sprint State
+
+> Single source of truth for current sprint context. picard updates this at each sprint boundary and after each mission close.
+> Every agent reads this before beginning Ready Room analysis or Bridge execution.
+
+**Owner**: picard  
+**Last Updated**: 2026-04-05
+
+---
+
+## Current Sprint
+
+| Field | Value |
+|-------|-------|
+| **Sprint** | Sprint 2 |
+| **Sprint Dates** | 2026-04-06 – 2026-04-19 |
+| **Sprint Goal** | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review |
+| **Health** | GREEN |
+
+---
+
+## Active Missions
+
+| Slug | Description | Status | Owner |
+|------|-------------|--------|-------|
+| _(none open)_ | | | |
+
+---
+
+## Carry-Forward Items (from prior sprints)
+
+Items not resolved last sprint. Every agent should know these exist before starting a new mission — they may constrain scope or create dependencies.
+
+| ID | Item | Owner | Source Mission | Priority | Target Sprint |
+|----|------|-------|----------------|----------|---------------|
+| CF-001 | Rate-limit handling for burst PR windows | obrien + geordi | `claude-api-pr-review` | P3 | Sprint 2 |
+| CF-002 | Multi-agent review panel (WES-PROPOSAL-2) | wes | `claude-api-pr-review` | deferred | Sprint 3 |
+| CF-003 | AI review comment engagement metric | troi | `claude-api-pr-review` | P3 | Sprint 4 |
+
+---
+
+## Open Conditional Close Checklists
+
+| Mission Slug | Item | Owner | Due Sprint | Verification Criterion | Status |
+|--------------|------|-------|------------|----------------------|--------|
+| — | — | — | — | — | — |
+
+> picard reviews all `pending` items at every sprint close. Slipped items trigger a Ready Room re-open before any execution on that mission begins.
+
+---
+
+## Tech Debt Snapshot (from barclay)
+
+Current debt health from `tech-debt-register.md` — top active items only.
+
+| ID | Item | Severity | Owner | Target Sprint |
+|----|------|----------|-------|---------------|
+| TD-001 | `ci.yml.tmp` stray file — malformed YAML draft | Low | geordi | Sprint 2 |
+
+> For full register, read `knowledge_base/documents/tech-debt-register.md`.
+
+---
+
+## Prior Sprint Summary
+
+### Sprint 1 — 2026-04-01 to 2026-04-05
+
+| Mission | Status | P1s | Open Items |
+|---------|--------|-----|------------|
+| Health Assessment & CI/CD Remediation | success | all resolved | 5 (geordi-heavy) |
+| Claude API PR Review Integration | success | 2/2 resolved | 3 carried forward |
+
+**Sprint 1 Outcome**: CI/CD health rating upgraded from AMBER to GREEN. Claude API PR review shipped to CI. All 13 critical/high/medium Sprint 1 issues resolved.
+
+---
+
+*"The record does not lie."* — guinan

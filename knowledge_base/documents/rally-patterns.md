@@ -3,8 +3,8 @@
 ## Standard Handling Process
 
 - Always pull the **full story** including description and acceptance criteria before beginning work.
-- Map each acceptance criterion directly to test cases (bones uses this).
-- Flag any ambiguous, incomplete, or conflicting requirements back to kirk immediately.
+- Map each acceptance criterion directly to test cases (crusher uses this).
+- Flag any ambiguous, incomplete, or conflicting requirements back to picard immediately.
 
 ## Common Patterns
 

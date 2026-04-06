@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Database migration patterns and strategies for production systems. Maintained by kirk, reviewed quarterly.
+Database migration patterns and strategies for production systems. Maintained by picard, reviewed quarterly.
 
 ---
 
@@ -113,10 +113,10 @@ done
 ```markdown
 ---
 Version History:
-    - 2026-04-05: kirk — Initial database migration strategies document
+    - 2026-04-05: picard — Initial database migration strategies document
 ---
 ```
 
 ---
 
-_Created: 2026-04-05 | Owner: kirk (orchestrator) | Review cadence: Quarterly_
+_Created: 2026-04-05 | Owner: picard (orchestrator) | Review cadence: Quarterly_

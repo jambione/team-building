@@ -134,6 +134,32 @@ The Ready Room is where all decisions are made before action begins. No crew mem
 - If picard does not issue an ACK, the handoff is considered incomplete and the crew member's contribution is at risk of being lost.
 - picard issues ACKs for every specialist trigger received, even when acting as relay between crew members.
 
+**Running Context Relay Protocol**:
+
+Before invoking each crew member during the Ready Room, picard produces a brief **Running Context Summary** block. This ensures every agent receives all prior findings — not just their direct briefing. Format:
+
+```
+▶ picard — briefing <agent> before <analysis type>.
+
+Running context so far:
+- Mission Briefing Packet: [sprint, related missions, relevant open items]
+- guinan flagged: [one-line summary, or "nothing material"]
+- <agent-N> flagged: [one-line summary of their key finding]
+- PRIORITY items open: [IDs and owning agents, or "none yet"]
+- WES proposals pending: [IDs, or "none yet"]
+```
+
+This block is produced by picard before every invocation — no exceptions. Agents must not begin analysis without it. A crew member acting without a Running Context Summary may duplicate work already done or contradict a prior finding.
+
+**Context to Load Before Orchestrating**:
+
+At the start of every mission, picard reads these before opening the Ready Room:
+
+1. `knowledge_base/documents/sprint-state.md` — current sprint context
+2. `knowledge_base/missions/mission-index.md` — prior missions and carry-forward items
+3. `knowledge_base/documents/agent-performance-log.md` — open conditional close checklists; crew load
+4. `knowledge_base/documents/index.md` — which KB documents are current and owned
+
 **Session Journal Protocol**:
 
 - At the start of every new mission, picard opens a session journal using the template at `knowledge_base/sessions/session-template.md`.

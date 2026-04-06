@@ -12,7 +12,7 @@ Standardized approach for handling defects, bugs, and production issues across t
 
 | Level  | Name          | Auto-Assign              | SLA      | Example                    |
 | ------ | ------------- | ------------------------ | -------- | -------------------------- |
-| **P1** | Critical Bug  | kirk → On-call Lead      | 2 hours  | Data loss, complete outage |
+| **P1** | Critical Bug  | picard → On-call Lead    | 2 hours  | Data loss, complete outage |
 | **P2** | High Priority | Automatic (GitHub Issue) | 8 hours  | Major feature broken       |
 | **P3** | Medium        | Queue for next sprint    | 48 hours | UI bug, non-blocking       |
 
@@ -60,7 +60,7 @@ Standardized approach for handling defects, bugs, and production issues across t
 
 ## Defect Triage Process
 
-### Daily Triage Meeting — kirk Leads
+### Daily Triage Meeting — picard Leads
 
 ```mermaid
 graph LR
@@ -81,7 +81,7 @@ graph LR
 ### Phase 1 — Triage & Classification (First Hour)
 
 ```bash
-# kirk performs initial triage
+# picard performs initial triage
 gh issue list --state=open --label="bug" --limit 20
 
 # Tag with severity if not already tagged
@@ -105,7 +105,7 @@ git checkout -b fix/<issue-number>-<short-description>
 ### Phase 4 — Verification & Regression Testing
 
 - Developer tests the fix against reproduction steps
-- QA team (bones) performs regression testing
+- QA team (crusher) performs regression testing
 - Document any edge cases discovered
 
 ---
@@ -175,10 +175,10 @@ git log --since="2 weeks ago" --oneline -- "*auth*" | head -20
 ```markdown
 ---
 Version History:
-    - 2026-04-04: kirk — Initial defect management process creation
+    - 2026-04-04: picard — Initial defect management process creation
 ---
 ```
 
 ---
 
-_Created: 2026-04-04 | Owner: kirk (Quality Lead) | Review Cadence: Quarterly_
+_Created: 2026-04-04 | Owner: picard (Quality Lead) | Review Cadence: Quarterly_

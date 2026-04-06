@@ -1,5 +1,13 @@
 # Monitoring & Observability — Logging, Metrics, Alerting Standards
 
+## Current State
+
+**As of**: 2026-04-05  
+**Health**: AMBER  
+**Top active item**: Claude API PR review metrics (latency, cost, skip rate) added to CI — Grafana panel required before go-live. Rate-limit alerting for burst PR windows deferred to Sprint 2 (CF-001).
+
+---
+
 ## Purpose
 
 Standardized monitoring practices for production systems. Maintained by obrien, reviewed quarterly.
@@ -96,10 +104,10 @@ memory_usage_bytes{gc="young"}                       # Gauge
 
 ### Availability Targets
 
-| Environment | SLO Target | Measurement Window |
-|-------------|-----------|-------------------|
-| Production | 99.9% uptime | Rolling 30 days |
-| Staging | 99.0% uptime | Rolling 7 days |
+| Environment | SLO Target   | Measurement Window |
+| ----------- | ------------ | ------------------ |
+| Production  | 99.9% uptime | Rolling 30 days    |
+| Staging     | 99.0% uptime | Rolling 7 days     |
 
 ### Error Budget Policy
 
@@ -111,13 +119,13 @@ memory_usage_bytes{gc="young"}                       # Gauge
 
 ## 7. Current Observability Gaps (as of 2026-04-05)
 
-| Gap | Severity | Owner | Sprint |
-|-----|----------|-------|--------|
-| No application source code — nothing to instrument | Critical | data | Sprint 3 |
-| No observability platform configured | High | obrien | Sprint 3 |
-| Deployment telemetry events not emitted from workflows | High | geordi | Sprint 2 |
-| No SLO burn-rate alerts defined | High | obrien | Sprint 3 |
-| No structured logging library integrated | Medium | data | Sprint 3 |
+| Gap                                                    | Severity | Owner  | Sprint   |
+| ------------------------------------------------------ | -------- | ------ | -------- |
+| No application source code — nothing to instrument     | Critical | data   | Sprint 3 |
+| No observability platform configured                   | High     | obrien | Sprint 3 |
+| Deployment telemetry events not emitted from workflows | High     | geordi | Sprint 2 |
+| No SLO burn-rate alerts defined                        | High     | obrien | Sprint 3 |
+| No structured logging library integrated               | Medium   | data   | Sprint 3 |
 
 ---
 
@@ -126,7 +134,7 @@ memory_usage_bytes{gc="young"}                       # Gauge
 ```markdown
 ---
 Version History:
-    - 2026-04-05: kirk — Initial monitoring and observability standards document
+    - 2026-04-05: picard — Initial monitoring and observability standards document
     - 2026-04-05: obrien — Added Three Core Operational Questions, SLO definitions, observability gaps; updated ownership
 ---
 ```

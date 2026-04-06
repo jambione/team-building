@@ -143,6 +143,8 @@ _All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
 - [ ] Conflict resolution log updated
 - [ ] Agent performance log updated
 - [ ] Mission Debrief filled (`mission-debrief-template.md`)
+- [ ] Mission log filed at `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md`
+- [ ] Mission index updated at `knowledge_base/missions/mission-index.md`
 - [ ] guinan notified of session journal availability for cross-session continuity
 
 **Session Status**: open / **closed**

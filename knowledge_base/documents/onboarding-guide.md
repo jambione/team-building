@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Standardized onboarding procedures for new team members. Maintained by kirk, reviewed quarterly.
+Standardized onboarding procedures for new team members. Maintained by picard, reviewed quarterly.
 
 ---
 
@@ -104,4 +104,4 @@ grep -l "onboarding-guide.md" knowledge_base/documents/*.md > /dev/null && echo 
 
 ---
 
-_Created: 2026-04-04 | Owner: kirk (orchestrator) | Review cadence: Quarterly_
+_Created: 2026-04-04 | Owner: picard (orchestrator) | Review cadence: Quarterly_

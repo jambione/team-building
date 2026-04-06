@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Document scalable, maintainable system design patterns the team uses consistently. Updated quarterly by spock.
+Document scalable, maintainable system design patterns the team uses consistently. Updated quarterly by data.
 
 ---
 
@@ -101,4 +101,4 @@ git log --since="1 month ago" --oneline -- "*arch*" | head -20
 
 ---
 
-_Created: 2026-04-04 | Owner: spock (Architect) | Review Cadence: Quarterly_
+_Created: 2026-04-04 | Owner: data (Architect) | Review Cadence: Quarterly_

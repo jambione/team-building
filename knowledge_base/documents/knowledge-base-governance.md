@@ -28,9 +28,9 @@ Examples:
 
 | Document                         | Primary Owner | Review Cadence | Last Reviewed |
 | -------------------------------- | ------------- | -------------- | ------------- |
-| architecture-principles.md       | spock         | Quarterly      | TBD           |
-| github-actions-best-practices.md | scotty        | Monthly        | TBD           |
-| devops-best-practices.md         | scotty        | Quarterly      | TBD           |
+| architecture-principles.md       | data          | Quarterly      | TBD           |
+| github-actions-best-practices.md | geordi        | Monthly        | TBD           |
+| devops-best-practices.md         | geordi        | Quarterly      | TBD           |
 
 ---
 
@@ -60,8 +60,8 @@ Each significant update should be logged at the bottom of the document:
 ```markdown
 ---
 Version History:
-    - 2026-04-04: kirk — Added CI/CD pipeline recommendations section
-    - 2026-03-15: scotty — Updated caching best practices
+    - 2026-04-04: picard — Added CI/CD pipeline recommendations section
+    - 2026-03-15: geordi — Updated caching best practices
 ---
 ```
 
@@ -105,10 +105,10 @@ The team should maintain an index document that lists all active documents with 
 
 ## Ethics & Responsibility
 
-- kirk must review and update this governance policy quarterly
+- picard must review and update this governance policy quarterly
 - Any team member can suggest improvements to this policy by creating a draft PR
 - Documents that violate these standards may be archived without warning after 60 days notice
 
 ---
 
-_Created: 2026-04-04 | Owner: kirk (orchestrator)_
+_Created: 2026-04-04 | Owner: picard (orchestrator)_

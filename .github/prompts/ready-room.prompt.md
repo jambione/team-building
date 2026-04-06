@@ -31,6 +31,34 @@ picard states:
 
 ---
 
+## STEP 1B — Mission Briefing Packet
+
+Before calling guinan, picard compiles a **Mission Briefing Packet** and posts it in the conversation. This front-loads all relevant context so every agent that follows starts informed.
+
+picard reads and summarizes:
+
+```
+## Mission Briefing Packet — <mission-slug>
+
+| Item | Detail |
+|------|--------|
+| Current sprint | [from sprint-state.md] |
+| Sprint goal | [from sprint-state.md] |
+| Related prior missions | [slugs from mission-index.md with overlapping domain] |
+| Carry-forward items in scope | [CF-IDs from sprint-state.md relevant to this mission] |
+| Open conditional close checklists | [any pending items from agent-performance-log.md] |
+| Relevant KB docs | [list of docs the crew will need — picard picks, not prescriptive] |
+| Known tech debt in scope | [top items from tech-debt-register.md Current State] |
+| Relevant ADRs | [ADR IDs from architecture-decision-records.md ADR Index] |
+```
+
+**Rules**:
+- If sprint-state.md is not current (last updated more than 1 sprint ago), picard updates it before proceeding
+- If mission-index.md has no related missions, picard states "no prior missions in this domain" — this is useful information, not an error
+- The Briefing Packet is posted in the conversation — it is not log-only
+
+---
+
 ## STEP 2 — Historical Context (guinan)
 
 Before analysis begins, guinan surfaces relevant history.

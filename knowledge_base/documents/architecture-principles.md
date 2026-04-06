@@ -1,5 +1,13 @@
 # Architecture Principles
 
+## Current State
+
+**As of**: 2026-04-05  
+**Health**: GREEN  
+**Top active item**: All foundational patterns (composition over inheritance, stateless components, built-in features first) accepted and active. ADR-001 through ADR-003 all in force. No active violations flagged.
+
+---
+
 ## Foundational Rules
 
 - Keep solutions as simple as possible, but no simpler.
