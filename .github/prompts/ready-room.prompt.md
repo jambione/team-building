@@ -53,23 +53,27 @@ picard ACKs: `[context-retrieval-received ✓ picard]`
 
 picard-thinking leads this step as the deliberation operator.
 
+**Brevity rule**: Every crew member leads with their key finding in one sentence, then bullets (max 5). No prose paragraphs.
+
+**Action announcement rule**: Every crew member announces their action on one line before producing output: `▶ <agent> — <what they are doing>`
+
 The following crew analyze in **parallel** — analysis only, no implementation:
 
-- **picard-thinking**: Perform deep architectural and ethical analysis. What are the full trade-off space and second-order consequences? Produce a structured options matrix. End with: `picard-thinking returns findings to picard. [complex-task-complete]`
+- **picard-thinking**: Deep architectural + ethical analysis. Options matrix (bullet table). Trade-offs and second-order consequences. End with: `picard-thinking returns findings to picard. [complex-task-complete]`
 
-- **data**: Provide architectural assessment. Which design patterns apply? What are the structural implications? Identify any ADR that should be created. Flag architectural risks as `[PRIORITY: P1/P2/P3 | data | <summary>]`. End with: `data returns control to picard. [arch-design-complete]`
+- **data**: Architecture assessment — patterns, structural implications, ADR candidates. Flag risks as `[PRIORITY: P1/P2/P3 | data | <summary>]`. End with: `data returns control to picard. [arch-design-complete]`
 
-- **worf**: Identify all security implications of each option under consideration. Rate each risk with your honor-based taxonomy (DISHONORABLE / WEAK / CARELESS / MINOR). Flag blockers as `[PRIORITY: P1 | worf | <summary>]`. End with: `worf returns control to picard. [security-review-complete]`
+- **worf**: Security implications of each option. Rate each: DISHONORABLE / WEAK / CARELESS / MINOR. Flag blockers as `[PRIORITY: P1 | worf | <summary>]`. End with: `worf returns control to picard. [security-review-complete]`
 
-- **troi**: Assess UX and quality risks. What will users or future maintainers experience? What QA concerns exist? Flag quality blockers as `[PRIORITY: P1/P2/P3 | troi | <summary>]`. End with: `troi returns control to picard. [qa-strategy-complete]`
+- **troi**: UX and quality risks — what will users and future maintainers experience? Flag blockers as `[PRIORITY: P1/P2/P3 | troi | <summary>]`. End with: `troi returns control to picard. [qa-strategy-complete]`
 
-- **barclay**: Review the proposed approach for debt implications. Will this introduce new technical debt? Does existing debt constrain the options? Flag as `[PRIORITY: P1/P2/P3 | barclay | <summary>]`. End with: `barclay returns control to picard. [tech-debt-assessment-complete]`
+- **barclay**: Debt implications — new debt introduced, existing debt that constrains options. Flag as `[PRIORITY: P1/P2/P3 | barclay | <summary>]`. End with: `barclay returns control to picard. [tech-debt-assessment-complete]`
 
-- **crusher**: Flag any reliability or edge-case risks. Apply the diagnostic model: what could degrade slowly and not be caught? Flag as `[PRIORITY: P1/P2/P3 | crusher | <summary>]`. End with: `crusher returns control to picard. [reliability-assessment-complete]`
+- **crusher**: Reliability and edge-case risks — what could degrade slowly and go undetected? Flag as `[PRIORITY: P1/P2/P3 | crusher | <summary>]`. End with: `crusher returns control to picard. [reliability-assessment-complete]`
 
-- **obrien**: Flag observability gaps in the proposed approach. Can we see the system's health after this change? Flag as `[PRIORITY: P1/P2/P3 | obrien | <summary>]`. End with: `obrien returns control to picard. [observability-review-complete]`
+- **obrien**: Observability gaps — can we see system health after this change? Flag as `[PRIORITY: P1/P2/P3 | obrien | <summary>]`. End with: `obrien returns control to picard. [observability-review-complete]`
 
-- **wes** *(optional — invoke for exploratory missions)*: Submit up to 3 alternative proposals the crew may not have considered, using the `WES-PROPOSAL-<N>` format. wes does not decide — wes proposes. End with: `wes has submitted proposals for picard's review. [wes-proposal-ready]`
+- **wes** *(optional — invoke for exploratory missions)*: Up to 3 alternative proposals in `WES-PROPOSAL-<N>` format. wes proposes only. End with: `wes has submitted proposals for picard's review. [wes-proposal-ready]`
 
 ---
 
@@ -163,17 +167,70 @@ riker is NOT authorized to engage until picard verifies all checklist items and 
 
 picard updates the session journal with the MDR, PRIORITY Triage Summary, and close signal used.
 
-picard addresses riker:
+picard hands off immediately to riker — no additional prompt needed:
 
 *"Number One — the Ready Room is closed. The MDR is in the journal. Engage."*
 
-riker takes the MDR and coordinates execution on the Bridge.
+**riker engages now.** riker reads the MDR Crew Assignments table and produces an Execution Coordination Report (bullets: parallel tasks, sequential tasks, dependencies). riker begins executing without waiting for further input.
 
 ---
 
-## STEP 7 — Mission Close (post-execution)
+## STEP 7 — Track C Review (hardening pass — displayed in chat)
 
-After the Bridge crew has executed:
+After Bridge execution, the following specialists publish their review **directly in the conversation** using the standard review block format. This is not optional and not log-only — the crew's findings must be visible.
+
+Each review block:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔴 WORF — Security Review  [mission-slug]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERDICT: PASS / FAIL / CONDITIONAL
+[findings as bullets — lead with verdict on each item from MDR]
+worf returns control to picard. [security-review-complete]
+```
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟡 TROI — UX & Quality Review  [mission-slug]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERDICT: PASS / FAIL / CONDITIONAL
+[findings as bullets]
+troi returns control to picard. [qa-strategy-complete]
+```
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🟠 CRUSHER — Reliability Review  [mission-slug]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERDICT: PASS / FAIL / CONDITIONAL
+[findings as bullets]
+crusher returns control to picard. [reliability-assessment-complete]
+```
+
+After all three reviews, picard classifies each open item and issues a **Mission Go/No-Go**:
+
+| Tier | When | Signal |
+|------|------|--------|
+| **Fix-in-place** | Bug or missed implementation — decision still valid | `[FIX-IN-PLACE: <item> — Owner: <agent>]` → riker fixes, reviewer re-verifies in chat |
+| **Scoped Ready Room** | Gap reveals a missing decision | `[SCOPED-READY-ROOM: <item> — Crew: <agents>]` → targeted analysis, scoped Decision Record, then re-review |
+| **Full Reopen** | MDR decision is invalid | `[READY-ROOM-REOPEN: <mission-slug>: <reason>]` → halt execution, full Ready Room from Step 1 |
+
+After fixes or a scoped Ready Room, the owning reviewer re-runs their review block in chat. picard issues an updated Go/No-Go.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚫ PICARD — Mission Go/No-Go  [mission-slug]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GO / NO-GO
+[one line per open item, owner, sprint]
+```
+
+---
+
+## STEP 8 — Mission Close (post-execution)
+
+After Track C reviews and Go/No-Go:
 
 - All specialists update their domain KB documents
 - picard fills the Mission Debrief using `knowledge_base/sessions/mission-debrief-template.md`

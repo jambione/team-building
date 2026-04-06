@@ -66,6 +66,22 @@ When in doubt: **Ready Room first. Bridge second.**
 
 ---
 
+## Track C Review Loop Protocol
+
+When Track C (worf / troi / crusher) issues a **CONDITIONAL** or **FAIL** verdict, picard classifies each open item into one of three tiers and signals the appropriate response in the Go/No-Go:
+
+| Tier | Criteria | Response |
+|------|----------|----------|
+| **Fix-in-place** | Bug or missed implementation — decision is still valid, work just incomplete | riker fixes inline. Owning reviewer re-verifies. No Ready Room needed. Signal: `[FIX-IN-PLACE: <item> — Owner: <agent>]` |
+| **Scoped Ready Room** | Gap reveals a missing decision — e.g., a feature was never designed, a constraint was wrong | picard opens a **scoped Ready Room** for that item only. Only the relevant crew members participate. Full MDR not required — a scoped Decision Record suffices. Signal: `[SCOPED-READY-ROOM: <item> — Crew: <agents>]` |
+| **Full Ready Room Reopen** | Track C reveals the core MDR decision is invalid — wrong approach, wrong architecture, or a P1 risk was missed entirely | picard reopens the full Ready Room. `[MDR-INVALIDATED: <mission-slug>: <reason>]` is issued. riker halts all execution. Signal: `[READY-ROOM-REOPEN: <mission-slug>: <reason>]` |
+
+**Default rule**: Fix-in-place for bugs. Scoped Ready Room for design gaps. Full reopen for invalidated decisions. When in doubt, picard errs toward a Scoped Ready Room over a Fix-in-place.
+
+After fixes or a scoped Ready Room, the owning Track C reviewer **re-runs their review block** in chat and issues a final PASS or FAIL. picard then issues an updated Go/No-Go.
+
+---
+
 ## PRIORITY Tag Protocol
 
 Any crew member may raise a PRIORITY flag during the Ready Room:
@@ -107,6 +123,49 @@ riker is **not authorized to engage** until every item on the Pre-req Checklist 
 **Conditional Close Expiry**: If a conditional close's Pre-req Checklist is not fully completed within **2 sprints** of the conditional close date, the Ready Room expires automatically. picard must re-run the full Ready Room from Step 1 before execution may begin. Rationale: after 2 sprints, the MDR context is stale, crew KB documents have drifted, and the analysis is no longer valid.
 
 **Sprint-Close Pre-req Review**: At every sprint close, picard reviews all open conditional close checklists in `agent-performance-log.md`. For each unchecked item: picard confirms status with the owning agent and either verifies completion or escalates the slip.
+
+---
+
+## Action Announcement Protocol
+
+**Default: Hybrid mode.** picard announces each agent delegation in the main conversation before the subagent runs. This ensures crew attribution is always visible to the user.
+
+### Hybrid mode (default)
+
+picard prints the announcement in the main conversation, then delegates to the subagent:
+
+```
+▶ geordi — styling SSOLoginPage and CallbackPage
+```
+*[subagent runs and returns result]*
+
+```
+▶ worf — security review of style-sso-pages
+```
+*[subagent runs and returns result]*
+
+One announcement per agent delegation. The user sees who is working and why before the result appears.
+
+### Main conversation mode (opt-in)
+
+Use when the user wants to watch an agent work at the tool-call level. picard announces, then runs the actions directly in the main conversation without a subagent. Every Read, Write, and Edit is attributed:
+
+```
+▶ worf — reading src/services/ssoService.js for token storage review
+```
+*[Read tool call visible]*
+```
+▶ worf — reviewing logout() for 5xx handling
+```
+*[findings output]*
+
+Invoke with: *"watch [agent] work"* or *"run [agent] in main conversation"*.
+
+### Rules (both modes)
+- Announcements are printed in the main conversation before the work — never batched after.
+- One line only. Present tense. No preamble.
+- picard uses it too: `▶ picard — opening Ready Room for build-sso-auth`
+- Inside a subagent, agents still announce internally — visible in subagent output if inspected.
 
 ---
 
