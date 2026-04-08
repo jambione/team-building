@@ -128,14 +128,29 @@ _All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
 
 ---
 
+## KB Update Audit
+
+_Reconcile every `[NEW DISCOVERY]` flag against a `[KB-UPDATED]` signal before mission close. Any gap blocks close._
+
+| [NEW DISCOVERY] | Raised By | KB Doc Assigned | [KB-UPDATED] Signal Received | Status |
+|-----------------|-----------|-----------------|------------------------------|--------|
+| | | | | pending / verified / deferred |
+
+**picard emits `[LEARNING-LOOP-VERIFIED: <mission-slug>]` only when all rows are verified.**
+
+---
+
 ## Session Close
 
 - [ ] Ready Room closed with `[READY-ROOM-CLOSED]` or `[READY-ROOM-CONDITIONAL-CLOSE]` before execution began
 - [ ] If conditional close: Pre-req Checklist recorded with owner + sprint for every item
 - [ ] If conditional close: Full `[READY-ROOM-CLOSED]` issued after all checklist items verified before riker engaged
+- [ ] Pre-close Crew Checklist run — all mandatory agents for mission type ACKed
 - [ ] All P1 PRIORITY items resolved (or conditionally resolved with checklist) before Ready Room closed
 - [ ] Mission Decision Record (MDR) produced by picard-thinking
-- [ ] All crew have updated their domain KB documents
+- [ ] Execution Verification Report received from riker before Track C review
+- [ ] All crew have emitted `[KB-UPDATED]` or `[KB-NO-CHANGE]` signals
+- [ ] KB Update Audit table complete — `[LEARNING-LOOP-VERIFIED]` emitted
 - [ ] All `[NEW DISCOVERY]` flags resolved or explicitly deferred with owner + sprint
 - [ ] All `[EXTERNAL-EVENT]` signals raised during this session logged in `agent-performance-log.md` External Event Log
 - [ ] All WES proposals dispositioned (approved / rejected / deferred)

@@ -67,6 +67,112 @@ When in doubt: **Ready Room first. Bridge second.**
 
 ---
 
+## Required Crew Matrix
+
+picard consults this table before closing the Ready Room. A mission may not reach `[READY-ROOM-CLOSED]` until every **mandatory** agent for that mission type has provided findings and been ACKed by picard.
+
+| Mission Type | Mandatory Crew | Recommended Crew | Optional |
+|-------------|---------------|-----------------|---------|
+| **Infrastructure / CI change** | geordi, worf, obrien | data, barclay, crusher | troi, wes |
+| **Feature / application** | data, troi, worf | barclay, crusher, obrien | geordi, wes |
+| **Security audit** | worf, obrien | data, barclay, crusher | troi, wes |
+| **Refactor / debt** | barclay, data | troi, crusher | worf, obrien, wes |
+| **Reliability / incident** | crusher, obrien | data, geordi | worf, troi, wes |
+| **Sprint planning** | all active domain leads | — | wes |
+
+**Universal rules (all mission types)**:
+- guinan is always first — no mission type exempts her
+- picard-thinking produces the MDR on any mission with architectural, security, or cross-cutting decisions
+- riker does not engage until `[READY-ROOM-CLOSED]`
+
+**Pre-close validation** (picard runs this before issuing `[READY-ROOM-CLOSED]`):
+```
+Pre-close Crew Checklist — <mission-slug>
+Mission type: <type>
+Mandatory crew ACKed: [ ] <agent-1>  [ ] <agent-2>  ...
+All P1s resolved: yes / no
+All [NEW DISCOVERY] flags have KB update assigned: yes / no
+```
+If any mandatory crew checkbox is empty, picard invokes the missing agent before closing.
+
+---
+
+## KB Update Signal Protocol
+
+When any agent updates a KB document during a mission, they **must** emit a formal signal before returning control to picard:
+
+```
+[KB-UPDATED: <document-path> | <nature of change>]
+```
+
+When no KB update was needed (agent found nothing new), the agent emits:
+
+```
+[KB-NO-CHANGE: <document-path> | reason: <brief>]
+```
+
+Both signals are **mandatory** on every agent return — missing signals are treated as incomplete handoffs. picard tracks them in the session journal's KB Update Audit section.
+
+**Learning Loop Audit** — picard runs this before mission close:
+1. List every `[NEW DISCOVERY]` flag raised this mission
+2. For each flag: confirm a matching `[KB-UPDATED]` signal exists from the named agent
+3. Any `[NEW DISCOVERY]` with no `[KB-UPDATED]` blocks mission close — picard re-invokes the owning agent
+4. After all flags are resolved: guinan is notified that KB documents have been updated this mission
+
+---
+
+## Rollback Protocol
+
+A rollback is triggered when execution must be partially or fully reversed. Only picard may authorize a rollback.
+
+**Rollback triggers**:
+- Track C issues a **FAIL** verdict that cannot be resolved with Fix-in-place
+- An `[EXTERNAL-EVENT]` at `severity: critical` invalidates the MDR mid-execution
+- riker detects a blocking dependency failure that makes forward progress unsafe
+
+**Rollback signals**:
+```
+[ROLLBACK-PARTIAL: <mission-slug> | scope: <what to revert> | owner: riker]
+[ROLLBACK-FULL: <mission-slug> | reason: <brief> | owner: riker]
+```
+
+**riker's rollback procedure**:
+1. Halt all in-progress execution immediately on receipt of picard's rollback signal
+2. Produce a **Rollback Scope Report**: what was completed, what is mid-flight, what was not started, and recommended revert steps
+3. Coordinate revert tasks with the relevant specialists (geordi for infra, worf for security changes)
+4. Each specialist confirms revert with `[REVERTED: <item>]`
+5. riker issues `[ROLLBACK-COMPLETE: <mission-slug>]` when all reverts confirmed
+6. picard ACKs: `[rollback-received ✓ picard]` and decides: re-open Ready Room or cancel mission
+
+**Partial rollback**: only the failed component is reverted. Completed, passing components remain. Requires Track C re-review of the affected component after revert.
+
+**Full rollback**: all execution reverted. picard reopens the Ready Room from Step 1.
+
+---
+
+## Execution Verification Protocol
+
+After all Bridge execution tasks are complete, riker produces an **Execution Verification Report** before returning control to picard:
+
+```
+## Execution Verification Report — <mission-slug>
+
+| MDR Task | Assigned Agent | Status | KB-UPDATED Signal |
+|----------|---------------|--------|-------------------|
+| <task-1> | geordi | complete / partial / blocked | [KB-UPDATED: doc | change] |
+| <task-2> | worf | complete / partial / blocked | [KB-NO-CHANGE: doc | reason] |
+
+Blocked items (if any):
+- <item> — reason — recommended disposition
+
+riker's assessment: all tasks complete / N tasks blocked — picard decision required
+riker returns control to picard. [execution-complete]
+```
+
+This report is mandatory. picard may not proceed to Track C review until the Execution Verification Report is received and ACKed.
+
+---
+
 ## Track C Review Loop Protocol
 
 When Track C (worf / troi / crusher) issues a **CONDITIONAL** or **FAIL** verdict, picard classifies each open item into one of three tiers and signals the appropriate response in the Go/No-Go:
