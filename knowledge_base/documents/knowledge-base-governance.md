@@ -8,6 +8,12 @@ This document defines how the IT team maintains, updates, and governs the shared
 
 ## Document Structure & Naming Convention
 
+### KB Tiers
+
+- `knowledge_base/current/` — canonical, concise, first-reference guidance.
+- `knowledge_base/documents/` — working reference docs and domain standards.
+- `knowledge_base/archive/` — historical long-form and superseded material.
+
 ### Naming Rules
 
 ```
@@ -82,6 +88,8 @@ A document should be deprecated when:
 1. Owner marks document as `[DEPRECATED]` at the top
 2. Adds deprecation notice with migration path in the first section
 3. Archives to `knowledge_base/archived/` after 90 days
+
+> Note: active archive path is `knowledge_base/archive/`.
 
 ---
 

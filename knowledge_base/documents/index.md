@@ -40,7 +40,6 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                     | Description                                       | Last Updated | Owner    |
 | ---------------------------- | ------------------------------------------------- | ------------ | -------- |
 | `rally-patterns.md`          | Rally story handling, acceptance criteria mapping | 2026-04-04   | kc-rally |
-| `architecture-principles.md` | Architecture decisions, ADR framework             | 2026-04-04   | data     |
 
 ---
 
@@ -99,6 +98,15 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | `knowledge_base/sessions/`                            | Per-mission session journals for cross-session continuity | guinan        |
 | `knowledge_base/sessions/session-template.md`         | Template for opening new session journals                 | picard        |
 | `knowledge_base/sessions/mission-debrief-template.md` | Post-mission debrief template filled by picard at close   | picard        |
+
+---
+
+## Archive Tier
+
+| Location | Description | Maintained By |
+| -------- | ----------- | ------------- |
+| `knowledge_base/archive/` | Historical long-form artifacts and superseded guidance | picard |
+| `knowledge_base/current/` | Canonical high-signal guidance for active execution | picard |
 
 ---
 

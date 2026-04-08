@@ -24,6 +24,7 @@ Last updated: 2026-04-08
 - `.github/workflows/adr-workflow.yml`
 - `.github/workflows/kb-staleness-check.yml`
 - `.github/workflows/agent-structure-check.yml`
+- `.github/workflows/kb-quality-check.yml`
 
 ## Guardrails
 
