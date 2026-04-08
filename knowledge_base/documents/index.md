@@ -64,7 +64,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 | Document                                  | Description                                                                             | Last Updated | Owner  |
 | ----------------------------------------- | --------------------------------------------------------------------------------------- | ------------ | ------ |
-| `team-health-assessment-github-agents.md` | Full-spectrum health review: CI/CD, security, test coverage, reliability — AMBER status | 2026-04-05   | picard |
+| `team-health-assessment-github-agents.md` | Full-spectrum health review: CI/CD, security, test coverage, reliability — currently GREEN (see latest entry) | 2026-04-05   | picard |
 
 ---
 

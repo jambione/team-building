@@ -1,0 +1,37 @@
+name: Agent Structure Check
+
+on:
+  pull_request:
+    paths:
+      - ".github/agents/**"
+      - ".github/workflows/**"
+      - "TEAM-TOPOLOGY.md"
+      - "STATUS.md"
+      - "scripts/validate-agent-structure.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/agents/**"
+      - ".github/workflows/**"
+      - "TEAM-TOPOLOGY.md"
+      - "STATUS.md"
+      - "scripts/validate-agent-structure.py"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate agent structure
+        run: python scripts/validate-agent-structure.py

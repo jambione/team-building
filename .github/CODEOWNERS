@@ -28,7 +28,6 @@
 .github/workflows/adr-workflow.yml         @jambione/geordi @jambione/data
 
 # ── Security Configuration (worf) ─────────────────────────────────────────────
-.github/workflows/security-scan.yml        @jambione/worf @jambione/geordi
 .github/CODEOWNERS                         @jambione/worf @jambione/picard
 
 # ── Agent Definitions (picard + domain owner) ─────────────────────────────────
