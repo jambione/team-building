@@ -5,7 +5,7 @@
 - Simplicity first, then performance, maintainability, and operational excellence.
 - Single responsibility everywhere.
 - picard is the single orchestrator. Every specialist must stay strictly in their lane.
-- Use parallel execution when tasks are independent.
+- **Agents excel at parallel execution. When tasks are independent, always batch-dispatch them in a single message — one message, multiple Agent calls.**
 - Maintain and consult the shared knowledge base at `knowledge_base/documents/`.
 - Every session is journaled at `knowledge_base/sessions/` for cross-session continuity.
 - **All decisions are made in the Ready Room before the crew acts on the Bridge.**
@@ -36,18 +36,19 @@
 
 1. **Open session journal** (`knowledge_base/sessions/`) — picard
 2. **Activate Ready Room** → picard opens `[READY-ROOM-OPEN: <mission-slug>]`
-3. **Historical context** → guinan (always first)
-4. **Ready Room analysis** (parallel) → picard-thinking, data, worf, troi, barclay, crusher, obrien, wes (optional)
+3. **Historical context + KB reads overlap** → guinan scans history while picard reads KB docs — dispatched in parallel
+4. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, wes (optional) in one message; all return before picard proceeds
 5. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
 6. **Mission Decision Record** → picard synthesizes MDR; all P1s resolved
 7. **Close Ready Room** → picard issues `[READY-ROOM-CLOSED: <mission-slug>]`
-8. **Bridge execution** → riker coordinates geordi, worf, troi, crusher, obrien as needed
-9. **KB updates** → each specialist updates their domain document
-10. **Mission Debrief** → picard fills `mission-debrief-template.md`
-11. **Session journal close** → picard marks `status: closed`; notifies guinan
-12. **Performance log update** → picard updates `agent-performance-log.md`
-13. **Mission log** → picard files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
-14. **Close with "Make it so!"** — picard
+8. **Bridge execution** → riker produces wave plan; dispatches each wave as a parallel batch; waits for all returns before next wave
+9. **Track C review — single parallel batch** → picard dispatches worf, troi, crusher simultaneously; aggregates verdicts
+10. **KB updates — single parallel batch** → picard dispatches all domain specialists simultaneously; each updates their doc
+11. **Mission Debrief** → picard fills `mission-debrief-template.md`
+12. **Session journal close** → picard marks `status: closed`; notifies guinan
+13. **Performance log update** → picard updates `agent-performance-log.md`
+14. **Mission log** → picard files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
+15. **Close with "Make it so!"** — picard
 
 ---
 
@@ -102,7 +103,7 @@ If any mandatory crew checkbox is empty, picard invokes the missing agent before
 When any agent updates a KB document during a mission, they **must** emit a formal signal before returning control to picard:
 
 ```
-[KB-UPDATED: <document-path> | <nature of change>]
+[KB-UPDATED: <document-path> | Added: <specific description of what was written and why>]
 ```
 
 When no KB update was needed (agent found nothing new), the agent emits:
@@ -113,11 +114,19 @@ When no KB update was needed (agent found nothing new), the agent emits:
 
 Both signals are **mandatory** on every agent return — missing signals are treated as incomplete handoffs. picard tracks them in the session journal's KB Update Audit section.
 
+**KB Update Quality Standard** — the `<specific description>` in a `[KB-UPDATED]` signal must:
+- Name the actual content added (not just "updated the document")
+- Be specific enough that picard can verify without re-reading the doc
+- Example INVALID: `[KB-UPDATED: devops-best-practices.md | updated best practices]`
+- Example VALID: `[KB-UPDATED: devops-best-practices.md | Added: graceful degradation pattern for third-party CI API dependencies — timeout at 60s, treat failure as warning not error]`
+
+picard rejects any `[KB-UPDATED]` signal that does not meet this standard and re-invokes the agent to provide the actual content before counting it as verified.
+
 **Learning Loop Audit** — picard runs this before mission close:
 1. List every `[NEW DISCOVERY]` flag raised this mission
-2. For each flag: confirm a matching `[KB-UPDATED]` signal exists from the named agent
-3. Any `[NEW DISCOVERY]` with no `[KB-UPDATED]` blocks mission close — picard re-invokes the owning agent
-4. After all flags are resolved: guinan is notified that KB documents have been updated this mission
+2. For each flag: confirm a matching `[KB-UPDATED]` signal exists from the named agent **and** that the signal description is specific (Quality Standard above)
+3. Any `[NEW DISCOVERY]` with no valid `[KB-UPDATED]` blocks mission close — picard re-invokes the owning agent
+4. After all flags are resolved: picard notifies guinan that KB documents have been updated; guinan runs cross-session synthesis and updates `knowledge_base/current/session-continuity.md`
 
 ---
 
@@ -233,6 +242,42 @@ riker is **not authorized to engage** until every item on the Pre-req Checklist 
 
 ---
 
+## Parallel Dispatch Protocol
+
+Agents have no inherent speed advantage on single sequential tasks — their strength is doing many independent things simultaneously. picard and riker must exploit this at every opportunity.
+
+### The rule
+
+**Whenever two or more agents have no dependency on each other's output, dispatch them in a single message as parallel Agent calls.** Never chain them sequentially if they can run at the same time.
+
+### Canonical parallel batches
+
+| Phase | Parallel batch |
+|-------|---------------|
+| Ready Room Step 2+3 overlap | picard reads KB docs while guinan scans history simultaneously |
+| Ready Room Step 3 (analysis) | picard-thinking, data, worf, troi, barclay, crusher, obrien, wes — all in one batch |
+| Track C review (Step 7) | worf, troi, crusher — all in one batch |
+| Mission close KB updates (Step 8) | all specialists update their domain docs in one batch |
+| Bridge execution (each wave) | riker dispatches all agents in the same wave in one batch |
+
+### Wave-structured execution
+
+When tasks have dependencies, riker organizes them into waves. Each wave is a parallel batch; the next wave does not start until the prior wave is complete.
+
+```
+Wave 1 (parallel — no deps): <agent-a>, <agent-b>
+Wave 2 (parallel — after Wave 1): <agent-c>, <agent-d>
+Wave 3 (sequential gate): <agent-e> validates Wave 2 output
+```
+
+riker dispatches each wave as a single parallel batch. He does not start Wave N+1 until all Wave N agents have returned and been ACKed by picard.
+
+### What counts as a dependency
+
+An agent has a dependency on another if it needs that agent's **output** to do its own work. Reading the same shared KB docs is not a dependency — multiple agents may read the same documents simultaneously.
+
+---
+
 ## Action Announcement Protocol
 
 **Default: Hybrid mode.** picard announces each agent delegation in the main conversation before the subagent runs. This ensures crew attribution is always visible to the user.
@@ -342,6 +387,59 @@ When two crew members produce conflicting recommendations:
 3. picard consults relevant KB documents, decides, and records: `[CONFLICT-RESOLVED: <conflict-id>: <decision>]`
 4. No crew member proceeds on a conflicted item until picard issues `[CONFLICT-RESOLVED]`.
 5. Resolution is logged in `knowledge_base/documents/agent-performance-log.md`.
+
+---
+
+## Cross-Session Continuity Protocol
+
+This protocol keeps the team's knowledge alive across separate conversation instances. When a new conversation starts, picard must not begin from zero — the session-continuity document bridges the gap.
+
+### guinan's synthesis trigger
+
+After **every** mission close, picard notifies guinan:
+
+```
+[GUINAN-SYNTHESIZE: <mission-slug>]
+Session journal: knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md
+Debrief: knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>-debrief.md
+```
+
+guinan then runs the full Structured Session Journal Query Protocol across **all closed journals** (not just the latest) and updates `knowledge_base/current/session-continuity.md` with:
+
+```
+## Cross-Session Synthesis Update — <mission-slug> — YYYY-MM-DD
+
+### Last Mission Outcome
+[one paragraph: what was accomplished, what was deferred, what changed in the KB]
+
+### Open Carry-Forward (from all missions)
+| ID | Item | Owner | Target Sprint | Priority |
+|----|------|-------|---------------|----------|
+
+### Cross-Mission Patterns Detected
+[any recurring issues, unresolved P2s across missions, behavioral trends]
+
+### Recommended Next Mission Focus
+[guinan's observation on what the team should tackle next — pattern-based, not prescriptive]
+
+### KB Documents Updated This Mission
+[list of docs and nature of change — distilled from [KB-UPDATED] signals]
+```
+
+guinan emits:
+```
+[KB-UPDATED: knowledge_base/current/session-continuity.md | Updated: cross-session synthesis after <mission-slug>]
+```
+
+### How new instances resume
+
+When picard opens a new conversation, the first context loaded is `knowledge_base/current/session-continuity.md`. This document tells picard:
+- What the last mission accomplished
+- What carry-forward items are active
+- What patterns guinan has detected
+- Where to focus next
+
+This is the cross-instance handoff. Without it, every new instance starts cold. With it, the team continues from where it left off.
 
 ---
 

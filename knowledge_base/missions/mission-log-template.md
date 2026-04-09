@@ -78,4 +78,24 @@
 
 ---
 
+## Lessons Learned
+
+_Cross-cutting lessons distilled from this mission. Sourced from the debrief's Lessons Learned table. guinan incorporates these into `past-lessons-learned.md` during cross-session synthesis._
+
+| # | Lesson | Category | Applies To |
+|---|--------|----------|------------|
+| 1 | | process / technical / team | all / <specific agent> |
+
+---
+
+## KB Documents Updated
+
+_Every KB document updated this mission. Verified by picard via [KB-UPDATED] signals before close._
+
+| Document | Updated By | Nature of Change |
+|----------|-----------|-----------------|
+| | | |
+
+---
+
 *"Make it so."* — picard

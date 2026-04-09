@@ -132,11 +132,21 @@ _All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
 
 _Reconcile every `[NEW DISCOVERY]` flag against a `[KB-UPDATED]` signal before mission close. Any gap blocks close._
 
-| [NEW DISCOVERY] | Raised By | KB Doc Assigned | [KB-UPDATED] Signal Received | Status |
-|-----------------|-----------|-----------------|------------------------------|--------|
-| | | | | pending / verified / deferred |
+| [NEW DISCOVERY] | Raised By | KB Doc Assigned | [KB-UPDATED] Signal Received | Content Description Specific? | Status |
+|-----------------|-----------|-----------------|------------------------------|-------------------------------|--------|
+| | | | | yes / no — re-invoke if no | pending / verified / deferred |
 
-**picard emits `[LEARNING-LOOP-VERIFIED: <mission-slug>]` only when all rows are verified.**
+**Quality check**: picard verifies each `[KB-UPDATED]` signal includes a specific content description (not just "updated the document"). Any signal that fails the quality check is treated as missing — picard re-invokes the owning agent.
+
+**picard emits `[LEARNING-LOOP-VERIFIED: <mission-slug>]` only when all rows are verified and quality-checked.**
+
+After emitting `[LEARNING-LOOP-VERIFIED]`, picard triggers guinan cross-session synthesis:
+```
+[GUINAN-SYNTHESIZE: <mission-slug>]
+Session journal: knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md
+Debrief: knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>-debrief.md
+```
+guinan updates `knowledge_base/current/session-continuity.md` and emits `[KB-UPDATED: knowledge_base/current/session-continuity.md | <summary>]`.
 
 ---
 
@@ -160,7 +170,8 @@ _Reconcile every `[NEW DISCOVERY]` flag against a `[KB-UPDATED]` signal before m
 - [ ] Mission Debrief filled (`mission-debrief-template.md`)
 - [ ] Mission log filed at `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md`
 - [ ] Mission index updated at `knowledge_base/missions/mission-index.md`
-- [ ] guinan notified of session journal availability for cross-session continuity
+- [ ] guinan notified with `[GUINAN-SYNTHESIZE: <mission-slug>]` — guinan updates `knowledge_base/current/session-continuity.md`
+- [ ] guinan `[KB-UPDATED: knowledge_base/current/session-continuity.md | ...]` signal received and verified
 
 **Session Status**: open / **closed**
 

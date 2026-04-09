@@ -86,4 +86,30 @@
 
 ---
 
+## Lessons Learned
+
+| # | Lesson | Category | Applies To |
+|---|--------|----------|------------|
+| 1 | Graceful degradation for third-party CI APIs: timeout at 60s, treat failure as warning not error | technical | geordi, crusher |
+| 2 | External API keys in CI must use org-level secrets + environment protection gates — repo secrets are insufficient | technical | worf, geordi |
+| 3 | Instrument latency and cost metrics before go-live on any third-party CI integration — not after | process | obrien |
+| 4 | Pin third-party SDK versions and add to Dependabot at integration time, not retroactively | technical | barclay, geordi |
+| 5 | Diff-scoped AI review prompts outperform full-file prompts for signal/noise ratio and token cost | technical | all |
+
+---
+
+## KB Documents Updated
+
+| Document | Updated By | Nature of Change |
+|----------|-----------|-----------------|
+| `architecture-principles.md` | data | Added third-party API integration pattern: CI step preferred over webhook |
+| `devops-best-practices.md` | geordi | Added graceful degradation pattern for third-party CI API dependencies |
+| `github-actions-security-hardening.md` | worf | Added org-level secret + environment protection gate requirement for external API keys |
+| `monitoring-observability.md` | obrien | Added rate-limit alert spec; custom metric emission standard for CI steps |
+| `tech-debt-register.md` | barclay | Added TD-003 (unpinned SDK, resolved); added TD-006 (TESTING.md incomplete) |
+| `past-lessons-learned.md` | guinan | Added CI graceful degradation and org-level secret lessons |
+| `index.md` | picard | Updated with session journal infrastructure, agent-performance-log, tech-debt-register |
+
+---
+
 *"Make it so."* — picard
