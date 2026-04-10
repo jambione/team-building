@@ -280,23 +280,62 @@ An agent has a dependency on another if it needs that agent's **output** to do i
 
 ## Action Announcement Protocol
 
-**Default: Hybrid mode.** picard announces each agent delegation in the main conversation before the subagent runs. This ensures crew attribution is always visible to the user.
+**Default: Upfront mode.** The crew is always visible. Every delegation is announced before it runs. Parallel batches get a full dispatch board so the user can see all agents working simultaneously. "Behind the scenes" is an opt-in quiet mode — not the default.
 
-### Hybrid mode (default)
+### Upfront mode (default)
 
-picard prints the announcement in the main conversation, then delegates to the subagent:
+#### Single agent dispatch
+picard prints one line before each delegation:
 
 ```
-▶ geordi — styling SSOLoginPage and CallbackPage
+▶ geordi — applying CI pipeline changes
 ```
 *[subagent runs and returns result]*
+
+#### Parallel batch dispatch
+When two or more agents are dispatched in a single batch, picard prints the full dispatch board **before** the parallel Agent calls fire:
+
+```
+⚡ PARALLEL BATCH — ready-room-analysis
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ▶ picard-thinking  deliberation & MDR draft
+  ▶ data             architecture & design review
+  ▶ worf             security & compliance scan
+  ▶ troi             UX & quality risk
+  ▶ barclay          tech debt analysis
+  ▶ crusher          reliability & edge cases
+  ▶ obrien           observability gaps
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Dispatching 7 agents in parallel...
+```
+
+After all agents return, picard prints the completion board:
+
+```
+✅ PARALLEL BATCH COMPLETE — ready-room-analysis
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✓ picard-thinking  [complex-task-complete]
+  ✓ data             [arch-design-complete]
+  ✓ worf             [security-review-complete]
+  ✓ troi             [qa-strategy-complete]
+  ✓ barclay          [tech-debt-assessment-complete]
+  ✓ crusher          [reliability-assessment-complete]
+  ✓ obrien           [observability-review-complete]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+The dispatch board always fires **before** the agents run — never printed after results appear.
+
+### Hybrid mode (opt-in)
+
+Single-line announcement per agent, no dispatch board for parallel batches. Use when the user wants minimal output overhead.
+
+Invoke with: *"hybrid mode"* or *"minimal announcements"*.
 
 ```
 ▶ worf — security review of style-sso-pages
 ```
 *[subagent runs and returns result]*
-
-One announcement per agent delegation. The user sees who is working and why before the result appears.
 
 ### Main conversation mode (opt-in)
 
@@ -313,10 +352,17 @@ Use when the user wants to watch an agent work at the tool-call level. picard an
 
 Invoke with: *"watch [agent] work"* or *"run [agent] in main conversation"*.
 
-### Rules (both modes)
+### Behind the scenes mode (opt-in)
+
+Agents run silently. No announcements, no dispatch boards. picard presents synthesized results only.
+
+Invoke with: *"behind the scenes"* or *"quiet mode"* or *"hide agents"*.
+
+### Rules (all modes)
 - Announcements are printed in the main conversation before the work — never batched after.
-- One line only. Present tense. No preamble.
+- Single-agent lines: one line, present tense, no preamble.
 - picard uses it too: `▶ picard — opening Ready Room for build-sso-auth`
+- Dispatch board agent count must match the actual parallel Agent calls in that message.
 - Inside a subagent, agents still announce internally — visible in subagent output if inspected.
 
 ---
