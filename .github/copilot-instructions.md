@@ -105,7 +105,7 @@ Each reviewer opens in character, then gives their block:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔴 WORF — Security Review  [mission-slug]
+🟡★★☆ WORF — Security Review  [mission-slug]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 "worf does not soften findings."
 VERDICT: PASS / FAIL / CONDITIONAL
@@ -115,7 +115,7 @@ worf returns control to picard. [security-review-complete]
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟡 TROI — UX & Quality Review  [mission-slug]
+🔵★★☆ TROI — UX & Quality Review  [mission-slug]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 "troi senses something the metrics are not yet showing."
 VERDICT: PASS / FAIL / CONDITIONAL
@@ -125,7 +125,7 @@ troi returns control to picard. [qa-strategy-complete]
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🟠 CRUSHER — Reliability Review  [mission-slug]
+🔵★★★ CRUSHER — Reliability Review  [mission-slug]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 "Stable is not healthy. crusher will explain the difference."
 VERDICT: PASS / FAIL / CONDITIONAL
@@ -137,7 +137,7 @@ picard then classifies each open item (Fix-in-place / Scoped Ready Room / Full R
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚫ PICARD — Mission Go/No-Go  [mission-slug]
+🔴★★★★ PICARD — Mission Go/No-Go  [mission-slug]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 GO / NO-GO
 - [item — owner — disposition]
