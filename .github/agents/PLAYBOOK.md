@@ -342,11 +342,11 @@ Invoke with: *"hybrid mode"* or *"minimal announcements"*.
 Use when the user wants to watch an agent work at the tool-call level. picard announces, then runs the actions directly in the main conversation without a subagent. Every Read, Write, and Edit is attributed:
 
 ```
-▶ worf — reading src/services/ssoService.js for token storage review
+🟡★★☆ worf — reading src/services/ssoService.js for token storage review
 ```
 *[Read tool call visible]*
 ```
-▶ worf — reviewing logout() for 5xx handling
+🟡★★☆ worf — reviewing logout() for 5xx handling
 ```
 *[findings output]*
 

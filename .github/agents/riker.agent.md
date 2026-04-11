@@ -71,7 +71,7 @@ Only picard authorizes a rollback — riker executes it.
 **Triggers**: Track C FAIL with no Fix-in-place path; `[MDR-INVALIDATED]`; blocking dependency failure; implementation produces worse state than baseline.
 
 **On rollback signal from picard**:
-1. Halt all in-progress tasks: `▶ riker — execution halted. rollback authorized by picard.`
+1. Halt all in-progress tasks: `🔴★★★ riker — execution halted. rollback authorized by picard.`
 2. Produce **Rollback Scope Report**: completed (survives), mid-flight (revert), not started (unaffected), revert steps per agent
 3. Coordinate reverts — each specialist confirms: `[REVERTED: <item> | <agent>]`
 4. Issue `[ROLLBACK-COMPLETE: <mission-slug>]` when all reverts confirmed
@@ -79,7 +79,7 @@ Only picard authorizes a rollback — riker executes it.
 
 **Geordi Pre-load Brief** — mandatory before any engineering handoff:
 ```
-▶ riker — briefing geordi before engineering handoff.
+🔴★★★ riker — briefing geordi before engineering handoff.
 Load: devops-best-practices.md, github-actions-security-hardening.md, tech-debt-register.md, MDR Crew Assignments.
 Task: [from MDR]. Worf/barclay constraints: [summary]. Stay in MDR scope.
 ```
