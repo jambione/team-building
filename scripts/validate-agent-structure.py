@@ -5,7 +5,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 AGENTS_DIR = ROOT / ".github" / "agents"
-STATUS_FILE = ROOT / "STATUS.md"
+STATUS_FILE = ROOT / "docs" / "reference" / "STATUS.md"
 
 
 def parse_frontmatter(text: str) -> str:
@@ -75,19 +75,21 @@ def main() -> int:
             )
 
     if not STATUS_FILE.exists():
-        errors.append("STATUS.md: file not found")
+        errors.append("docs/reference/STATUS.md: file not found")
     else:
         status_text = STATUS_FILE.read_text(encoding="utf-8")
         status_paths = parse_status_entries(status_text)
         if not status_paths:
-            errors.append("STATUS.md: no file path entries found")
+            errors.append("docs/reference/STATUS.md: no file path entries found")
         for rel_path in status_paths:
             if rel_path.startswith("/"):
-                errors.append(f"STATUS.md: path '{rel_path}' must be repo-relative")
+                errors.append(f"docs/reference/STATUS.md: path '{rel_path}' must be repo-relative")
                 continue
             file_path = ROOT / rel_path
             if not file_path.exists():
-                errors.append(f"STATUS.md: referenced path does not exist: '{rel_path}'")
+                errors.append(
+                    f"docs/reference/STATUS.md: referenced path does not exist: '{rel_path}'"
+                )
 
     if errors:
         print("Agent structure validation failed:")
@@ -97,7 +99,7 @@ def main() -> int:
 
     print("Agent structure validation passed.")
     print(f"Validated {len(files)} agent files.")
-    print("Validated STATUS.md references.")
+    print("Validated docs/reference/STATUS.md references.")
     return 0
 
 

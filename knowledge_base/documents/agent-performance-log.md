@@ -6,7 +6,7 @@ Tracks per-agent mission metrics across sprints to surface utilization imbalance
 
 **Owner**: picard  
 **Review Cadence**: Every sprint close  
-**Last Updated**: 2026-04-05
+**Last Updated**: 2026-04-11
 
 ---
 
@@ -64,9 +64,27 @@ Tracks per-agent mission metrics across sprints to surface utilization imbalance
 
 ---
 
-## Sprint 2 — (Pending)
+## Sprint 2 — (In Progress)
 
-*To be populated at Sprint 2 close by picard.*
+### Mission: compare-team-building-vs-oio-agents (2026-04-11)
+
+| Agent | Tasks | KB Updates | New Discoveries | Conflicts | Open Items |
+|-------|-------|-----------|-----------------|-----------|------------|
+| picard | 1 | 0 | 0 | 0 | 0 |
+| picard-thinking | 1 | 0 | 0 | 0 | 0 |
+| data | 1 | 0 | 0 | 0 | 0 |
+| riker | 1 | 0 | 0 | 0 | 0 |
+| geordi | 1 | 0 | 0 | 0 | 1 |
+| worf | 1 | 0 | 0 | 0 | 0 |
+| troi | 1 | 0 | 0 | 0 | 0 |
+| crusher | 1 | 0 | 0 | 0 | 0 |
+| barclay | 1 | 0 | 0 | 0 | 1 |
+| guinan | 1 | 2 | 1 | 0 | 0 |
+| obrien | 1 | 0 | 0 | 0 | 0 |
+
+### Sprint 2 Interim Observation
+
+- Comparative mission quality was high; follow-up hardening item created for validator/workflow path consistency in team-building.
 
 ---
 
@@ -117,4 +135,5 @@ Tracks per-agent mission metrics across sprints to surface utilization imbalance
 
 ```
 - 2026-04-05: picard — Initial log created; Sprint 1 data backfilled from health assessment
+- 2026-04-11: picard — Added Sprint 2 interim mission metrics for compare-team-building-vs-oio-agents
 ```

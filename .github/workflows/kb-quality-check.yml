@@ -6,6 +6,7 @@ on:
       - "knowledge_base/**"
       - "scripts/kb-lint.py"
       - "scripts/validate-discovery-kb-link.py"
+      - "scripts/validate-workspace.py"
       - ".github/workflows/kb-quality-check.yml"
   push:
     branches: [main]
@@ -13,6 +14,7 @@ on:
       - "knowledge_base/**"
       - "scripts/kb-lint.py"
       - "scripts/validate-discovery-kb-link.py"
+      - "scripts/validate-workspace.py"
       - ".github/workflows/kb-quality-check.yml"
 
 permissions:
@@ -33,11 +35,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Run KB lint
-        run: python scripts/kb-lint.py
-
-      - name: Validate discovery-to-KB linkage
+      - name: Run unified workspace validation (KB quality)
         env:
           BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
           HEAD_SHA: ${{ github.sha }}
-        run: python scripts/validate-discovery-kb-link.py
+        run: python scripts/validate-workspace.py --check kb-quality

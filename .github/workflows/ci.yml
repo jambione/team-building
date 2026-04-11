@@ -1,8 +1,4 @@
-# GitHub Actions CI Workflow for Node.js/TypeScript Project
-
-# This workflow triggers on push to main and pull request events.
-# It includes multi-stage jobs: prepare, build, test, lint.
-# Security scanning is handled by the dedicated security-scan.yml workflow.
+# GitHub Actions CI workflow for repository governance and KB validation.
 
 name: CI
 
@@ -14,76 +10,48 @@ on:
 
 permissions:
   contents: read
-  actions: read
-  checks: write
-  pull-requests: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  NODE_VERSION: '20'
-  TYPESCRIPT_VERSION: '5.0'
-
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
+  validate-runtime-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-bash
+            os: ubuntu-latest
+            shell: bash
+          - name: linux-pwsh
+            os: ubuntu-latest
+            shell: pwsh
+          - name: windows-pwsh
+            os: windows-latest
+            shell: pwsh
+    name: validate-${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: prepare
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-      - name: Build project
-        run: npm run build
-
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs: [prepare, build]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-      - name: Run tests
-        run: npm test
-
-  lint:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: [prepare, build]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-      - name: Lint code
-        run: npx eslint src --ext js,ts
+          python-version: "3.11"
+      - name: Run unified workspace validation (bash)
+        if: matrix.shell == 'bash'
+        shell: bash
+        run: python scripts/validate-workspace.py --check ci-core
+      - name: Run unified workspace validation (pwsh)
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
+        run: python scripts/validate-workspace.py --check ci-core
+      - name: Run validator regression tests (bash)
+        if: matrix.shell == 'bash'
+        shell: bash
+        run: python -m unittest discover -s tests -p "test_*.py"
+      - name: Run validator regression tests (pwsh)
+        if: matrix.shell == 'pwsh'
+        shell: pwsh
+        run: python -m unittest discover -s tests -p "test_*.py"

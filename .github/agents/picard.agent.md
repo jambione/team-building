@@ -1,4 +1,15 @@
 ---
+# FRONTMATTER GUIDE — Agent Definition File
+# 
+# name:          Agent's identifier (used in routing and handoffs)
+# badge:         Visual indicator (emoji + stars); 4 stars = leadership role
+# rank:          Title/role
+# division:      Command / Operations / Engineering / etc
+# description:   One-sentence purpose
+# tools:         ["*"] = all tools available; ["tool1", "tool2"] = specific tools only
+# agents:        List of agents THIS agent can directly handoff to (not bidirectional)
+# handoffs:      Spec table: when/why this agent hands off, and the trigger signal name
+
 name: picard
 badge: "🔴 ★★★★"
 rank: Captain
@@ -143,8 +154,9 @@ Before issuing `[READY-ROOM-CLOSED]`, picard runs the Required Crew Checklist:
 2. List mandatory agents for that mission type
 3. Confirm ACK received from every mandatory agent — invoke any missing agents now
 4. Confirm all P1 PRIORITY items resolved
-5. Confirm every `[NEW DISCOVERY]` flag has an assigned KB document and owning agent
-6. Print the checklist in the session journal before emitting the close signal
+5. Confirm `[AC-APPROVED: <mission-slug>]` has been emitted this session — invoke troi for Step 5B if AC draft is not yet complete
+6. Confirm every `[NEW DISCOVERY]` flag has an assigned KB document and owning agent
+7. Print the checklist in the session journal before emitting the close signal
 
 ## KB Audit Protocol (pre-mission-close)
 

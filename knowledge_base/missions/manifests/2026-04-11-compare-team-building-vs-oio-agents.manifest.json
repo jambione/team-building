@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "mission_slug": "compare-team-building-vs-oio-agents",
+  "mission_type": "multi-repo",
+  "repos": [
+    {
+      "repo": "team-building",
+      "branch": "mission/compare-team-building-vs-oio-agents",
+      "base_ref": "chore/agent-setup-v2",
+      "final_commit_sha": "n/a",
+      "role": "primary",
+      "wave": 1,
+      "notes": "Analysis and recommendations only; no code changes recorded in this mission artifact."
+    },
+    {
+      "repo": "IntegrityOne-OIO.Agents-main",
+      "branch": "mission/compare-team-building-vs-oio-agents",
+      "base_ref": "main",
+      "final_commit_sha": "n/a",
+      "role": "reference",
+      "wave": 2,
+      "notes": "Comparative analysis source; no implementation changes recorded in this mission artifact."
+    }
+  ],
+  "waves": [
+    {
+      "wave": 1,
+      "repo": "team-building",
+      "gate_commit_sha": "n/a",
+      "result": "pass"
+    },
+    {
+      "wave": 2,
+      "repo": "IntegrityOne-OIO.Agents-main",
+      "gate_commit_sha": "n/a",
+      "result": "pass"
+    }
+  ],
+  "replay_hash": "637c97ec62c6833db55ebdc99a9fe6359b4c22cf99b4b7bbaebe7d25aa475b46"
+}

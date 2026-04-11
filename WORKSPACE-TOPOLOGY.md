@@ -10,9 +10,9 @@
 
 ## Hub
 
-| Repo | Role | Primary Owner | Notes |
-|------|------|---------------|-------|
-| `team-building` | **Workspace Hub** — all agent definitions, KB, mission history, session journals live here | picard | Never used as a deployment target; agents are always loaded from this repo |
+| Repo            | Role                                                                                       | Primary Owner | Notes                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------- |
+| `team-building` | **Workspace Hub** — all agent definitions, KB, mission history, session journals live here | picard        | Never used as a deployment target; agents are always loaded from this repo |
 
 ---
 
@@ -20,11 +20,12 @@
 
 > Add a row here for every service/codebase in the workspace. Each spoke repo should contain a `.tng-context.md` file in its root that mirrors this entry.
 
-| Repo | Service Domain | Owner Agent | Depends On | Status | Notes |
-|------|---------------|-------------|------------|--------|-------|
-| _(add spoke repos here)_ | | | | | |
+| Repo                     | Service Domain | Owner Agent | Depends On | Status | Notes |
+| ------------------------ | -------------- | ----------- | ---------- | ------ | ----- |
+| _(add spoke repos here)_ |                |             |            |        |       |
 
 **Example format:**
+
 ```
 | `org/service-api`    | Backend REST API       | data    | `org/service-db`    | active     | Primary API surface |
 | `org/service-ui`     | Frontend React app     | troi    | `org/service-api`   | active     | User-facing product |
@@ -39,11 +40,12 @@
 
 > Use this section to document which repos must be coordinated when making changes. For loosely coupled repos, most missions will be single-repo. Only document real runtime or build-time dependencies here.
 
-| Upstream Repo | Downstream Repo | Dependency Type | Notes |
-|---------------|-----------------|-----------------|-------|
-| _(add when known)_ | | | |
+| Upstream Repo      | Downstream Repo | Dependency Type | Notes |
+| ------------------ | --------------- | --------------- | ----- |
+| _(add when known)_ |                 |                 |       |
 
 **Dependency types:**
+
 - `api-contract` — downstream calls upstream's API; breaking changes require coordination
 - `shared-lib` — downstream imports a package published by upstream
 - `build-order` — downstream's CI must build after upstream (e.g., base Docker images)
@@ -67,6 +69,10 @@ When picard opens a Ready Room, determine the `current_repo` using this priority
 
 - **One MDR per repo**: When a mission touches multiple repos, picard opens sequential Mission Decision Records — one per affected repo — not a combined MDR. This keeps KB updates, issue creation, and session journals cleanly scoped.
 - **Cross-repo coordination**: If repo-A must change before repo-B, riker sequences waves accordingly: Wave 1 = repo-A tasks, Wave 2 = repo-B tasks (gated on Wave 1 completion). Document the dependency in the session journal's `Cross-Repo Dependencies` field.
+- **Deterministic repo identity**: Every active spoke repo should be represented by a stable repo identifier (`owner/repo`) in both this table and session artifacts.
+- **Deterministic wave evidence**: Cross-repo waves must record `base_ref`, `mission_branch`, and `final_commit_sha` for each repo.
+- **Manifest requirement**: Multi-repo missions must file `knowledge_base/missions/manifests/YYYY-MM-DD-<mission-slug>.manifest.md` and link it from `knowledge_base/missions/mission-index.md`.
+- **Carry-forward provenance**: Cross-repo carry-forwards must include `source_mission`, `source_repo`, and `source_commit` (`n/a` for non-code outcomes).
 - **Issue targeting**: MDR signals include `Target-Repo: <owner>/<repo>` when the tracking issue should be created in a spoke repo, not the hub.
 - **Spoke repo identification**: Every spoke repo should have `.tng-context.md` in its root (see template). Agents read this to orient themselves when invoked in an unfamiliar repo.
 

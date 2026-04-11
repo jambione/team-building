@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://team-building.local/schemas/mission-execution-plan.schema.json",
+  "x-schema-version": "1.0.0",
+  "title": "Mission Execution Plan",
+  "description": "Deterministic multi-repo execution plan and replay contract.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "mission_slug",
+    "mission_type",
+    "repos",
+    "waves",
+    "replay_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "mission_slug": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mission_type": {
+      "type": "string",
+      "enum": ["multi-repo"]
+    },
+    "repos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "repo",
+          "branch",
+          "base_ref",
+          "final_commit_sha",
+          "role",
+          "wave"
+        ],
+        "properties": {
+          "repo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "branch": {
+            "type": "string",
+            "minLength": 1
+          },
+          "base_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "final_commit_sha": {
+            "type": "string",
+            "pattern": "^([0-9a-f]{7,40}|n/a|na)$"
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "wave": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "waves": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["wave", "repo", "gate_commit_sha", "result"],
+        "properties": {
+          "wave": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "repo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gate_commit_sha": {
+            "type": "string",
+            "pattern": "^([0-9a-f]{7,40}|n/a|na)$"
+          },
+          "result": {
+            "type": "string",
+            "enum": ["pass", "fail"]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "replay_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": true
+}

@@ -5,17 +5,19 @@ on:
     paths:
       - ".github/agents/**"
       - ".github/workflows/**"
-      - "TEAM-TOPOLOGY.md"
-      - "STATUS.md"
+      - "docs/reference/TEAM-TOPOLOGY.md"
+      - "docs/reference/STATUS.md"
       - "scripts/validate-agent-structure.py"
+      - "scripts/validate-workspace.py"
   push:
     branches: [main]
     paths:
       - ".github/agents/**"
       - ".github/workflows/**"
-      - "TEAM-TOPOLOGY.md"
-      - "STATUS.md"
+      - "docs/reference/TEAM-TOPOLOGY.md"
+      - "docs/reference/STATUS.md"
       - "scripts/validate-agent-structure.py"
+      - "scripts/validate-workspace.py"
 
 permissions:
   contents: read
@@ -33,5 +35,5 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Validate agent structure
-        run: python scripts/validate-agent-structure.py
+      - name: Run unified workspace validation (agent structure)
+        run: python scripts/validate-workspace.py --check agent-structure
