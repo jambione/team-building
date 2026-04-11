@@ -10,7 +10,9 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 | Document                     | Description                                             | Last Updated | Owner  |
 | ---------------------------- | ------------------------------------------------------- | ------------ | ------ |
+| `architecture-decision-records.md` | Formal ADR index and decision rationale history            | 2026-04-05   | data   |
 | `architecture-principles.md` | Foundational rules, decision framework, common patterns | 2026-04-04   | data   |
+| `system-design-patterns.md`  | Reusable system design templates and implementation patterns | 2026-04-11   | data   |
 | `coding-standards.md`        | Readability, naming conventions, style guidelines       | 2026-04-04   | picard |
 
 ---
@@ -32,7 +34,10 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document              | Description                                     | Last Updated | Owner  |
 | --------------------- | ----------------------------------------------- | ------------ | ------ |
 | `best-practices.md`   | General development guidelines, QA requirements | 2026-04-04   | picard |
+| `defect-management-process.md` | Defect triage workflow, severity handling, and remediation standards | 2026-04-11   | troi   |
+| `onboarding-guide.md` | New team member onboarding flow and operating checklist | 2026-04-11   | picard |
 | `team-conventions.md` | Orchestration rules, third-person communication | 2026-04-04   | picard |
+| `team-tools-recommendations.md` | Recommended toolchain and usage patterns for team workflows | 2026-04-11   | picard |
 
 ---
 
@@ -65,6 +70,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 | Document                                  | Description                                                                             | Last Updated | Owner  |
 | ----------------------------------------- | --------------------------------------------------------------------------------------- | ------------ | ------ |
+| `team-health-assessment-clinerules.md`    | Team health assessment focused on instruction and agent-rules quality                   | 2026-04-05   | picard |
 | `team-health-assessment-github-agents.md` | Full-spectrum health review: CI/CD, security, test coverage, reliability — currently GREEN (see latest entry) | 2026-04-05   | picard |
 
 ---
@@ -90,6 +96,8 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                   | Description                                                            | Last Updated | Owner  |
 | -------------------------- | ---------------------------------------------------------------------- | ------------ | ------ |
 | `agent-performance-log.md` | Per-agent sprint metrics; utilization signals; conflict resolution log | 2026-04-05   | picard |
+| `past-lessons-learned.md`  | Cross-mission lessons and decision outcomes synthesized by guinan      | 2026-04-11   | guinan |
+| `sprint-state.md`          | Current sprint goals, carry-forwards, and active mission state         | 2026-04-11   | picard |
 
 ---
 
@@ -128,6 +136,7 @@ Version History:
     - 2026-04-05: picard — Added tech-debt-register (barclay), monitoring-observability enhancements (obrien), agent-performance-log (picard), session journal infrastructure (guinan); removed resolved pending items
     - 2026-04-11: geordi — Added notification-integration.md (connectivity layer: Teams/Slack webhooks, MDR-to-Issue workflow, signal mapping)
     - 2026-04-11: picard — Added multi-repo-conventions.md (hub model, workspace orientation, repo-scoped KB signals, cross-repo mission rules)
+    - 2026-04-11: picard — Indexed all top-level KB documents so kb-lint has full top-level coverage and no warning-only gaps
 ---
 ```
 

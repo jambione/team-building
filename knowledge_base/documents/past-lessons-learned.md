@@ -1,5 +1,14 @@
 # Past Lessons Learned
 
+## 2026-04-11 - Comparative Framework Evaluation (team-building vs OIO.Agents)
+
+- **Lesson**: Framework richness and build maturity should be scored independently before selecting an overall winner; combining them too early distorts decision quality.
+- **Lesson**: Validation failures caused by local prerequisites must be classified separately from intrinsic repository drift (for example, path mismatches and broken assumptions).
+- **Observation**: team-building currently leads in orchestration depth, agent protocol richness, and mission lifecycle structure.
+- **Observation**: OIO.Agents currently leads in executable contract validation and workflow-level enforcement consistency.
+- **Decision**: Use a dual-layer verdict in comparative missions: category winners plus weighted overall recommendation.
+- **Outcome**: OIO.Agents selected as present-state overall winner for operational reliability; team-building retained as feature-rich orchestration benchmark.
+
 ## 2026-04-11 – Code Review & Framework Health Assessment
 
 - **Lesson**: Documentation reorganization requires prominent navigation update. When migrating user-facing docs to new structure, add explicit link from entry point (README.md).

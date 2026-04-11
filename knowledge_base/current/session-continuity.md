@@ -10,9 +10,9 @@
 
 ## Last Mission Outcome
 
-**Mission**: `claude-api-pr-review` — Sprint 1 — 2026-04-05 — **success**
+**Mission**: `compare-team-building-vs-oio-agents` — Sprint 2 — 2026-04-11 — **success**
 
-The team integrated Claude API into the GitHub Actions CI pipeline for automated PR code review. Two P1 items were surfaced and resolved before the Ready Room closed: API key exposure risk (resolved via org-level secret + environment protection) and hard-fail risk on 5xx (resolved via graceful degradation with 60s timeout). All Track C reviewers returned CONDITIONAL verdicts that were resolved inline. riker executed cleanly. 7 KB documents updated across 6 agents. 3 items carried forward to Sprint 2/3/4.
+The crew executed a full comparative mission with Ready Room, Bridge execution, and Track C review. team-building was assessed as stronger in orchestration depth and mission framework richness, while OIO.Agents was assessed as stronger in present-state build contract maturity and validation rigor. A weighted recommendation selected OIO.Agents as the current overall winner for operational reliability, with one carry-forward item opened to harden team-building validator and workflow path alignment.
 
 ---
 
@@ -23,6 +23,7 @@ The team integrated Claude API into the GitHub Actions CI pipeline for automated
 | CF-001 | Rate-limit handling for burst PR windows | obrien + geordi | `claude-api-pr-review` | P3 | Sprint 2 |
 | CF-002 | Multi-agent review panel (WES-PROPOSAL-2) | wes | `claude-api-pr-review` | deferred | Sprint 3 |
 | CF-003 | AI review comment engagement metric | troi | `claude-api-pr-review` | P3 | Sprint 4 |
+| CF-008 | team-building validator/workflow path hardening (`STATUS.md` and `TEAM-TOPOLOGY.md` drift) | geordi + barclay | `compare-team-building-vs-oio-agents` | P2 | Sprint 3 |
 
 ---
 
@@ -53,9 +54,9 @@ The team integrated Claude API into the GitHub Actions CI pipeline for automated
 
 ## Recommended Next Mission Focus
 
-Rate-limit handling (CF-001) is the highest-priority carry-forward and is due Sprint 2. This is a geordi + obrien led execution mission — the decision (graceful degradation with alert) was already made in the MDR for `claude-api-pr-review`. This does not need a full Ready Room — picard should consider whether a scoped Ready Room is sufficient.
+First priority should be a targeted hardening mission for `team-building` to fix validator and workflow path drift and align CI assumptions with repository reality. This has direct impact on confidence in all future mission automation.
 
-Before that mission begins, picard should address the troi KB gap directly: troi should update TESTING.md as a pre-mission task, not defer it again.
+After hardening, rerun the same comparative scoring model to see if the overall ranking changes.
 
 ---
 
@@ -63,13 +64,8 @@ Before that mission begins, picard should address the troi KB gap directly: troi
 
 | Document | Updated By | Nature of Change |
 |----------|-----------|-----------------|
-| `architecture-principles.md` | data | Added third-party API integration pattern: CI step preferred over webhook for operational simplicity |
-| `devops-best-practices.md` | geordi | Added graceful degradation pattern for third-party CI API dependencies |
-| `github-actions-security-hardening.md` | worf | Added org-level secret + environment protection gate requirement for external API keys |
-| `monitoring-observability.md` | obrien | Added rate-limit alert spec for Claude API burst windows; custom metric emission standard for CI steps |
-| `tech-debt-register.md` | barclay | Added TD-003 (unpinned Claude API SDK) — resolved same sprint; added TD-006 (TESTING.md incomplete) |
-| `past-lessons-learned.md` | guinan | Added: graceful degradation pattern for third-party CI dependencies; org-level secret management lesson |
-| `index.md` | picard | Updated with new session journal infrastructure, agent-performance-log, tech-debt-register entries |
+| `past-lessons-learned.md` | guinan | Added comparative-framework lessons, including intrinsic-vs-environment reliability distinction |
+| `session-continuity.md` | guinan | Updated last mission outcome and added CF-008 carry-forward hardening item |
 
 ---
 
