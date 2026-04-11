@@ -49,6 +49,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                       | Description                                            | Last Updated | Owner  |
 | ------------------------------ | ------------------------------------------------------ | ------------ | ------ |
 | `knowledge-base-governance.md` | Document ownership, review cadence, deprecation policy | 2026-04-04   | picard |
+| `multi-repo-conventions.md`    | Hub model, workspace orientation protocol, repo-scoped KB signals, cross-repo mission rules | 2026-04-11 | picard |
 
 ---
 
@@ -126,6 +127,7 @@ Version History:
     - 2026-04-05: picard — Added team-health-assessment-github-agents.md; 15 remediation items identified across CI/CD, security, testing, and reliability domains
     - 2026-04-05: picard — Added tech-debt-register (barclay), monitoring-observability enhancements (obrien), agent-performance-log (picard), session journal infrastructure (guinan); removed resolved pending items
     - 2026-04-11: geordi — Added notification-integration.md (connectivity layer: Teams/Slack webhooks, MDR-to-Issue workflow, signal mapping)
+    - 2026-04-11: picard — Added multi-repo-conventions.md (hub model, workspace orientation, repo-scoped KB signals, cross-repo mission rules)
 ---
 ```
 

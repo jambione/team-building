@@ -6,6 +6,10 @@
 # Signal format expected from picard:
 #   [MDR-ISSUED: <mission-slug>] Priority: <P0|P1|P2|P3>
 #   Mission: <one-line description>
+#   Target-Repo: <owner>/<repo>   ← optional; defaults to current repo if omitted
+#
+# Multi-repo workspace: When the mission targets a spoke repo, picard includes
+# Target-Repo so the issue is created in the correct service repo, not the hub.
 #
 # Owner: geordi | Security review: worf
 
@@ -48,6 +52,15 @@ jobs:
           MISSION=$(echo "$COMMENT_BODY" | grep -oP 'Mission:\s*\K[^\n]+' | head -1 | xargs)
           MISSION=${MISSION:-"Mission details in linked source"}
 
+          # Extract optional Target-Repo: <owner>/<repo> for multi-repo workspace routing
+          TARGET_REPO=$(echo "$COMMENT_BODY" | grep -oP 'Target-Repo:\s*\K[^\s\n]+' | head -1 | xargs)
+          # Fall back to current repo if not specified
+          if [ -z "$TARGET_REPO" ]; then
+            TARGET_REPO="${{ github.repository }}"
+          fi
+          TARGET_OWNER=$(echo "$TARGET_REPO" | cut -d'/' -f1)
+          TARGET_REPO_NAME=$(echo "$TARGET_REPO" | cut -d'/' -f2)
+
           # Determine source URL (the comment's HTML URL)
           SOURCE_URL="${{ github.event.comment.html_url }}"
 
@@ -55,6 +68,27 @@ jobs:
           echo "priority=$PRIORITY" >> "$GITHUB_OUTPUT"
           echo "mission=$MISSION" >> "$GITHUB_OUTPUT"
           echo "source_url=$SOURCE_URL" >> "$GITHUB_OUTPUT"
+          echo "target_owner=$TARGET_OWNER" >> "$GITHUB_OUTPUT"
+          echo "target_repo_name=$TARGET_REPO_NAME" >> "$GITHUB_OUTPUT"
+          echo "target_repo=$TARGET_REPO" >> "$GITHUB_OUTPUT"
+
+      - name: Validate target repo exists (fluid workspace guard)
+        id: validate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const targetOwner = '${{ steps.extract.outputs.target_owner }}';
+            const targetRepo = '${{ steps.extract.outputs.target_repo_name }}';
+            try {
+              await github.rest.repos.get({ owner: targetOwner, repo: targetRepo });
+              core.setOutput('repo_valid', 'true');
+              console.log(`Target repo ${targetOwner}/${targetRepo} exists and is accessible.`);
+            } catch (e) {
+              core.warning(`Target repo ${targetOwner}/${targetRepo} not found or not accessible. Falling back to hub repo.`);
+              core.setOutput('repo_valid', 'false');
+              core.setOutput('fallback_owner', context.repo.owner);
+              core.setOutput('fallback_repo', context.repo.repo);
+            }
 
       - name: Create GitHub Issue from MDR
         uses: actions/github-script@v7
@@ -101,9 +135,23 @@ jobs:
               labels.push('urgent');
             }
 
+            // Multi-repo: use validated Target-Repo, fall back to hub if repo no longer exists
+            const repoValid = '${{ steps.validate.outputs.repo_valid }}' === 'true';
+            const targetOwner = repoValid
+              ? ('${{ steps.extract.outputs.target_owner }}' || context.repo.owner)
+              : ('${{ steps.validate.outputs.fallback_owner }}' || context.repo.owner);
+            const targetRepo = repoValid
+              ? ('${{ steps.extract.outputs.target_repo_name }}' || context.repo.repo)
+              : ('${{ steps.validate.outputs.fallback_repo }}' || context.repo.repo);
+            const isRemoteRepo = targetOwner !== context.repo.owner || targetRepo !== context.repo.repo;
+
+            if (isRemoteRepo) {
+              console.log(`Multi-repo routing: creating issue in ${targetOwner}/${targetRepo}`);
+            }
+
             const issue = await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner: targetOwner,
+              repo: targetRepo,
               title,
               body,
               labels,
@@ -111,12 +159,16 @@ jobs:
 
             console.log(`Created issue #${issue.data.number}: ${issue.data.html_url}`);
 
-            // Post a reply comment linking to the new issue
+            // Post a reply comment linking to the new issue (always in the source repo/PR)
+            const replyBody = isRemoteRepo
+              ? `🖖 **TNG Bridge** — MDR signal received. Tracking issue created in \`${targetOwner}/${targetRepo}\`: ${issue.data.html_url}`
+              : `🖖 **TNG Bridge** — MDR signal received. Tracking issue created: ${issue.data.html_url}`;
+
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `🖖 **TNG Bridge** — MDR signal received. Tracking issue created: ${issue.data.html_url}`,
+              body: replyBody,
             });
 
       - name: Notify Teams (fire-and-forget)

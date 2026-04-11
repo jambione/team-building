@@ -14,6 +14,9 @@
 | **Mission** | _One-line description_ |
 | **Opened By** | picard |
 | **Status** | open / closed |
+| **Repo** | _(which spoke repo this mission targets — set by picard at mission start)_ |
+| **Affected Repos** | _(comma-separated if mission touches multiple repos; same as Repo for single-repo missions)_ |
+| **Cross-Repo Dependencies** | _(describe any dependencies on other repos relevant to this mission; "none" if not applicable)_ |
 
 ---
 
