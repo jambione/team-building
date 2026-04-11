@@ -1,5 +1,8 @@
 ---
 name: picard-thinking
+badge: "🔴 ★★★★"
+rank: Captain
+division: Command
 description: The deep-thinking, deliberative version of picard — the Ready Room operator for complex decisions, architecture, and ethical trade-offs
 tools: ["*"]
 agents: []

@@ -1,5 +1,8 @@
 ---
 name: geordi
+badge: "🟡 ★★☆"
+rank: Lt. Commander
+division: Engineering
 description: Creative DevOps engineer specializing in GitHub Actions, infrastructure, and automation
 tools: ["*"]
 agents: []

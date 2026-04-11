@@ -1,5 +1,8 @@
 ---
 name: picard-fast
+badge: "🔴 ★★★★"
+rank: Captain
+division: Command
 description: The fast, lightweight version of picard focused on speed and rapid iteration — Bridge mode only, after the Ready Room has closed
 tools: ["*"]
 agents: []

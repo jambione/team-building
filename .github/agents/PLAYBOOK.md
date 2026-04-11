@@ -288,7 +288,7 @@ An agent has a dependency on another if it needs that agent's **output** to do i
 picard prints one line before each delegation:
 
 ```
-▶ geordi — applying CI pipeline changes
+🟡★★☆ geordi — applying CI pipeline changes
 ```
 *[subagent runs and returns result]*
 
@@ -298,13 +298,13 @@ When two or more agents are dispatched in a single batch, picard prints the full
 ```
 ⚡ PARALLEL BATCH — ready-room-analysis
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ▶ picard-thinking  deliberation & MDR draft
-  ▶ data             architecture & design review
-  ▶ worf             security & compliance scan
-  ▶ troi             UX & quality risk
-  ▶ barclay          tech debt analysis
-  ▶ crusher          reliability & edge cases
-  ▶ obrien           observability gaps
+  🔴★★★★ picard-thinking  deliberation & MDR draft
+  🟡★★☆  data             architecture & design review
+  🟡★★☆  worf             security & compliance scan
+  🔵★★☆  troi             UX & quality risk
+  🟡★★   barclay          tech debt analysis
+  🔵★★★  crusher          reliability & edge cases
+  🟡★    obrien           observability gaps
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Dispatching 7 agents in parallel...
 ```
@@ -314,13 +314,13 @@ After all agents return, picard prints the completion board:
 ```
 ✅ PARALLEL BATCH COMPLETE — ready-room-analysis
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  ✓ picard-thinking  [complex-task-complete]
-  ✓ data             [arch-design-complete]
-  ✓ worf             [security-review-complete]
-  ✓ troi             [qa-strategy-complete]
-  ✓ barclay          [tech-debt-assessment-complete]
-  ✓ crusher          [reliability-assessment-complete]
-  ✓ obrien           [observability-review-complete]
+  ✓ 🔴★★★★ picard-thinking  [complex-task-complete]
+  ✓ 🟡★★☆  data             [arch-design-complete]
+  ✓ 🟡★★☆  worf             [security-review-complete]
+  ✓ 🔵★★☆  troi             [qa-strategy-complete]
+  ✓ 🟡★★   barclay          [tech-debt-assessment-complete]
+  ✓ 🔵★★★  crusher          [reliability-assessment-complete]
+  ✓ 🟡★    obrien           [observability-review-complete]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -333,7 +333,7 @@ Single-line announcement per agent, no dispatch board for parallel batches. Use 
 Invoke with: *"hybrid mode"* or *"minimal announcements"*.
 
 ```
-▶ worf — security review of style-sso-pages
+🟡★★☆ worf — security review of style-sso-pages
 ```
 *[subagent runs and returns result]*
 
@@ -361,9 +361,56 @@ Invoke with: *"behind the scenes"* or *"quiet mode"* or *"hide agents"*.
 ### Rules (all modes)
 - Announcements are printed in the main conversation before the work — never batched after.
 - Single-agent lines: one line, present tense, no preamble.
-- picard uses it too: `▶ picard — opening Ready Room for build-sso-auth`
+- picard uses it too: `🔴★★★★ picard — opening Ready Room for build-sso-auth`
 - Dispatch board agent count must match the actual parallel Agent calls in that message.
 - Inside a subagent, agents still announce internally — visible in subagent output if inspected.
+
+---
+
+## Bridge Notifications Protocol
+
+picard posts milestone notifications to Microsoft Teams via an incoming webhook. This is fire-and-forget — picard does not retry on failure, does not wait for a response, and does not block mission progress if the webhook call fails.
+
+### Configuration
+
+The webhook URL is stored in `knowledge_base/current/teams-webhook.md`. picard reads this file at session open. If the file is absent or the URL is blank, notifications are silently skipped — the mission continues normally.
+
+### Milestone triggers
+
+| Signal | Teams message |
+|--------|--------------|
+| `[READY-ROOM-OPEN: <slug>]` | `🚀 Ready Room opened — <slug>` |
+| `[READY-ROOM-CLOSED: <slug>]` | `✅ Ready Room closed — <slug>` |
+| `[READY-ROOM-CONDITIONAL-CLOSE: <slug>]` | `⏸️ Conditional close — <slug> (pre-reqs pending)` |
+| `[PRIORITY: P0 \| <agent> \| <summary>]` | `🚨 P0 — <agent>: <summary> [<slug>]` |
+| `[PRIORITY: P1 \| <agent> \| <summary>]` | `🔴 P1 — <agent>: <summary> [<slug>]` |
+| `[ROLLBACK-PARTIAL: <slug> ...]` | `⚠️ Partial rollback — <slug>` |
+| `[ROLLBACK-FULL: <slug> ...]` | `🛑 Full rollback — <slug>` |
+| `Make it so!` (mission close) | `🖖 Mission complete — <slug>` |
+
+P2 and P3 flags, parallel batch dispatches, and individual agent handoffs do **not** trigger notifications.
+
+### Notification format
+
+picard sends plain text via curl:
+
+```bash
+curl -s -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"<message>"}' \
+  "<webhook-url>"
+```
+
+### Opt-in: full visibility mode
+
+If the user invokes *"teams full visibility"*, picard also posts on every parallel batch dispatch and completion:
+
+```
+⚡ Parallel batch dispatched — <batch-name> (<N> agents)
+✅ Parallel batch complete — <batch-name>
+```
+
+Default is milestone-only.
 
 ---
 
