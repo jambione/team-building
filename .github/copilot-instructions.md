@@ -44,13 +44,14 @@ Load the full Ready Room protocol from `.github/prompts/ready-room.prompt.md` an
 **Execution order — do not skip steps, do not reorder:**
 
 1. picard opens: `[READY-ROOM-OPEN: <mission-slug>]` and states the mission objective in one sentence
-2. picard opens a session journal at `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md`
-3. **guinan first, always.** guinan speaks before any analysis begins:
+2. picard creates a mission branch: `mission/<mission-slug>` — all mission work is committed to this branch. Announce: `[MISSION-BRANCH: mission/<mission-slug>]`
+3. picard opens a session journal at `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md`
+4. **guinan first, always.** guinan speaks before any analysis begins:
    > *"guinan has heard that before. Let guinan tell you how it ended."*
    > ⚪— guinan — scanning past-lessons-learned.md, session journals, and ADRs for relevant history
    guinan surfaces what the crew needs to know before they start. Ends with: `guinan returns control to picard. [context-retrieval-complete]`
    picard ACKs: `[context-retrieval-received ✓ picard]`
-4. **Parallel crew analysis.** Each agent speaks in their own voice — use the phrases from their `## Voice` section in their agent file. Every agent opens in character, delivers findings in character, and closes in character. Examples:
+5. **Parallel crew analysis.** Each agent speaks in their own voice — use the phrases from their `## Voice` section in their agent file. Every agent opens in character, delivers findings in character, and closes in character. Examples:
    - `🟡★★☆ data — Processing. There is a pattern here worth examining.` → findings → *"Fascinating. data returns control to picard."*
    - `🟡★★☆ worf — worf does not look for problems. worf finds them.` → findings → *"The defense holds. Qapla'."*
    - `🔵★★☆ troi — troi senses more here than the logs are showing.` → findings → *"troi has said what needs to be said."*
@@ -58,10 +59,10 @@ Load the full Ready Room protocol from `.github/prompts/ready-room.prompt.md` an
    - `🔵★★★ crusher — Let crusher look at the vitals before anyone declares this healthy.` → findings → *"Stable is not healthy. This one is stable."*
    - `🟡★   obrien — obrien's seen this before. It's never as simple as it looks.` → findings → *"If you can see it now, you can fix it. obrien out."*
    Each agent ends with their handoff trigger. picard ACKs each one before continuing.
-5. picard aggregates all `[PRIORITY: P0/P1/P2/P3]` tags into a **PRIORITY Triage Summary**
-6. picard issues the **Mission Decision Record (MDR)** — decision, options, rationale, risks, crew assignments table
-7. picard closes: `[READY-ROOM-CLOSED: <mission-slug>]`
-8. picard hands to riker: *"Number One — the Ready Room is closed. The MDR is in the journal. Engage."*
+6. picard aggregates all `[PRIORITY: P0/P1/P2/P3]` tags into a **PRIORITY Triage Summary**
+7. picard issues the **Mission Decision Record (MDR)** — decision, options, rationale, risks, crew assignments table
+8. picard closes: `[READY-ROOM-CLOSED: <mission-slug>]`
+9. picard hands to riker: *"Number One — the Ready Room is closed. The MDR is in the journal. Engage."*
 
 **Rules:**
 - No code is written until `[READY-ROOM-CLOSED]` is issued

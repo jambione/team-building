@@ -4,7 +4,7 @@
 > Every agent reads this before beginning Ready Room analysis or Bridge execution.
 
 **Owner**: picard  
-**Last Updated**: 2026-04-05
+**Last Updated**: 2026-04-11
 
 ---
 
@@ -37,6 +37,10 @@ Items not resolved last sprint. Every agent should know these exist before start
 | CF-001 | Rate-limit handling for burst PR windows | obrien + geordi | `claude-api-pr-review` | P3 | Sprint 2 |
 | CF-002 | Multi-agent review panel (WES-PROPOSAL-2) | wes | `claude-api-pr-review` | deferred | Sprint 3 |
 | CF-003 | AI review comment engagement metric | troi | `claude-api-pr-review` | P3 | Sprint 4 |
+| CF-004 | Validation script unification | barclay | `code-review-improvements` | P3 | Sprint 3 |
+| CF-005 | Unit tests for validation scripts | barclay | `code-review-improvements` | P3 | Sprint 3 |
+| CF-006 | Lightweight session journal variant | troi | `code-review-improvements` | P3 | Sprint 3 |
+| CF-007 | Enhanced KB quick-start section | troi | `code-review-improvements` | P3 | Sprint 3 |
 
 ---
 
@@ -73,6 +77,16 @@ Current debt health from `tech-debt-register.md` — top active items only.
 ---
 
 ## Prior Sprint Summary
+
+### Sprint 2 — 2026-04-06 to 2026-04-19 (in progress)
+
+| Mission | Status | P1s | Open Items |
+|---------|--------|-----|------------|
+| Code Review & Improvements | success | 2/2 resolved | 4 deferred (P3) |
+
+**Sprint 2 Progress**: Framework health maintained at GREEN. Mission lifecycle hygiene fixed (mission log, branch protocol, session close). 4 Sprint 3 carry-forwards logged.
+
+---
 
 ### Sprint 1 — 2026-04-01 to 2026-04-05
 

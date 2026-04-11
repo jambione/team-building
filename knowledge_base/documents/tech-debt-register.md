@@ -14,7 +14,7 @@ Centralized registry of known technical debt items across the codebase and infra
 
 **Owner**: barclay  
 **Review Cadence**: Every sprint  
-**Last Updated**: 2026-04-05
+**Last Updated**: 2026-04-11
 
 ---
 
@@ -51,13 +51,6 @@ Centralized registry of known technical debt items across the codebase and infra
 | TD-009 | Validation script fragmentation — 3 separate tools, no unified runner | Medium | barclay | 2 hrs | 2026-04-11 | Sprint 3 | open |
 | TD-010 | No unit tests for validation scripts (`kb-lint.py`, etc.) | Medium | barclay | 2 hrs | 2026-04-11 | Sprint 3 | open |
 
-### Architecture & Design
-
-| ID | Item | Severity | Owner | Effort | Added | Target Sprint |
-|----|------|----------|-------|--------|-------|---------------|
-| TD-009 | No source code in repository — framework is governance/workflow only; actual application scaffold missing | High | data | 4 hrs | 2026-04-05 | Sprint 3 |
-| TD-010 | No `package.json` at repo root — CI runs against nothing | Critical | data | 1 hr | 2026-04-05 | Sprint 1 |
-
 ---
 
 ## Resolved Debt Items
@@ -82,7 +75,7 @@ Centralized registry of known technical debt items across the codebase and infra
 | Sprint | Items Added | Items Resolved | Net Change | Escalations |
 |--------|-------------|----------------|------------|-------------|
 | Sprint 1 | 10 | 8 | -8 resolved | 0 |
-| Sprint 2 | — | — | — | — |
+| Sprint 2 | 2 | 1 | TD-001 resolved; TD-009/TD-010 added | 0 |
 
 ---
 
