@@ -1,0 +1,195 @@
+# MDR-to-Issue Workflow
+#
+# Watches for picard's [MDR-ISSUED] signal in issue comments and PR comments,
+# then automatically creates a tracked GitHub Issue for the mission.
+#
+# Signal format expected from picard:
+#   [MDR-ISSUED: <mission-slug>] Priority: <P0|P1|P2|P3>
+#   Mission: <one-line description>
+#   Target-Repo: <owner>/<repo>   ← optional; defaults to current repo if omitted
+#
+# Multi-repo workspace: When the mission targets a spoke repo, picard includes
+# Target-Repo so the issue is created in the correct service repo, not the hub.
+#
+# Owner: geordi | Security review: worf
+
+name: MDR to Issue
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  detect-and-create:
+    name: Detect MDR signal and create tracking issue
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    # Only run when the comment contains the MDR-ISSUED signal
+    if: |
+      contains(github.event.comment.body, '[MDR-ISSUED:')
+
+    steps:
+      - name: Extract MDR details
+        id: extract
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          # Extract mission slug from [MDR-ISSUED: <slug>]
+          SLUG=$(echo "$COMMENT_BODY" | grep -oP '\[MDR-ISSUED:\s*\K[^\]]+' | head -1 | xargs)
+
+          # Extract priority (P0–P3), default to P2 if not found
+          PRIORITY=$(echo "$COMMENT_BODY" | grep -oP 'Priority:\s*\K(P[0-3])' | head -1)
+          PRIORITY=${PRIORITY:-P2}
+
+          # Extract one-line mission description after "Mission:"
+          MISSION=$(echo "$COMMENT_BODY" | grep -oP 'Mission:\s*\K[^\n]+' | head -1 | xargs)
+          MISSION=${MISSION:-"Mission details in linked source"}
+
+          # Extract optional Target-Repo: <owner>/<repo> for multi-repo workspace routing
+          TARGET_REPO=$(echo "$COMMENT_BODY" | grep -oP 'Target-Repo:\s*\K[^\s\n]+' | head -1 | xargs)
+          # Fall back to current repo if not specified
+          if [ -z "$TARGET_REPO" ]; then
+            TARGET_REPO="${{ github.repository }}"
+          fi
+          TARGET_OWNER=$(echo "$TARGET_REPO" | cut -d'/' -f1)
+          TARGET_REPO_NAME=$(echo "$TARGET_REPO" | cut -d'/' -f2)
+
+          # Determine source URL (the comment's HTML URL)
+          SOURCE_URL="${{ github.event.comment.html_url }}"
+
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "priority=$PRIORITY" >> "$GITHUB_OUTPUT"
+          echo "mission=$MISSION" >> "$GITHUB_OUTPUT"
+          echo "source_url=$SOURCE_URL" >> "$GITHUB_OUTPUT"
+          echo "target_owner=$TARGET_OWNER" >> "$GITHUB_OUTPUT"
+          echo "target_repo_name=$TARGET_REPO_NAME" >> "$GITHUB_OUTPUT"
+          echo "target_repo=$TARGET_REPO" >> "$GITHUB_OUTPUT"
+
+      - name: Validate target repo exists (fluid workspace guard)
+        id: validate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const targetOwner = '${{ steps.extract.outputs.target_owner }}';
+            const targetRepo = '${{ steps.extract.outputs.target_repo_name }}';
+            try {
+              await github.rest.repos.get({ owner: targetOwner, repo: targetRepo });
+              core.setOutput('repo_valid', 'true');
+              console.log(`Target repo ${targetOwner}/${targetRepo} exists and is accessible.`);
+            } catch (e) {
+              core.warning(`Target repo ${targetOwner}/${targetRepo} not found or not accessible. Falling back to hub repo.`);
+              core.setOutput('repo_valid', 'false');
+              core.setOutput('fallback_owner', context.repo.owner);
+              core.setOutput('fallback_repo', context.repo.repo);
+            }
+
+      - name: Create GitHub Issue from MDR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const slug = '${{ steps.extract.outputs.slug }}';
+            const priority = '${{ steps.extract.outputs.priority }}';
+            const mission = '${{ steps.extract.outputs.mission }}';
+            const sourceUrl = '${{ steps.extract.outputs.source_url }}';
+            const actor = '${{ github.event.comment.user.login }}';
+
+            // Map priority to label color description
+            const priorityLabel = `priority:${priority.toLowerCase()}`;
+
+            const title = slug
+              ? `[MDR] ${slug}`
+              : `[MDR] Mission tracking issue`;
+
+            const body = [
+              `## Mission Decision Record`,
+              ``,
+              `**Mission:** ${mission}`,
+              `**Priority:** ${priority}`,
+              `**Issued by:** @${actor}`,
+              `**Source:** ${sourceUrl}`,
+              ``,
+              `---`,
+              ``,
+              `This issue was automatically created from a \`[MDR-ISSUED]\` signal by picard.`,
+              ``,
+              `### Checklist`,
+              `- [ ] Mission scope confirmed`,
+              `- [ ] Implementation complete`,
+              `- [ ] Track C review passed (worf, troi, crusher)`,
+              `- [ ] KB updated`,
+              `- [ ] Mission closed`,
+            ].join('\n');
+
+            // Determine labels to apply
+            const labels = ['mission', 'mdr', priorityLabel];
+
+            // Add P0/P1 urgency label
+            if (priority === 'P0' || priority === 'P1') {
+              labels.push('urgent');
+            }
+
+            // Multi-repo: use validated Target-Repo, fall back to hub if repo no longer exists
+            const repoValid = '${{ steps.validate.outputs.repo_valid }}' === 'true';
+            const targetOwner = repoValid
+              ? ('${{ steps.extract.outputs.target_owner }}' || context.repo.owner)
+              : ('${{ steps.validate.outputs.fallback_owner }}' || context.repo.owner);
+            const targetRepo = repoValid
+              ? ('${{ steps.extract.outputs.target_repo_name }}' || context.repo.repo)
+              : ('${{ steps.validate.outputs.fallback_repo }}' || context.repo.repo);
+            const isRemoteRepo = targetOwner !== context.repo.owner || targetRepo !== context.repo.repo;
+
+            if (isRemoteRepo) {
+              console.log(`Multi-repo routing: creating issue in ${targetOwner}/${targetRepo}`);
+            }
+
+            const issue = await github.rest.issues.create({
+              owner: targetOwner,
+              repo: targetRepo,
+              title,
+              body,
+              labels,
+            });
+
+            console.log(`Created issue #${issue.data.number}: ${issue.data.html_url}`);
+
+            // Post a reply comment linking to the new issue (always in the source repo/PR)
+            const replyBody = isRemoteRepo
+              ? `🖖 **TNG Bridge** — MDR signal received. Tracking issue created in \`${targetOwner}/${targetRepo}\`: ${issue.data.html_url}`
+              : `🖖 **TNG Bridge** — MDR signal received. Tracking issue created: ${issue.data.html_url}`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: replyBody,
+            });
+
+      - name: Notify Teams (fire-and-forget)
+        if: always()
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          SLUG: ${{ steps.extract.outputs.slug }}
+          PRIORITY: ${{ steps.extract.outputs.priority }}
+          SOURCE_URL: ${{ steps.extract.outputs.source_url }}
+        run: |
+          if [ -n "$TEAMS_WEBHOOK_URL" ]; then
+            curl -s -X POST "$TEAMS_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"@type\": \"MessageCard\",
+                \"summary\": \"TNG MDR Issued\",
+                \"themeColor\": \"0076D7\",
+                \"sections\": [{
+                  \"activityTitle\": \"🖖 TNG Bridge — MDR Issued\",
+                  \"activitySubtitle\": \"Mission: $SLUG\",
+                  \"activityText\": \"Priority: $PRIORITY | Source: $SOURCE_URL\"
+                }]
+              }" || true
+          fi

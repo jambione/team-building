@@ -31,9 +31,11 @@ picard states:
 
 ---
 
-## STEP 1B — Mission Briefing Packet
+## STEP 1B + 2 — Mission Briefing Packet & Historical Context (parallel)
 
-Before calling guinan, picard compiles a **Mission Briefing Packet** and posts it in the conversation. This front-loads all relevant context so every agent that follows starts informed.
+**These two steps run simultaneously** — picard reads KB docs while guinan scans history. Dispatch both in a single parallel batch.
+
+**picard** compiles the **Mission Briefing Packet** and posts it in the conversation. This front-loads all relevant context so every agent that follows starts informed.
 
 picard reads and summarizes:
 
@@ -52,32 +54,28 @@ picard reads and summarizes:
 | Relevant ADRs | [ADR IDs from architecture-decision-records.md ADR Index] |
 ```
 
-**Rules**:
+**picard's rules**:
 - If sprint-state.md is not current (last updated more than 1 sprint ago), picard updates it before proceeding
 - If mission-index.md has no related missions, picard states "no prior missions in this domain" — this is useful information, not an error
 - The Briefing Packet is posted in the conversation — it is not log-only
 
----
-
-## STEP 2 — Historical Context (guinan)
-
-Before analysis begins, guinan surfaces relevant history.
-
-**guinan**: Consult `past-lessons-learned.md`, `knowledge_base/sessions/`, relevant ADRs, and git history. Answer:
+**guinan** (dispatched in the same batch as picard's KB reads): Consult `past-lessons-learned.md`, `knowledge_base/sessions/`, relevant ADRs, and git history. Answer:
 1. Has the crew faced a similar decision before? What was decided and why?
 2. Are there any documented failure modes that apply here?
 3. Is there any `[NEW DISCOVERY]` flag in the KB that the crew should know about before proceeding?
 
 End with: `guinan returns control to picard. [context-retrieval-complete]`
 
-picard ACKs: `[context-retrieval-received ✓ picard]`
+picard ACKs both: `[context-retrieval-received ✓ picard]` and posts the Briefing Packet in the conversation.
 
 > **guinan Mid-Session Interrupt** — available at any point during Steps 3–5:
 > Any crew member may call `[guinan-consult: <topic>]` to trigger a focused historical scan on a specific topic. guinan runs steps 1–3 of the structured query protocol scoped to that topic and returns findings immediately. picard ACKs with `[guinan-consult-received ✓ picard]`. Use when a conflict, a PRIORITY flag, or a new proposal warrants a quick historical check before picard decides.
 
 ---
 
-## STEP 3 — Ready Room Analysis (parallel crew)
+## STEP 3 — Ready Room Analysis (single parallel batch)
+
+**Dispatch all analysts in one message as parallel Agent calls.** Do not call them sequentially. All agents return their findings before picard proceeds to Step 4.
 
 picard-thinking leads this step as the deliberation operator.
 
@@ -85,7 +83,7 @@ picard-thinking leads this step as the deliberation operator.
 
 **Action announcement rule**: Every crew member announces their action on one line before producing output: `▶ <agent> — <what they are doing>`
 
-The following crew analyze in **parallel** — analysis only, no implementation:
+The following crew analyze in a **single parallel batch** — analysis only, no implementation:
 
 - **picard-thinking**: Deep architectural + ethical analysis. Options matrix (bullet table). Trade-offs and second-order consequences. End with: `picard-thinking returns findings to picard. [complex-task-complete]`
 
@@ -203,9 +201,9 @@ picard hands off immediately to riker — no additional prompt needed:
 
 ---
 
-## STEP 7 — Track C Review (hardening pass — displayed in chat)
+## STEP 7 — Track C Review (single parallel batch — displayed in chat)
 
-After Bridge execution, the following specialists publish their review **directly in the conversation** using the standard review block format. This is not optional and not log-only — the crew's findings must be visible.
+After Bridge execution, picard dispatches worf, troi, and crusher in **a single parallel batch** — one message, three Agent calls. All three return their findings before picard issues the Go/No-Go. Their reviews are displayed **directly in the conversation** using the standard review block format. This is not optional and not log-only — the crew's findings must be visible.
 
 Each review block:
 
@@ -260,7 +258,7 @@ GO / NO-GO
 
 After Track C reviews and Go/No-Go:
 
-- All specialists update their domain KB documents
+- **KB updates — single parallel batch**: picard dispatches all specialists who need to update their domain documents in one message. Each specialist emits `[KB-UPDATED]` or `[KB-NO-CHANGE]` on return. picard waits for all returns before proceeding.
 - picard fills the Mission Debrief using `knowledge_base/sessions/mission-debrief-template.md`
 - picard closes the session journal: `status: closed`
 - guinan is notified for cross-session continuity

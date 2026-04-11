@@ -14,6 +14,9 @@
 | **Mission** | _One-line description_ |
 | **Opened By** | picard |
 | **Status** | open / closed |
+| **Repo** | _(which spoke repo this mission targets — set by picard at mission start)_ |
+| **Affected Repos** | _(comma-separated if mission touches multiple repos; same as Repo for single-repo missions)_ |
+| **Cross-Repo Dependencies** | _(describe any dependencies on other repos relevant to this mission; "none" if not applicable)_ |
 
 ---
 
@@ -128,14 +131,39 @@ _All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
 
 ---
 
+## KB Update Audit
+
+_Reconcile every `[NEW DISCOVERY]` flag against a `[KB-UPDATED]` signal before mission close. Any gap blocks close._
+
+| [NEW DISCOVERY] | Raised By | KB Doc Assigned | [KB-UPDATED] Signal Received | Content Description Specific? | Status |
+|-----------------|-----------|-----------------|------------------------------|-------------------------------|--------|
+| | | | | yes / no — re-invoke if no | pending / verified / deferred |
+
+**Quality check**: picard verifies each `[KB-UPDATED]` signal includes a specific content description (not just "updated the document"). Any signal that fails the quality check is treated as missing — picard re-invokes the owning agent.
+
+**picard emits `[LEARNING-LOOP-VERIFIED: <mission-slug>]` only when all rows are verified and quality-checked.**
+
+After emitting `[LEARNING-LOOP-VERIFIED]`, picard triggers guinan cross-session synthesis:
+```
+[GUINAN-SYNTHESIZE: <mission-slug>]
+Session journal: knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md
+Debrief: knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>-debrief.md
+```
+guinan updates `knowledge_base/current/session-continuity.md` and emits `[KB-UPDATED: knowledge_base/current/session-continuity.md | <summary>]`.
+
+---
+
 ## Session Close
 
 - [ ] Ready Room closed with `[READY-ROOM-CLOSED]` or `[READY-ROOM-CONDITIONAL-CLOSE]` before execution began
 - [ ] If conditional close: Pre-req Checklist recorded with owner + sprint for every item
 - [ ] If conditional close: Full `[READY-ROOM-CLOSED]` issued after all checklist items verified before riker engaged
+- [ ] Pre-close Crew Checklist run — all mandatory agents for mission type ACKed
 - [ ] All P1 PRIORITY items resolved (or conditionally resolved with checklist) before Ready Room closed
 - [ ] Mission Decision Record (MDR) produced by picard-thinking
-- [ ] All crew have updated their domain KB documents
+- [ ] Execution Verification Report received from riker before Track C review
+- [ ] All crew have emitted `[KB-UPDATED]` or `[KB-NO-CHANGE]` signals
+- [ ] KB Update Audit table complete — `[LEARNING-LOOP-VERIFIED]` emitted
 - [ ] All `[NEW DISCOVERY]` flags resolved or explicitly deferred with owner + sprint
 - [ ] All `[EXTERNAL-EVENT]` signals raised during this session logged in `agent-performance-log.md` External Event Log
 - [ ] All WES proposals dispositioned (approved / rejected / deferred)
@@ -145,7 +173,8 @@ _All `WES-PROPOSAL-<N>` items submitted this session and their disposition._
 - [ ] Mission Debrief filled (`mission-debrief-template.md`)
 - [ ] Mission log filed at `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md`
 - [ ] Mission index updated at `knowledge_base/missions/mission-index.md`
-- [ ] guinan notified of session journal availability for cross-session continuity
+- [ ] guinan notified with `[GUINAN-SYNTHESIZE: <mission-slug>]` — guinan updates `knowledge_base/current/session-continuity.md`
+- [ ] guinan `[KB-UPDATED: knowledge_base/current/session-continuity.md | ...]` signal received and verified
 
 **Session Status**: open / **closed**
 

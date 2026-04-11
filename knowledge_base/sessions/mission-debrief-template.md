@@ -144,12 +144,14 @@ _Was the Ready Room protocol followed? Did it surface what it needed to?_
 ## Debrief Close
 
 - [ ] Session journal marked `status: closed`
-- [ ] All KB updates confirmed from crew
-- [ ] Lessons learned added to `past-lessons-learned.md`
-- [ ] `agent-performance-log.md` updated
-- [ ] Mission log filed at `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md`
+- [ ] All KB updates confirmed from crew — every `[KB-UPDATED]` signal verified for specific content (not just signal presence)
+- [ ] Lessons learned added to `past-lessons-learned.md` (guinan's domain — verify guinan emitted `[KB-UPDATED]` with content)
+- [ ] `agent-performance-log.md` updated — guinan's KB update count must be non-zero if any lessons were found
+- [ ] Mission log filed at `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` — includes Lessons Learned table and KB Documents Updated table
 - [ ] Mission index updated at `knowledge_base/missions/mission-index.md`
-- [ ] guinan notified: session journal + debrief available for cross-session synthesis
+- [ ] `[LEARNING-LOOP-VERIFIED: <mission-slug>]` emitted by picard
+- [ ] `[GUINAN-SYNTHESIZE: <mission-slug>]` triggered — guinan updates `knowledge_base/current/session-continuity.md`
+- [ ] guinan `[KB-UPDATED: knowledge_base/current/session-continuity.md | ...]` signal received
 - [ ] ADR candidates handed to data for Sprint N
 
 **Debrief Status**: complete
