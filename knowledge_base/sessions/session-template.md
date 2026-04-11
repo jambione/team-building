@@ -75,6 +75,19 @@ _All `[PRIORITY]` tags raised during the Ready Room. P1 items block `[READY-ROOM
 
 ---
 
+## Acceptance Criteria
+
+_Acceptance Criteria drafted by troi (STEP 5B) and approved by picard before `[READY-ROOM-CLOSED]`. Required on every mission._
+
+| Field | Value |
+|-------|-------|
+| **AC File** | `knowledge_base/missions/acceptance-criteria/YYYY-MM-DD-<mission-slug>-ac.md` |
+| **Scenarios Written** | _N_ |
+| **`[AC-APPROVED]` Signal** | emitted / pending / not-applicable |
+| **Status** | draft / approved |
+
+---
+
 ## [NEW DISCOVERY] Flags
 
 _All new discoveries raised this session. Must be resolved or explicitly deferred before session close._
@@ -173,6 +186,7 @@ guinan updates `knowledge_base/current/session-continuity.md` and emits `[KB-UPD
 - [ ] If conditional close: Full `[READY-ROOM-CLOSED]` issued after all checklist items verified before riker engaged
 - [ ] Pre-close Crew Checklist run — all mandatory agents for mission type ACKed
 - [ ] All P1 PRIORITY items resolved (or conditionally resolved with checklist) before Ready Room closed
+- [ ] Acceptance Criteria approved — `[AC-APPROVED: <mission-slug>]` emitted before `[READY-ROOM-CLOSED]`
 - [ ] Mission Decision Record (MDR) produced by picard-thinking
 - [ ] Execution Verification Report received from riker before Track C review
 - [ ] All crew have emitted `[KB-UPDATED]` or `[KB-NO-CHANGE]` signals
