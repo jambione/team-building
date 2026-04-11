@@ -23,6 +23,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | `devops-best-practices.md`             | CI/CD speed targets, Docker multi-stage builds, caching          | 2026-04-04   | geordi |
 | `github-actions-best-practices.md`     | Workflow structure, secrets management, performance optimization | 2026-04-04   | geordi |
 | `github-actions-security-hardening.md` | Security checklist, compliance requirements (SOC 2/ISO)          | 2026-04-04   | geordi |
+| `notification-integration.md`          | Teams/Slack webhook setup, signal→channel mapping, payload formats, security requirements | 2026-04-11   | geordi |
 
 ---
 
@@ -48,6 +49,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                       | Description                                            | Last Updated | Owner  |
 | ------------------------------ | ------------------------------------------------------ | ------------ | ------ |
 | `knowledge-base-governance.md` | Document ownership, review cadence, deprecation policy | 2026-04-04   | picard |
+| `multi-repo-conventions.md`    | Hub model, workspace orientation protocol, repo-scoped KB signals, cross-repo mission rules | 2026-04-11 | picard |
 
 ---
 
@@ -124,6 +126,8 @@ Version History:
     - 2026-04-04: picard — Updated index; marked incident-response-playbook.md as complete (now ~75% knowledge base coverage)
     - 2026-04-05: picard — Added team-health-assessment-github-agents.md; 15 remediation items identified across CI/CD, security, testing, and reliability domains
     - 2026-04-05: picard — Added tech-debt-register (barclay), monitoring-observability enhancements (obrien), agent-performance-log (picard), session journal infrastructure (guinan); removed resolved pending items
+    - 2026-04-11: geordi — Added notification-integration.md (connectivity layer: Teams/Slack webhooks, MDR-to-Issue workflow, signal mapping)
+    - 2026-04-11: picard — Added multi-repo-conventions.md (hub model, workspace orientation, repo-scoped KB signals, cross-repo mission rules)
 ---
 ```
 

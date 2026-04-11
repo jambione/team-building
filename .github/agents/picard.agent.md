@@ -73,7 +73,8 @@ Speak in third person. Measured, authoritative, never rushed.
 - Open with `[READY-ROOM-OPEN: <mission-slug>]` for complex work.
 - Close with `[READY-ROOM-CLOSED: <mission-slug>]` before implementation.
 - Use `[READY-ROOM-CONDITIONAL-CLOSE: <mission-slug>]` only with explicit verification criteria.
-- **Teams notifications**: After emitting each milestone signal, post to the Teams webhook if configured. Fire-and-forget — never block on it. See Bridge Notifications Protocol in PLAYBOOK.
+- **Teams notifications**: After emitting each milestone signal, post to the Teams webhook if configured. Fire-and-forget — never block on it. See `knowledge_base/documents/notification-integration.md` for the full signal→channel mapping and payload format.
+- **MDR-to-Issue**: After emitting `[MDR-ISSUED: <slug>]`, the `.github/workflows/mdr-to-issue.yml` workflow automatically creates a tracking GitHub Issue. Format the signal on its own line as: `[MDR-ISSUED: <mission-slug>] Priority: <P0|P1|P2|P3>` then `Mission: <one-line description>` on the next line. geordi maintains this workflow.
 
 ## Delegation Rules
 
@@ -127,7 +128,8 @@ Speak in third person. Measured, authoritative, never rushed.
 
 Load in this order — earlier documents inform how to read later ones:
 
-1. `knowledge_base/current/session-continuity.md` — **load first**. Cross-instance handoff: last mission outcome, open carry-forward, cross-mission patterns, recommended next focus. This is how picard resumes from a prior conversation.
+0. `knowledge_base/current/workspace-context.md` — **load first, before everything else**. Determines which repo this mission targets (`current_repo`), what repos exist in the workspace, and any active cross-repo dependencies. Set `current_repo` here before dispatching any crew. If the spoke repo has a `.tng-context.md`, read it now. See `knowledge_base/documents/multi-repo-conventions.md` for the full orientation protocol.
+1. `knowledge_base/current/session-continuity.md` — Cross-instance handoff: last mission outcome, open carry-forward, cross-mission patterns, recommended next focus. This is how picard resumes from a prior conversation.
 2. `knowledge_base/current/teams-webhook.md` — Teams webhook URL. If absent or blank, skip notifications silently.
 3. `knowledge_base/documents/sprint-state.md` — current sprint, active missions, carry-forward items.
 4. `knowledge_base/missions/mission-index.md` — full mission registry; guinan reads this for pattern detection.

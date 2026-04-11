@@ -11,9 +11,9 @@
 
 ## Mission Registry
 
-| Date | Slug | Mission | Sprint | Status | Crew | P1s | Open Items | Log |
-|------|------|---------|--------|--------|------|-----|------------|-----|
-| 2026-04-05 | `claude-api-pr-review` | Add automated PR code review via Claude API to CI pipeline | Sprint 1 | success | picard, guinan, picard-thinking, data, worf, troi, barclay, crusher, obrien, wes, riker | 2/2 resolved | 3 | [→](2026-04-05-claude-api-pr-review.md) |
+| Date | Slug | Mission | Sprint | Repo(s) | Status | Crew | P1s | Open Items | Log |
+|------|------|---------|--------|---------|--------|------|-----|------------|-----|
+| 2026-04-05 | `claude-api-pr-review` | Add automated PR code review via Claude API to CI pipeline | Sprint 1 | `team-building` | success | picard, guinan, picard-thinking, data, worf, troi, barclay, crusher, obrien, wes, riker | 2/2 resolved | 3 | [→](2026-04-05-claude-api-pr-review.md) |
 
 ---
 

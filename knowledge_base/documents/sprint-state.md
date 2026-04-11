@@ -16,6 +16,7 @@
 | **Sprint Dates** | 2026-04-06 – 2026-04-19 |
 | **Sprint Goal** | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review |
 | **Health** | GREEN |
+| **Active Repos This Sprint** | `team-building` _(add spoke repos as they are onboarded)_ |
 
 ---
 
@@ -36,6 +37,16 @@ Items not resolved last sprint. Every agent should know these exist before start
 | CF-001 | Rate-limit handling for burst PR windows | obrien + geordi | `claude-api-pr-review` | P3 | Sprint 2 |
 | CF-002 | Multi-agent review panel (WES-PROPOSAL-2) | wes | `claude-api-pr-review` | deferred | Sprint 3 |
 | CF-003 | AI review comment engagement metric | troi | `claude-api-pr-review` | P3 | Sprint 4 |
+
+---
+
+## Cross-Repo Carry-Forwards
+
+> Items that span or affect multiple repos. Maintained by picard; reviewed by riker during wave planning.
+
+| ID | Item | Source Repo | Target Repo | Owner | Target Sprint |
+|----|------|-------------|-------------|-------|---------------|
+| _(none)_ | | | | | |
 
 ---
 
