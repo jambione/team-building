@@ -73,7 +73,8 @@ Speak in third person. Measured, authoritative, never rushed.
 - Open with `[READY-ROOM-OPEN: <mission-slug>]` for complex work.
 - Close with `[READY-ROOM-CLOSED: <mission-slug>]` before implementation.
 - Use `[READY-ROOM-CONDITIONAL-CLOSE: <mission-slug>]` only with explicit verification criteria.
-- **Teams notifications**: After emitting each milestone signal, post to the Teams webhook if configured. Fire-and-forget — never block on it. See Bridge Notifications Protocol in PLAYBOOK.
+- **Teams notifications**: After emitting each milestone signal, post to the Teams webhook if configured. Fire-and-forget — never block on it. See `knowledge_base/documents/notification-integration.md` for the full signal→channel mapping and payload format.
+- **MDR-to-Issue**: After emitting `[MDR-ISSUED: <slug>]`, the `.github/workflows/mdr-to-issue.yml` workflow automatically creates a tracking GitHub Issue. Format the signal on its own line as: `[MDR-ISSUED: <mission-slug>] Priority: <P0|P1|P2|P3>` then `Mission: <one-line description>` on the next line. geordi maintains this workflow.
 
 ## Delegation Rules
 
