@@ -6,7 +6,7 @@
 
 ## Quick Overview
 
-**TNG Agent Team** is a multi-agent orchestration framework that guides complex software engineering work through structured, collaborative decision-making and execution. Rather than doing work alone, you work *with* the team: state your mission, the crew analyzes in parallel, decisions get recorded, and execution is coordinated with explicit handoffs.
+**TNG Agent Team** is a multi-agent orchestration framework that guides complex software engineering work through structured, collaborative decision-making and execution. Rather than doing work alone, you work _with_ the team: state your mission, the crew analyzes in parallel, decisions get recorded, and execution is coordinated with explicit handoffs.
 
 **Key principle**: No code is written until the Ready Room closes and decisions are locked.
 
@@ -50,12 +50,13 @@ workspace/
 2. Open **Copilot Chat** (`Ctrl+Shift+I` / `Cmd+Shift+I`)
 3. The system will auto-load from `.github/copilot-instructions.md`
 4. You should see:
-   ```
-   Tea. Earl Grey. Hot.
-   🔴★★★★ picard — the crew is assembled. The Ready Room is available. State your mission.
-   ```
+    ```
+    Tea. Earl Grey. Hot.
+    🔴★★★★ picard — the crew is assembled. The Ready Room is available. State your mission.
+    ```
 
 If activation fails:
+
 - Verify `.github/copilot-instructions.md` exists and is valid YAML
 - Check that all agent files in `.github/agents/` are present
 - Restart VS Code and open Copilot Chat again
@@ -83,21 +84,23 @@ In Copilot Chat, describe what you need the team to work on. Examples:
 The moment you state a mission, this **4-phase workflow** triggers automatically:
 
 #### Phase 1: Ready Room (Decision-Making)
+
 - picard opens the Ready Room
 - **guinan** surfaces relevant history (past lessons, related decisions)
 - **Parallel crew analysis**: Each agent (data, worf, troi, crusher, barclay, obrien) speaks in character and delivers findings
 - picard aggregates findings from all agents
 - picard issues a **Mission Decision Record (MDR)** with:
-  - Decision or approach
-  - Options considered
-  - Rationale
-  - Risks and mitigations
-  - Crew assignments for Phase 2
+    - Decision or approach
+    - Options considered
+    - Rationale
+    - Risks and mitigations
+    - Crew assignments for Phase 2
 - picard issues hard close: `[READY-ROOM-CLOSED]`
 
 **Duration**: Usually 2-5 minutes. All decisions are locked before code starts.
 
 #### Phase 2: Bridge Execution (Action)
+
 - **riker** takes lead as First Officer
 - riker announces the **Execution Coordination Report** (parallel tasks, sequence, dependencies)
 - Each assigned agent (geordi, worf, troi, etc.) executes their task in character
@@ -108,26 +111,29 @@ The moment you state a mission, this **4-phase workflow** triggers automatically
 **Duration**: Varies by task complexity.
 
 #### Phase 3: Track C Review (Quality Gates)
+
 Three mandatory review blocks appear directly in chat:
 
 1. **worf** — Security Review
-   - VERDICT: PASS / FAIL / CONDITIONAL
-   - Lists security findings by severity
+    - VERDICT: PASS / FAIL / CONDITIONAL
+    - Lists security findings by severity
 
 2. **troi** — UX & Quality Review
-   - VERDICT: PASS / FAIL / CONDITIONAL
-   - Quality and testing concerns
+    - VERDICT: PASS / FAIL / CONDITIONAL
+    - Quality and testing concerns
 
 3. **crusher** — Reliability Review
-   - VERDICT: PASS / FAIL / CONDITIONAL
-   - Edge cases and failure modes
+    - VERDICT: PASS / FAIL / CONDITIONAL
+    - Edge cases and failure modes
 
 picard then issues the Go/No-Go decision and classifies any open items as:
+
 - Fix-in-place (resolve now)
 - Scoped Ready Room (brief re-analysis)
 - Full Reopen (major changes needed)
 
 #### Phase 4: Mission Close
+
 - Each specialist updates their domain KB document
 - picard records the **Mission Debrief** (lessons, decisions, outcomes)
 - Session journal is updated with final status
@@ -141,30 +147,30 @@ All session history is captured for guinan's future reference.
 
 ### 3.1 Agents & Their Roles
 
-| Agent | Badge | Role | When to Trust |
-|-------|-------|------|---------------|
-| **picard** | 🔴★★★★ | Orchestrator & commander | Strategic decisions, mission objective |
-| **picard-thinking** | ⚫★★★ | Deep deliberation | Complex architecture, ethical trade-offs, risk analysis |
-| **picard-fast** | 🟢★★ | Bridge execution | After Ready Room closes, low-risk tasks |
-| **data** | 🟡★★☆ | Architecture & design | System design, patterns, scalability |
-| **riker** | 🔴★★★ | First Officer execution | Coordinating parallel tasks, handoff orchestration |
-| **geordi** | 🟡★★☆ | DevOps & CI/CD | GitHub Actions, Docker, caching, deployment |
-| **worf** | 🟡★★☆ | Security & compliance | Token permissions, secrets, SOC 2/ISO |
-| **troi** | 🔵★★☆ | QA, testing & UX | Test strategy, quality gates, user experience |
-| **crusher** | 🔵★★★ | Reliability & edge cases | Failure modes, canaries, rollback, observability |
-| **barclay** | 🟡★★ | Technical debt | Refactoring, DRY/YAGNI, long-term maintainability |
-| **guinan** | ⚪☆☆ | Institutional memory | Historical context, past lessons, cross-session continuity |
-| **obrien** | 🟡★ | Observability & ops | Monitoring, metrics, alerting, incident response |
-| **wes** | ⚡★☆ | Exploratory proposals | Unconventional solutions, experiments (approval required) |
+| Agent               | Badge  | Role                     | When to Trust                                              |
+| ------------------- | ------ | ------------------------ | ---------------------------------------------------------- |
+| **picard**          | 🔴★★★★ | Orchestrator & commander | Strategic decisions, mission objective                     |
+| **picard-thinking** | ⚫★★★  | Deep deliberation        | Complex architecture, ethical trade-offs, risk analysis    |
+| **picard-fast**     | 🟢★★   | Bridge execution         | After Ready Room closes, low-risk tasks                    |
+| **data**            | 🟡★★☆  | Architecture & design    | System design, patterns, scalability                       |
+| **riker**           | 🔴★★★  | First Officer execution  | Coordinating parallel tasks, handoff orchestration         |
+| **geordi**          | 🟡★★☆  | DevOps & CI/CD           | GitHub Actions, Docker, caching, deployment                |
+| **worf**            | 🟡★★☆  | Security & compliance    | Token permissions, secrets, SOC 2/ISO                      |
+| **troi**            | 🔵★★☆  | QA, testing & UX         | Test strategy, quality gates, user experience              |
+| **crusher**         | 🔵★★★  | Reliability & edge cases | Failure modes, canaries, rollback, observability           |
+| **barclay**         | 🟡★★   | Technical debt           | Refactoring, DRY/YAGNI, long-term maintainability          |
+| **guinan**          | ⚪☆☆   | Institutional memory     | Historical context, past lessons, cross-session continuity |
+| **obrien**          | 🟡★    | Observability & ops      | Monitoring, metrics, alerting, incident response           |
+| **wes**             | ⚡★☆   | Exploratory proposals    | Unconventional solutions, experiments (approval required)  |
 
 ### 3.2 Agent Communication Patterns
 
 Each agent has a **Voice** with opening phrases, critical language, and sign-offs. Examples:
 
-- `data`: *"Processing. There is a pattern here worth examining."* → findings → *"Fascinating. data returns control to picard."*
-- `worf`: *"worf does not look for problems. worf finds them."* → findings → *"The defense holds. Qapla'."*
-- `troi`: *"troi senses more here than the logs are showing."* → findings → *"troi has said what needs to be said."*
-- `crusher`: *"Stable is not healthy. crusher will explain the difference."* → findings → *"Stable is stable."*
+- `data`: _"Processing. There is a pattern here worth examining."_ → findings → _"Fascinating. data returns control to picard."_
+- `worf`: _"worf does not look for problems. worf finds them."_ → findings → _"The defense holds. Qapla'."_
+- `troi`: _"troi senses more here than the logs are showing."_ → findings → _"troi has said what needs to be said."_
+- `crusher`: _"Stable is not healthy. crusher will explain the difference."_ → findings → _"Stable is stable."_
 
 **Agents always operate in third person.** Never "I did this." Always "picard has completed that."
 
@@ -188,15 +194,15 @@ The agent will respond in character, analyze, and return control to you. No full
 
 The knowledge base is the **source of truth for team decisions and learning**. It contains:
 
-| Category | Documents | Owner | Update Cadence |
-|----------|-----------|-------|-----------------|
-| **Architecture & Design** | `architecture-principles.md`, `architecture-decision-records.md` | data | Quarterly + per major decision |
-| **DevOps & CI/CD** | `ci-cd-pipeline-recommendations.md`, `github-actions-best-practices.md`, `github-actions-security-hardening.md` | geordi | Quarterly + per pipeline change |
-| **Development Practices** | `coding-standards.md`, `best-practices.md`, `team-conventions.md` | picard | Quarterly |
-| **Reliability & Observability** | `monitoring-observability.md`, `incident-response-playbook.md` | crusher, obrien | Quarterly + per incident |
-| **Technical Debt** | `tech-debt-register.md` | barclay | Per sprint + quarterly review |
-| **Lessons Learned** | `past-lessons-learned.md` | guinan | After every mission |
-| **Team State** | `sprint-state.md`, `agent-performance-log.md` | picard | Weekly + per mission |
+| Category                        | Documents                                                                                                       | Owner           | Update Cadence                  |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------------- |
+| **Architecture & Design**       | `architecture-principles.md`, `architecture-decision-records.md`                                                | data            | Quarterly + per major decision  |
+| **DevOps & CI/CD**              | `ci-cd-pipeline-recommendations.md`, `github-actions-best-practices.md`, `github-actions-security-hardening.md` | geordi          | Quarterly + per pipeline change |
+| **Development Practices**       | `coding-standards.md`, `best-practices.md`, `team-conventions.md`                                               | picard          | Quarterly                       |
+| **Reliability & Observability** | `monitoring-observability.md`, `incident-response-playbook.md`                                                  | crusher, obrien | Quarterly + per incident        |
+| **Technical Debt**              | `tech-debt-register.md`                                                                                         | barclay         | Per sprint + quarterly review   |
+| **Lessons Learned**             | `past-lessons-learned.md`                                                                                       | guinan          | After every mission             |
+| **Team State**                  | `sprint-state.md`, `agent-performance-log.md`                                                                   | picard          | Weekly + per mission            |
 
 ### 4.2 Anatomy of a Session Journal
 
@@ -206,55 +212,66 @@ After each mission, a session journal is created at `knowledge_base/sessions/YYY
 # Session Journal — 2026-04-05-10
 
 ## Session Metadata
-| Field | Value |
-|-------|-------|
-| **Session ID** | 2026-04-05-10 |
-| **Mission** | Add automated PR code review via Claude API |
-| **Status** | closed |
+
+| Field          | Value                                       |
+| -------------- | ------------------------------------------- |
+| **Session ID** | 2026-04-05-10                               |
+| **Mission**    | Add automated PR code review via Claude API |
+| **Status**     | closed                                      |
 
 ## Mission Objective
+
 Integrate Claude API into the GitHub Actions CI pipeline...
 
 ## KB Documents Consulted
+
 - past-lessons-learned.md
 - github-actions-security-hardening.md
 - ...
 
 ## Crew Engaged
-| Agent | Role | Trigger | Handoff ACK |
-|-------|------|---------|-------------|
-| picard | Orchestrator | — | — |
+
+| Agent  | Role           | Trigger          | Handoff ACK                             |
+| ------ | -------------- | ---------------- | --------------------------------------- |
+| picard | Orchestrator   | —                | —                                       |
 | guinan | Context lookup | `context-lookup` | `[context-retrieval-received ✓ picard]` |
+
 | ...
 
 ## Priority Triage
+
 - [PRIORITY: P0] Token permissions not hardened
 - [PRIORITY: P1] CodeQL sequence missing `analyze` step
 - ...
 
 ## Mission Decision Record (MDR)
+
 **Decision**: ...
 **Rationale**: ...
 **Risks**: ...
 **Crew Assignments**: ...
 
 ## Phase 1 Findings
+
 - [guinan findings]
 - [data findings]
 - [worf findings]
 - ...
 
 ## Phase 2 Execution
+
 - ▶ geordi — Updated `.github/workflows/ci.yml` with proper permissions blocks
 - ▶ worf — Hardened token scopes for CodeQL and Trivy
 - ...
 
 ## Phase 3 Reviews
+
 - Security: PASS
 - QA: PASS
 - Reliability: CONDITIONAL (fix in next sprint)
 
 ## Debrief
+
 **Key Lesson**: Omitting `permissions:` defaults to `write-all` — a critical misconfiguration.
 **Outcome**: All 13 issues resolved. Health GREEN.
 ```
@@ -270,6 +287,7 @@ When you start a new mission, **guinan speaks first**:
 ```
 
 guinan reads:
+
 - All previous session journals for similar topics
 - `past-lessons-learned.md` for relevant lessons
 - Architecture Decision Records (ADRs) for context
@@ -287,19 +305,20 @@ If you have multiple service repos (API, frontend, migrations, etc.), each one g
 
 1. Copy [`.tng-context.md`](.tng-context.md) into your service root
 2. Fill out the metadata:
-   ```yaml
-   repo_name: "org/service-api"
-   service_domain: "Backend REST API — user auth and accounts"
-   owner_agent: "data"      # Primary domain owner
-   status: "active"
-   hub_repo: "team-building"  # Do NOT change
-   ```
+    ```yaml
+    repo_name: "org/service-api"
+    service_domain: "Backend REST API — user auth and accounts"
+    owner_agent: "data" # Primary domain owner
+    status: "active"
+    hub_repo: "team-building" # Do NOT change
+    ```
 3. List your dependencies and tech stack
 4. Override default routing if needed (e.g., if geordi isn't your DevOps agent)
 
 ### 5.2 Running a Mission in a Spoke Repo
 
 When you state a mission while in a spoke repo (say, `/api`), picard automatically:
+
 1. Reads the local `.tng-context.md` to identify the service
 2. Routes to the correct owner agent (from the file)
 3. Applies any repo-specific routing overrides
@@ -318,10 +337,10 @@ picard reads .tng-context.md and sees:
 
 picard opens Ready Room:
   [READY-ROOM-OPEN: jwt-expiry-validation]
-  
+
   "We are working in org/service-api (Backend REST API).
    data is the owner agent for this domain."
-   
+
   guinan scans for prior auth-related sessions...
 ```
 
@@ -332,10 +351,10 @@ When execution begins, riker remains in the hub repo but directs work logically 
 When you close a mission with open items, picard updates `sprint-state.md` in the hub:
 
 ```markdown
-| CF-ID | Service | Item | Owner | Target Sprint |
-|-------|---------|------|-------|---------------|
-| CF-087 | org/service-api | Migrate auth to OAuth2 | data | Sprint 26 |
-| CF-088 | org/frontend | Dark mode mobile fixes | troi | Sprint 26 |
+| CF-ID  | Service         | Item                   | Owner | Target Sprint |
+| ------ | --------------- | ---------------------- | ----- | ------------- |
+| CF-087 | org/service-api | Migrate auth to OAuth2 | data  | Sprint 26     |
+| CF-088 | org/frontend    | Dark mode mobile fixes | troi  | Sprint 26     |
 ```
 
 The next time you work in that service, guinan surfaces these carry-forwards automatically.
@@ -355,16 +374,19 @@ When the Ready Room closes, picard issues an MDR. Here's what it contains:
 with optional manual override and rate limiting.
 
 **Options Considered**:
+
 1. Webhook-based external service (rejected: adds latency, single point of failure)
 2. GitHub App (rejected: complexity, approval process)
 3. GitHub Actions + Claude API (selected: simple, in-band with workflow)
 
 **Rationale**:
+
 - Options 1 & 2 add operational overhead without corresponding benefit
 - GitHub Actions integration keeps the workflow data-local and observable
 - API costs scale with volume (acceptable for our PR frequency)
 
 **Risks**:
+
 - P1: API rate limits during high-volume sprints → Mitigation: queue with backoff
 - P2: Token exposure in logs → Mitigation: use GitHub Secrets, audit logging
 - P3: Reviewing code changes to CI logic itself → Mitigation: manual approval gate
@@ -380,6 +402,7 @@ with optional manual override and rate limiting.
 ```
 
 **Rules**:
+
 - No P0 or P1 items may remain unresolved when Ready Room closes
 - All crew assignments are mandatory; agents will not skip tasks
 - You can request clarification on any option or risk before approving
@@ -394,10 +417,10 @@ with optional manual override and rate limiting.
 
 ```yaml
 permissions:
-  actions: read
-  contents: read
-  security-events: write     # ONLY if uploading SARIF
-  pull-requests: write       # ONLY if commenting on PRs
+    actions: read
+    contents: read
+    security-events: write # ONLY if uploading SARIF
+    pull-requests: write # ONLY if commenting on PRs
 ```
 
 See `knowledge_base/documents/github-actions-security-hardening.md` for full checklist.
@@ -472,12 +495,13 @@ picard retrieves and summarizes from `past-lessons-learned.md`.
 **Cause**: Agent files missing or YAML syntax error in `.github/copilot-instructions.md`
 
 **Fix**:
+
 1. Verify all files exist in `.github/agents/`:
-   ```
-   picard.agent.md, data.agent.md, riker.agent.md, geordi.agent.md, worf.agent.md,
-   troi.agent.md, crusher.agent.md, barclay.agent.md, guinan.agent.md, obrien.agent.md,
-   wes.agent.md, picard-fast.agent.md, picard-thinking.agent.md
-   ```
+    ```
+    picard.agent.md, data.agent.md, riker.agent.md, geordi.agent.md, worf.agent.md,
+    troi.agent.md, crusher.agent.md, barclay.agent.md, guinan.agent.md, obrien.agent.md,
+    wes.agent.md, picard-fast.agent.md, picard-thinking.agent.md
+    ```
 2. Validate YAML in `.github/copilot-instructions.md` (no syntax errors)
 3. Restart VS Code and open Copilot Chat
 
@@ -486,6 +510,7 @@ picard retrieves and summarizes from `past-lessons-learned.md`.
 **Cause**: Session journals not logged or file naming convention wrong
 
 **Fix**:
+
 1. Ensure sessions are saved at `knowledge_base/sessions/YYYY-MM-DD-HH-<slug>.md`
 2. Check that `past-lessons-learned.md` has recent entries (should be updated per mission)
 3. Verify status field is `closed` in session metadata
@@ -495,6 +520,7 @@ picard retrieves and summarizes from `past-lessons-learned.md`.
 **Cause**: Unresolved high-priority findings blocking closure
 
 **Fix**:
+
 1. Review the Priority Triage summary
 2. Work with picard to resolve each P0/P1 item before close
 3. If item needs to be deferred, reclassify as P2 with documented rationale
@@ -504,6 +530,7 @@ picard retrieves and summarizes from `past-lessons-learned.md`.
 **Cause**: Handoff signals not properly acknowledged
 
 **Fix**:
+
 1. Check the last handoff trigger in the conversation
 2. Verify picard issues an ACK: `[<trigger>-received ✓ picard]`
 3. If stuck, type: `"riker, status report"` to get execution coordination summary
@@ -513,6 +540,7 @@ picard retrieves and summarizes from `past-lessons-learned.md`.
 **Cause**: Quality gates identified issues before production deploy
 
 **Fix**:
+
 1. Review each reviewer's findings (worf, troi, crusher)
 2. Prioritize DISHONORABLE/WEAK findings (security, reliability)
 3. Decide disposition: Fix-in-place → Scoped Ready Room → Full Reopen
@@ -572,6 +600,7 @@ Agents always refer to themselves in third person — this keeps the team person
 Edit `TEAM-TOPOLOGY.md` to change default routing, then update `.github/agents/picard.agent.md` `agents:` list to match.
 
 Example:
+
 ```yaml
 # TEAM-TOPOLOGY.md — change from geordi to custom-ci-agent
 - custom-ci-agent: CI/CD specialist (new hire)
@@ -591,20 +620,20 @@ If you need a specialized workflow (e.g., incident postmortem, security audit, s
 
 ## 12. Reference: File Locations
 
-| What | Where |
-|------|-------|
-| Agent personas | `.github/agents/*.agent.md` |
-| System initialization | `.github/copilot-instructions.md` |
-| Workflows | `.github/workflows/` |
-| Ready Room protocol | `.github/prompts/ready-room.prompt.md` |
-| Team topology | `TEAM-TOPOLOGY.md` |
-| Workflow status | `STATUS.md` |
-| Execution guidelines | `RUNBOOK.md` |
+| What                    | Where                                                 |
+| ----------------------- | ----------------------------------------------------- |
+| Agent personas          | `.github/agents/*.agent.md`                           |
+| System initialization   | `.github/copilot-instructions.md`                     |
+| Workflows               | `.github/workflows/`                                  |
+| Ready Room protocol     | `.github/prompts/ready-room.prompt.md`                |
+| Team topology           | `TEAM-TOPOLOGY.md`                                    |
+| Workflow status         | `STATUS.md`                                           |
+| Execution guidelines    | `RUNBOOK.md`                                          |
 | Architecture principles | `knowledge_base/documents/architecture-principles.md` |
-| Past lessons | `knowledge_base/documents/past-lessons-learned.md` |
-| Sprint state | `knowledge_base/documents/sprint-state.md` |
-| Session journals | `knowledge_base/sessions/YYYY-MM-DD-HH-*.md` |
-| Spoke context | `<spoke-repo>/.tng-context.md` |
+| Past lessons            | `knowledge_base/documents/past-lessons-learned.md`    |
+| Sprint state            | `knowledge_base/documents/sprint-state.md`            |
+| Session journals        | `knowledge_base/sessions/YYYY-MM-DD-HH-*.md`          |
+| Spoke context           | `<spoke-repo>/.tng-context.md`                        |
 
 ---
 

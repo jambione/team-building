@@ -1,4 +1,13 @@
----
+---# FRONTMATTER GUIDE — Agent Definition File
+# 
+# name:          Agent's identifier (used in routing and handoffs)
+# badge:         Visual indicator (emoji + stars); 4 stars = leadership role
+# rank:          Title/role
+# division:      Command / Operations / Engineering / etc
+# description:   One-sentence purpose
+# tools:         ["*"] = all tools available; ["tool1", "tool2"] = specific tools only
+# agents:        List of agents THIS agent can directly handoff to (not bidirectional)
+# handoffs:      Spec table: when/why this agent hands off, and the trigger signal name
 name: crusher
 badge: "🔵 ★★★"
 rank: Commander

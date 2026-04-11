@@ -1,30 +1,39 @@
 # TNG Agent Team — Multi-Agent Orchestration Framework
 
-A sophisticated multi-agent system for complex software engineering tasks. Rather than working alone, you work *with* the team: state your mission, the crew analyzes in parallel, decisions get recorded, and execution is coordinated.
+**A structured, collaborative workflow for complex software engineering tasks.**
+
+Version 2.2 | Last updated: 2026-04-11
+
+A sophisticated multi-agent system modeled after Star Trek: The Next Generation. Rather than working alone, you work *with* a team of 13 specialized agents that analyze, decide, execute, and review your work — all with explicit handoffs and full history tracking.
 
 ---
 
-## 🚀 Quick Start
+---
 
-1. **New to TNG?** Start here: [FIRST-MISSION.md](FIRST-MISSION.md)
-2. **Need quick commands?** See: [QUICK-REFERENCE.md](QUICK-REFERENCE.md)
-3. **Full setup guide?** Read: [SETUP.md](SETUP.md)
-4. **Feature deep-dives?** Check: [FEATURES.md](FEATURES.md)
+## 📚 Documentation Hub
+
+**👉 [Browse All Documentation](docs/index.md)** — Complete navigation for guides, reference, and knowledge base.
+
+### Quick Start
+
+1. **New to TNG?** Start here: [docs/guides/SETUP.md](docs/guides/SETUP.md)
+2. **Need quick commands?** See: [docs/guides/QUICK-REFERENCE.md](docs/guides/QUICK-REFERENCE.md)
+3. **Feature deep-dives?** Check: [docs/guides/FEATURES.md](docs/guides/FEATURES.md)
 
 ---
 
-## 📖 Documentation Index
+## 📖 Documentation
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| **[FIRST-MISSION.md](FIRST-MISSION.md)** | Step-by-step walkthrough of your first mission | Everyone (start here) |
-| **[QUICK-REFERENCE.md](QUICK-REFERENCE.md)** | One-page command cheat sheet | Quick lookup |
-| **[SETUP.md](SETUP.md)** | Complete setup, features, and best practices guide | Full reference |
-| **[FEATURES.md](FEATURES.md)** | Deep documentation of all system features | Understanding capability |
-| **[RUNBOOK.md](RUNBOOK.md)** | Execution guidelines for agents | Team members |
-| **[TEAM-TOPOLOGY.md](TEAM-TOPOLOGY.md)** | Agent roster and routing rules | Team structure |
-| **[STATUS.md](STATUS.md)** | Workflow and agent activation status | Monitoring |
-| **[knowledge_base/documents/index.md](knowledge_base/documents/index.md)** | Navigation for all KB documents | Finding knowledge |
+| Type | Document | Purpose |
+|------|----------|---------|
+| **Guides** | [docs/guides/SETUP.md](docs/guides/SETUP.md) | Complete setup and usage guide (read first) |
+| | [docs/guides/QUICK-REFERENCE.md](docs/guides/QUICK-REFERENCE.md) | One-page command cheat sheet |
+| | [docs/guides/FEATURES.md](docs/guides/FEATURES.md) | Feature deep dives and explanations |
+| **Reference** | [docs/reference/TEAM-TOPOLOGY.md](docs/reference/TEAM-TOPOLOGY.md) | Agent roster and routing rules |
+| | [docs/reference/RUNBOOK.md](docs/reference/RUNBOOK.md) | Execution guidelines for team |
+| | [docs/reference/STATUS.md](docs/reference/STATUS.md) | System activation status |
+| **Navigation** | [docs/index.md](docs/index.md) | Full documentation index |
+| **Knowledge** | [knowledge_base/documents/index.md](knowledge_base/documents/index.md) | All KB documents navigation |
 
 ---
 
@@ -98,22 +107,27 @@ Or start a **full mission**:
 ## 📁 Project Structure
 
 ```
-team-building/          ← Hub repo (agents, KB, workflows)
+team-building/               ← Hub repo
+├── README.md                ← You are here
+├── docs/                    ← User documentation
+│   ├── guides/              ← Getting started & feature docs
+│   │   ├── SETUP.md        ← Full setup guide (read first)
+│   │   ├── QUICK-REFERENCE.md
+│   │   └── FEATURES.md
+│   ├── reference/           ← Operational reference
+│   │   ├── TEAM-TOPOLOGY.md
+│   │   ├── RUNBOOK.md
+│   │   └── STATUS.md
+│   └── index.md             ← Full navigation
 ├── .github/
-│   ├── agents/         ← 13 agent persona files
-│   ├── prompts/        ← Protocol templates (Ready Room, etc.)
-│   └── workflows/      ← CI/CD automation
-├── knowledge_base/     ← Team KB (source of truth)
-│   ├── documents/      ← Domain docs (architecture, DevOps, etc.)
-│   ├── sessions/       ← Session journals (one per mission)
-│   └── archive/        ← Historical records
-├── SETUP.md            ← Full setup & usage guide
-├── QUICK-REFERENCE.md  ← Command cheat sheet
-├── FEATURES.md         ← Feature documentation
-├── FIRST-MISSION.md    ← First-mission tutorial
-├── RUNBOOK.md          ← Execution guidelines
-├── TEAM-TOPOLOGY.md    ← Agent roster
-└── STATUS.md           ← Workflow status
+│   ├── agents/              ← 13 agent definitions
+│   ├── prompts/             ← Protocol templates
+│   └── workflows/           ← CI/CD automation
+├── knowledge_base/          ← Team KB (source of truth)
+│   ├── documents/           ← Domain KB docs
+│   ├── sessions/            ← Session journals
+│   └── archive/             ← Historical records
+└── scripts/                 ← Validation & utilities
 ```
 
 ---
@@ -169,18 +183,17 @@ team-building/          ← Hub repo (agents, KB, workflows)
 ## 🎓 Learning Resources
 
 ### For First-Time Users
-1. Read [FIRST-MISSION.md](FIRST-MISSION.md) (15 min)
+1. Read [docs/guides/SETUP.md](docs/guides/SETUP.md) (20 min)
 2. Run your first mission (30-60 min)
 3. Review session journal at `knowledge_base/sessions/`
 
-### For Reference
-- [QUICK-REFERENCE.md](QUICK-REFERENCE.md) — Commands & patterns
-- [SETUP.md](SETUP.md) — Full documentation
-- [FEATURES.md](FEATURES.md) — Feature deep-dives
+### For Quick Reference
+- [docs/guides/QUICK-REFERENCE.md](docs/guides/QUICK-REFERENCE.md) — Commands & patterns (bookmark this)
+- [docs/guides/FEATURES.md](docs/guides/FEATURES.md) — Feature deep-dives
 
 ### For Team Members
-- [RUNBOOK.md](RUNBOOK.md) — Execution guidelines
-- [TEAM-TOPOLOGY.md](TEAM-TOPOLOGY.md) — Team structure
+- [docs/reference/RUNBOOK.md](docs/reference/RUNBOOK.md) — Execution guidelines
+- [docs/reference/TEAM-TOPOLOGY.md](docs/reference/TEAM-TOPOLOGY.md) — Team structure
 - [knowledge_base/documents/](knowledge_base/documents/) — Domain KB
 
 ---
@@ -268,7 +281,7 @@ that's blocking automation improvements in the next quarter."
 | Ready Room won't close | Resolve all P1 priority items. Type: `"picard, what's blocking closure?"` |
 | Missing history (guinan silent) | Check `past-lessons-learned.md` has recent entries. Session journals must be closed. |
 
-See [SETUP.md](SETUP.md#9-troubleshooting) for more troubleshooting.
+See [docs/guides/SETUP.md](docs/guides/SETUP.md#9-troubleshooting) for more troubleshooting.
 
 ---
 
@@ -276,9 +289,9 @@ See [SETUP.md](SETUP.md#9-troubleshooting) for more troubleshooting.
 
 | Question | Resource |
 |----------|----------|
-| "How do I use this?" | [FIRST-MISSION.md](FIRST-MISSION.md) |
-| "What command...?" | [QUICK-REFERENCE.md](QUICK-REFERENCE.md) |
-| "How does [feature] work?" | [FEATURES.md](FEATURES.md) |
+| "How do I use this?" | [docs/guides/SETUP.md](docs/guides/SETUP.md) |
+| "What command...?" | [docs/guides/QUICK-REFERENCE.md](docs/guides/QUICK-REFERENCE.md) |
+| "How does [feature] work?" | [docs/guides/FEATURES.md](docs/guides/FEATURES.md) |
 | "What's our policy on [domain]?" | [knowledge_base/documents/index.md](knowledge_base/documents/index.md) |
 | "What happened in prior missions?" | [knowledge_base/sessions/](knowledge_base/sessions/) |
 
@@ -286,11 +299,10 @@ See [SETUP.md](SETUP.md#9-troubleshooting) for more troubleshooting.
 
 ## 🎬 Next Steps
 
-1. **Read** [FIRST-MISSION.md](FIRST-MISSION.md) (15 minutes)
+1. **Read** [docs/guides/SETUP.md](docs/guides/SETUP.md) (20 minutes)
 2. **Run** your first mission (30-60 minutes)
 3. **Review** your session journal (5 minutes)
-4. **Bookmark** [QUICK-REFERENCE.md](QUICK-REFERENCE.md) (fast lookup)
-5. **Run** your next mission with confidence!
+4. **Bookmark** [docs/guides/QUICK-REFERENCE.md](docs/guides/QUICK-REFERENCE.md) (fast lookup)
 
 ---
 

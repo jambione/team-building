@@ -2,9 +2,9 @@
 
 ## Current State
 
-**As of**: 2026-04-05  
+**As of**: 2026-04-11  
 **Health**: GREEN  
-**Top active item**: TD-001 — `ci.yml.tmp` stray file (Low severity, geordi, Sprint 2). Net debt trend: stable after Sprint 1 remediation resolved all Critical and High items.
+**Top active item**: TD-002 — Matrix testing configuration (Medium severity, geordi, Sprint 2). Previous TD-001 (ci.yml.tmp) resolved during 2026-04-11 code review mission. Net debt trend: stable; lightweight documentation enhancements queued for Sprint 3.
 
 ---
 
@@ -33,21 +33,23 @@ Centralized registry of known technical debt items across the codebase and infra
 
 ### CI/CD & Infrastructure
 
-| ID | Item | Severity | Owner | Effort | Added | Target Sprint |
-|----|------|----------|-------|--------|-------|---------------|
-| TD-001 | `ci.yml.tmp` stray file — malformed YAML draft not deleted | Low | geordi | 5 min | 2026-04-05 | Sprint 2 |
-| TD-002 | Matrix testing (Node 18/20/22 × OS) drafted in `.tmp` but not migrated to active `ci.yml` | Medium | geordi | 1 hr | 2026-04-05 | Sprint 2 |
-| TD-003 | No Dependabot configuration — dependency updates are fully manual | High | geordi | 30 min | 2026-04-05 | Sprint 2 |
-| TD-004 | No test coverage thresholds enforced — coverage can regress silently | High | troi | 1 hr | 2026-04-05 | Sprint 2 |
-| TD-005 | No test result artifact uploads — CI results not persisted for analysis | Medium | troi | 30 min | 2026-04-05 | Sprint 3 |
+| ID | Item | Severity | Owner | Effort | Added | Target Sprint | Status |
+|----|------|----------|-------|--------|-------|---------------|--------|
+| TD-001 | `ci.yml.tmp` stray file — malformed YAML draft not deleted | Low | geordi | 5 min | 2026-04-05 | Sprint 2 | **RESOLVED 2026-04-11** |
+| TD-002 | Matrix testing (Node 18/20/22 × OS) drafted in `.tmp` but not migrated to active `ci.yml` | Medium | geordi | 1 hr | 2026-04-05 | Sprint 2 | open |
+| TD-003 | No Dependabot configuration — dependency updates are fully manual | High | geordi | 30 min | 2026-04-05 | Sprint 2 | open |
+| TD-004 | No test coverage thresholds enforced — coverage can regress silently | High | troi | 1 hr | 2026-04-05 | Sprint 2 | open |
+| TD-005 | No test result artifact uploads — CI results not persisted for analysis | Medium | troi | 30 min | 2026-04-05 | Sprint 3 | open |
 
 ### Documentation & Governance
 
-| ID | Item | Severity | Owner | Effort | Added | Target Sprint |
-|----|------|----------|-------|--------|-------|---------------|
-| TD-006 | `TESTING.md` contains only placeholder header — no actual test strategy | Medium | troi | 2 hrs | 2026-04-05 | Sprint 2 |
-| TD-007 | `onboarding-guide.md` listed as pending in KB index — new member onboarding undocumented | Medium | picard | 3 hrs | 2026-04-05 | Sprint 3 |
-| TD-008 | No `main` → `production` branch promotion workflow defined | High | geordi | 2 hrs | 2026-04-05 | Sprint 2 |
+| ID | Item | Severity | Owner | Effort | Added | Target Sprint | Status |
+|----|------|----------|-------|--------|-------|---------------|--------|
+| TD-006 | `TESTING.md` contains only placeholder header — no actual test strategy | Medium | troi | 2 hrs | 2026-04-05 | Sprint 2 | open |
+| TD-007 | `onboarding-guide.md` listed as pending in KB index — new member onboarding undocumented | Medium | picard | 3 hrs | 2026-04-05 | Sprint 3 | open |
+| TD-008 | No `main` → `production` branch promotion workflow defined | High | geordi | 2 hrs | 2026-04-05 | Sprint 2 | open |
+| TD-009 | Validation script fragmentation — 3 separate tools, no unified runner | Medium | barclay | 2 hrs | 2026-04-11 | Sprint 3 | open |
+| TD-010 | No unit tests for validation scripts (`kb-lint.py`, etc.) | Medium | barclay | 2 hrs | 2026-04-11 | Sprint 3 | open |
 
 ### Architecture & Design
 
