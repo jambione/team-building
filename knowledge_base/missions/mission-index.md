@@ -4,7 +4,7 @@
 > picard adds a row here when filing each mission log at mission close.
 > guinan reads this index for cross-mission pattern detection.
 
-**Last Updated**: 2026-04-05  
+**Last Updated**: 2026-04-11  
 **Owner**: picard
 
 ---
@@ -14,6 +14,7 @@
 | Date | Slug | Mission | Sprint | Repo(s) | Status | Crew | P1s | Open Items | Log |
 |------|------|---------|--------|---------|--------|------|-----|------------|-----|
 | 2026-04-05 | `claude-api-pr-review` | Add automated PR code review via Claude API to CI pipeline | Sprint 1 | `team-building` | success | picard, guinan, picard-thinking, data, worf, troi, barclay, crusher, obrien, wes, riker | 2/2 resolved | 3 | [→](2026-04-05-claude-api-pr-review.md) |
+| 2026-04-11 | `code-review-improvements` | Comprehensive code review — resolve security, reliability, and maintainability issues | Sprint 2 | `team-building` | success | picard, guinan, picard-thinking, data, barclay, worf, troi, crusher, riker | 9/9 resolved | 4 | [→](2026-04-11-code-review-improvements.md) |
 
 ---
 
@@ -32,15 +33,15 @@
 
 | Metric | Count |
 |--------|-------|
-| Total missions | 1 |
-| Missions succeeded | 1 |
+| Total missions | 2 |
+| Missions succeeded | 2 |
 | Missions partial | 0 |
 | Missions blocked | 0 |
 | Missions cancelled | 0 |
-| Total P1 items raised | 2 |
-| Total P1 items resolved | 2 |
-| Total open items carried forward | 3 |
-| Total KB documents updated | 7 |
+| Total P1 items raised | 4 |
+| Total P1 items resolved | 4 |
+| Total open items carried forward | 7 |
+| Total KB documents updated | 14 |
 
 ---
 
