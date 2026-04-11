@@ -40,7 +40,7 @@ workspace/
 │   └── RUNBOOK.md          ← Execution guidelines
 │
 └── [spoke repos]/          ← Service repos (feature, API, etc.)
-    ├── .tng-context.md     ← Spoke identity & routing
+   ├── .tng-context.md     ← Optional spoke identity & routing override
     └── ...
 ```
 
@@ -50,10 +50,10 @@ workspace/
 2. Open **Copilot Chat** (`Ctrl+Shift+I` / `Cmd+Shift+I`)
 3. The system will auto-load from `.github/copilot-instructions.md`
 4. You should see:
-    ```
-    Tea. Earl Grey. Hot.
-    🔴★★★★ picard — the crew is assembled. The Ready Room is available. State your mission.
-    ```
+   ```
+   Tea. Earl Grey. Hot.
+   🔴★★★★ picard — the crew is assembled. The Ready Room is available. State your mission.
+   ```
 
 If activation fails:
 
@@ -90,11 +90,11 @@ The moment you state a mission, this **4-phase workflow** triggers automatically
 - **Parallel crew analysis**: Each agent (data, worf, troi, crusher, barclay, obrien) speaks in character and delivers findings
 - picard aggregates findings from all agents
 - picard issues a **Mission Decision Record (MDR)** with:
-    - Decision or approach
-    - Options considered
-    - Rationale
-    - Risks and mitigations
-    - Crew assignments for Phase 2
+  - Decision or approach
+  - Options considered
+  - Rationale
+  - Risks and mitigations
+  - Crew assignments for Phase 2
 - picard issues hard close: `[READY-ROOM-CLOSED]`
 
 **Duration**: Usually 2-5 minutes. All decisions are locked before code starts.
@@ -115,16 +115,18 @@ The moment you state a mission, this **4-phase workflow** triggers automatically
 Three mandatory review blocks appear directly in chat:
 
 1. **worf** — Security Review
-    - VERDICT: PASS / FAIL / CONDITIONAL
-    - Lists security findings by severity
+
+   - VERDICT: PASS / FAIL / CONDITIONAL
+   - Lists security findings by severity
 
 2. **troi** — UX & Quality Review
-    - VERDICT: PASS / FAIL / CONDITIONAL
-    - Quality and testing concerns
+
+   - VERDICT: PASS / FAIL / CONDITIONAL
+   - Quality and testing concerns
 
 3. **crusher** — Reliability Review
-    - VERDICT: PASS / FAIL / CONDITIONAL
-    - Edge cases and failure modes
+   - VERDICT: PASS / FAIL / CONDITIONAL
+   - Edge cases and failure modes
 
 picard then issues the Go/No-Go decision and classifies any open items as:
 
@@ -299,29 +301,28 @@ This ensures **you never repeat the same mistake twice** and benefit from instit
 
 ## 5. Spoke Repos — Using TNG in Your Services
 
-If you have multiple service repos (API, frontend, migrations, etc.), each one gets a `.tng-context.md` file:
+If you have multiple service repos (API, frontend, migrations, etc.), use `.tng-context.md` when you want spoke-local auto-routing metadata. Without it, picard uses `knowledge_base/current/workspace-context.md` and asks for confirmation when needed.
 
 ### 5.1 Setting Up a Spoke Repo
 
-1. Copy [`.tng-context.md`](.tng-context.md) into your service root
+1. Optionally copy [`.tng-context.md`](.tng-context.md) into your service root
 2. Fill out the metadata:
-    ```yaml
-    repo_name: "org/service-api"
-    service_domain: "Backend REST API — user auth and accounts"
-    owner_agent: "data" # Primary domain owner
-    status: "active"
-    hub_repo: "team-building" # Do NOT change
-    ```
+   ```yaml
+   repo_name: "org/service-api"
+   service_domain: "Backend REST API — user auth and accounts"
+   owner_agent: "data" # Primary domain owner
+   status: "active"
+   ```
 3. List your dependencies and tech stack
 4. Override default routing if needed (e.g., if geordi isn't your DevOps agent)
 
 ### 5.2 Running a Mission in a Spoke Repo
 
-When you state a mission while in a spoke repo (say, `/api`), picard automatically:
+When you state a mission while in a spoke repo (say, `/api`), picard:
 
-1. Reads the local `.tng-context.md` to identify the service
-2. Routes to the correct owner agent (from the file)
-3. Applies any repo-specific routing overrides
+1. Reads local `.tng-context.md` when present to identify service metadata
+2. Otherwise resolves context from `knowledge_base/current/workspace-context.md`
+3. Routes to the correct owner agent and applies repo-specific overrides
 4. Syncs carry-forward items from `knowledge_base/documents/sprint-state.md` in the hub
 
 Example:
@@ -417,10 +418,10 @@ with optional manual override and rate limiting.
 
 ```yaml
 permissions:
-    actions: read
-    contents: read
-    security-events: write # ONLY if uploading SARIF
-    pull-requests: write # ONLY if commenting on PRs
+  actions: read
+  contents: read
+  security-events: write # ONLY if uploading SARIF
+  pull-requests: write # ONLY if commenting on PRs
 ```
 
 See `knowledge_base/documents/github-actions-security-hardening.md` for full checklist.
@@ -497,11 +498,11 @@ picard retrieves and summarizes from `past-lessons-learned.md`.
 **Fix**:
 
 1. Verify all files exist in `.github/agents/`:
-    ```
-    picard.agent.md, data.agent.md, riker.agent.md, geordi.agent.md, worf.agent.md,
-    troi.agent.md, crusher.agent.md, barclay.agent.md, guinan.agent.md, obrien.agent.md,
-    wes.agent.md, picard-fast.agent.md, picard-thinking.agent.md
-    ```
+   ```
+   picard.agent.md, data.agent.md, riker.agent.md, geordi.agent.md, worf.agent.md,
+   troi.agent.md, crusher.agent.md, barclay.agent.md, guinan.agent.md, obrien.agent.md,
+   wes.agent.md, picard-fast.agent.md, picard-thinking.agent.md
+   ```
 2. Validate YAML in `.github/copilot-instructions.md` (no syntax errors)
 3. Restart VS Code and open Copilot Chat
 
@@ -590,10 +591,10 @@ Agents always refer to themselves in third person — this keeps the team person
 
 ### 11.1 Adding a New Spoke Repo
 
-1. Create `.tng-context.md` in repo root (copy template)
-2. Fill in metadata (name, domain, owner agent, tech stack)
+1. Add repo metadata to `knowledge_base/current/workspace-context.md`
+2. Optionally create `.tng-context.md` in repo root for local override
 3. Commit and push to main branch
-4. Next time you state a mission in that repo, picard auto-routes
+4. Next time you state a mission in that repo, picard routes using context + optional override
 
 ### 11.2 Customizing Agent Routing
 
@@ -620,20 +621,22 @@ If you need a specialized workflow (e.g., incident postmortem, security audit, s
 
 ## 12. Reference: File Locations
 
-| What                    | Where                                                 |
-| ----------------------- | ----------------------------------------------------- |
-| Agent personas          | `.github/agents/*.agent.md`                           |
-| System initialization   | `.github/copilot-instructions.md`                     |
-| Workflows               | `.github/workflows/`                                  |
-| Ready Room protocol     | `.github/prompts/ready-room.prompt.md`                |
-| Team topology           | `TEAM-TOPOLOGY.md`                                    |
-| Workflow status         | `STATUS.md`                                           |
-| Execution guidelines    | `RUNBOOK.md`                                          |
-| Architecture principles | `knowledge_base/documents/architecture-principles.md` |
-| Past lessons            | `knowledge_base/documents/past-lessons-learned.md`    |
-| Sprint state            | `knowledge_base/documents/sprint-state.md`            |
-| Session journals        | `knowledge_base/sessions/YYYY-MM-DD-HH-*.md`          |
-| Spoke context           | `<spoke-repo>/.tng-context.md`                        |
+| What                     | Where                                                 |
+| ------------------------ | ----------------------------------------------------- |
+| Agent personas           | `.github/agents/*.agent.md`                           |
+| System initialization    | `.github/copilot-instructions.md`                     |
+| Workflows                | `.github/workflows/`                                  |
+| Ready Room protocol      | `.github/prompts/ready-room.prompt.md`                |
+| Team topology            | `TEAM-TOPOLOGY.md`                                    |
+| Workflow status          | `STATUS.md`                                           |
+| Execution guidelines     | `RUNBOOK.md`                                          |
+| Architecture principles  | `knowledge_base/documents/architecture-principles.md` |
+| Past lessons             | `knowledge_base/documents/past-lessons-learned.md`    |
+| Sprint state             | `knowledge_base/documents/sprint-state.md`            |
+| Session journals         | `knowledge_base/sessions/YYYY-MM-DD-HH-*.md`          |
+| Workspace config         | `workspace-config.json`                               |
+| Config loader            | `scripts/workspace_config.py`                         |
+| Spoke context (optional) | `<spoke-repo>/.tng-context.md`                        |
 
 ---
 

@@ -101,16 +101,18 @@ Each agent works in-character, speaks opening phrase → does work → speaks cl
 Three reviewers publish findings directly in chat:
 
 1. **worf — Security Review**
-    - VERDICT: PASS / FAIL / CONDITIONAL
-    - Lists security issues by severity
+
+   - VERDICT: PASS / FAIL / CONDITIONAL
+   - Lists security issues by severity
 
 2. **troi — QA & Quality Review**
-    - VERDICT: PASS / FAIL / CONDITIONAL
-    - Test coverage, UX concerns
+
+   - VERDICT: PASS / FAIL / CONDITIONAL
+   - Test coverage, UX concerns
 
 3. **crusher — Reliability Review**
-    - VERDICT: PASS / FAIL / CONDITIONAL
-    - Edge cases, failure modes
+   - VERDICT: PASS / FAIL / CONDITIONAL
+   - Edge cases, failure modes
 
 picard then issues Go/No-Go and classifies open items as:
 
@@ -145,17 +147,16 @@ Examples:
 
 ## Spoke Repo Setup
 
-Copy `.tng-context.md` template into each service repo and fill out:
+Optional but recommended for auto-routing: copy `.tng-context.md` into each service repo and fill out:
 
 ```yaml
 repo_name: "org/service-api"
 service_domain: "Backend REST API — auth and accounts"
 owner_agent: "data"
 status: "active"
-hub_repo: "team-building"
 ```
 
-When you state a mission inside that repo, picard auto-routes to the correct owner agent.
+If no `.tng-context.md` exists, routing falls back to `knowledge_base/current/workspace-context.md` and picard asks for confirmation when needed.
 
 ---
 
@@ -200,10 +201,12 @@ When you state a mission inside that repo, picard auto-routes to the correct own
 | `STATUS.md`                                        | Workflow activation status                                           |
 | `RUNBOOK.md`                                       | Decision/execution guidelines                                        |
 | `docs/guides/SETUP.md`                             | Full setup guide (detailed version)                                  |
+| `workspace-config.json`                            | Workspace validation/routing contract defaults                       |
+| `scripts/workspace_config.py`                      | Shared config loader used by validators                              |
 | `knowledge_base/documents/index.md`                | KB navigation                                                        |
 | `knowledge_base/documents/past-lessons-learned.md` | Lessons from prior missions                                          |
 | `knowledge_base/documents/sprint-state.md`         | Open carry-forwards                                                  |
-| `.tng-context.md` (in spoke repos)                 | Service identity and routing                                         |
+| `.tng-context.md` (optional in spoke repos)        | Service identity override for repo-local auto-routing                |
 
 ---
 

@@ -65,12 +65,12 @@ System triggers 4-phase workflow automatically:
 1. picard opens the Ready Room
 2. guinan scans institutional memory for relevant history
 3. All decision-relevant agents analyze in parallel:
-    - data (architecture)
-    - worf (security)
-    - troi (QA/UX)
-    - crusher (reliability)
-    - barclay (technical debt)
-    - obrien (observability)
+   - data (architecture)
+   - worf (security)
+   - troi (QA/UX)
+   - crusher (reliability)
+   - barclay (technical debt)
+   - obrien (observability)
 4. picard synthesizes findings into a Mission Decision Record (MDR)
 5. picard locks all decisions: `[READY-ROOM-CLOSED]`
 
@@ -208,21 +208,21 @@ A special agent that remembers ALL prior sessions and surfaces relevant history 
 
 1. **Session journals** are saved at `knowledge_base/sessions/YYYY-MM-DD-HH-<slug>.md`
 2. Each session captures:
-    - Mission objective
-    - Crew engaged
-    - Decisions made
-    - Risks identified
-    - Lessons learned
-    - Final outcome
+   - Mission objective
+   - Crew engaged
+   - Decisions made
+   - Risks identified
+   - Lessons learned
+   - Final outcome
 3. **guinan reads** at mission start:
-    - All prior session journals (filtered by topic)
-    - `past-lessons-learned.md` entries
-    - Architecture Decision Records
-    - Carry-forward items from `sprint-state.md`
+   - All prior session journals (filtered by topic)
+   - `past-lessons-learned.md` entries
+   - Architecture Decision Records
+   - Carry-forward items from `sprint-state.md`
 4. **guinan synthesizes** and surfaces:
-    - Similar past situations and their outcomes
-    - Lessons learned (patterns, mistakes, successes)
-    - Open or deferred work related to this mission
+   - Similar past situations and their outcomes
+   - Lessons learned (patterns, mistakes, successes)
+   - Open or deferred work related to this mission
 
 ---
 
@@ -257,21 +257,24 @@ A way to manage multiple service repos (API, frontend, migrations, etc.) in a si
 ### How It Works
 
 1. **Hub repo** (`team-building/`) contains:
-    - All agent definitions
-    - All KB documents
-    - All session history
-    - All shared workflows
+
+   - All agent definitions
+   - All KB documents
+   - All session history
+   - All shared workflows
 
 2. **Spoke repos** (each service) contain:
-    - `.tng-context.md` file (service identity)
-    - Local code (API, frontend, etc.)
-    - Can reference hub for decisions/history
+
+   - Optional `.tng-context.md` file (service identity override)
+   - Local code (API, frontend, etc.)
+   - Can reference hub for decisions/history
 
 3. **When you state a mission in a spoke**:
-    - picard reads `.tng-context.md` to identify service
-    - picard routes to correct owner agent
-    - picard syncs carry-forwards from hub
-    - Work proceeds with hub knowledge
+   - picard reads `.tng-context.md` when present to identify service
+   - if absent, picard falls back to `knowledge_base/current/workspace-context.md`
+   - picard routes to correct owner agent
+   - picard syncs carry-forwards from hub
+   - Work proceeds with hub knowledge
 
 ---
 
@@ -343,32 +346,32 @@ Each handoff has 4 steps:
 
 1. **Announcement** (before work starts)
 
-    ```
-    ▶ [agent] — [action]
-    ```
+   ```
+   ▶ [agent] — [action]
+   ```
 
 2. **In-character opening** (agent acknowledges)
 
-    ```
-    🟡★★☆ geordi — Give geordi a few minutes.
-    ```
+   ```
+   🟡★★☆ geordi — Give geordi a few minutes.
+   ```
 
 3. **Work execution**
 
-    ```
-    [... actual work happens ...]
-    ```
+   ```
+   [... actual work happens ...]
+   ```
 
 4. **Return with trigger signal**
 
-    ```
-    geordi returns control to riker. [workflow-updated ✓]
-    ```
+   ```
+   geordi returns control to riker. [workflow-updated ✓]
+   ```
 
 5. **Acknowledgment** (receiver confirms)
-    ```
-    [riker] ACK: [workflow-updated ✓ riker]
-    ```
+   ```
+   [riker] ACK: [workflow-updated ✓ riker]
+   ```
 
 ### Why It Matters
 
@@ -388,19 +391,21 @@ Three mandatory quality checks (security, QA, reliability) that happen after all
 ### The Three Reviews
 
 1. **Security (worf)**
-    - Token permissions correctly scoped
-    - No hardcoded secrets
-    - Compliance requirements met
+
+   - Token permissions correctly scoped
+   - No hardcoded secrets
+   - Compliance requirements met
 
 2. **QA/Quality (troi)**
-    - Test coverage meets targets
-    - Edge cases tested
-    - No regressions introduced
+
+   - Test coverage meets targets
+   - Edge cases tested
+   - No regressions introduced
 
 3. **Reliability (crusher)**
-    - Failure modes identified
-    - Rollback procedures documented & tested
-    - Alerts configured for failure conditions
+   - Failure modes identified
+   - Rollback procedures documented & tested
+   - Alerts configured for failure conditions
 
 ### Verdict Options
 

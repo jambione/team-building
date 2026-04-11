@@ -55,11 +55,3 @@ jobs:
         if: matrix.shell == 'pwsh'
         shell: pwsh
         run: python -m unittest discover -s tests -p "test_*.py"
-      - name: Run deterministic validation (bash)
-        if: matrix.shell == 'bash'
-        shell: bash
-        run: python scripts/validate-workspace.py --check deterministic
-      - name: Run deterministic validation (pwsh)
-        if: matrix.shell == 'pwsh'
-        shell: pwsh
-        run: python scripts/validate-workspace.py --check deterministic

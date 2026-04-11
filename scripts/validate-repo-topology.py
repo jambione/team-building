@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from pathlib import Path
 
+from workspace_config import get_nested, get_rel_path, load_workspace_config
+
 
 ROOT = Path(__file__).resolve().parents[1]
-TOPOLOGY_FILE = ROOT / "WORKSPACE-TOPOLOGY.md"
-ALLOWED_DEPENDENCY_TYPES = {
+DEFAULT_ALLOWED_DEPENDENCY_TYPES = {
     "api-contract",
     "shared-lib",
     "build-order",
@@ -50,9 +52,9 @@ def clean_cell(value: str) -> str:
     return value.replace("`", "").strip()
 
 
-def parse_spoke_repos(text: str) -> tuple[list[str], list[str]]:
+def parse_spoke_repos(text: str, spoke_start: str, spoke_end: str) -> tuple[list[str], list[str]]:
     errors: list[str] = []
-    section = get_section(text, "## Spoke Repos", "## Inter-Repo Dependency Map")
+    section = get_section(text, spoke_start, spoke_end)
     rows = parse_table_rows(section)
     if len(rows) < 2:
         return [], ["Spoke Repos table is missing or malformed."]
@@ -74,9 +76,14 @@ def parse_spoke_repos(text: str) -> tuple[list[str], list[str]]:
     return repos, errors
 
 
-def validate_dependency_types(text: str) -> list[str]:
+def validate_dependency_types(
+    text: str,
+    dependency_start: str,
+    dependency_end: str,
+    allowed_dependency_types: set[str],
+) -> list[str]:
     errors: list[str] = []
-    section = get_section(text, "## Inter-Repo Dependency Map", "## Workspace Routing Rules")
+    section = get_section(text, dependency_start, dependency_end)
     rows = parse_table_rows(section)
     if len(rows) < 2:
         return ["Inter-Repo Dependency Map table is missing or malformed."]
@@ -87,23 +94,77 @@ def validate_dependency_types(text: str) -> list[str]:
         dep_type = clean_cell(row[2])
         if not dep_type or dep_type.startswith("_("):
             continue
-        if dep_type not in ALLOWED_DEPENDENCY_TYPES:
+        if dep_type not in allowed_dependency_types:
             errors.append(
                 "Invalid dependency type in WORKSPACE-TOPOLOGY.md: "
-                f"{dep_type} (allowed: {', '.join(sorted(ALLOWED_DEPENDENCY_TYPES))})"
+                f"{dep_type} (allowed: {', '.join(sorted(allowed_dependency_types))})"
             )
 
     return errors
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Validate workspace repo topology.")
+    parser.add_argument(
+        "--root",
+        default=str(ROOT),
+        help="Workspace root to validate (defaults to repository root).",
+    )
+    parser.add_argument(
+        "--config",
+        default=None,
+        help="Optional workspace config path (absolute or relative to --root).",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
-    if not TOPOLOGY_FILE.exists():
-        print(f"Missing required file: {TOPOLOGY_FILE}")
+    args = parse_args()
+    root = Path(args.root).resolve()
+    config = load_workspace_config(root, args.config)
+
+    topology_rel_path = get_rel_path(config, "topology", "WORKSPACE-TOPOLOGY.md")
+    topology_file = root / topology_rel_path
+
+    spoke_start = get_nested(config, ["topology", "spoke_section_start"], "## Spoke Repos")
+    spoke_end = get_nested(
+        config,
+        ["topology", "spoke_section_end"],
+        "## Inter-Repo Dependency Map",
+    )
+    dependency_start = get_nested(
+        config,
+        ["topology", "dependency_section_start"],
+        "## Inter-Repo Dependency Map",
+    )
+    dependency_end = get_nested(
+        config,
+        ["topology", "dependency_section_end"],
+        "## Workspace Routing Rules",
+    )
+    allowed_dep_types = get_nested(
+        config,
+        ["topology", "allowed_dependency_types"],
+        sorted(DEFAULT_ALLOWED_DEPENDENCY_TYPES),
+    )
+    allowed_dep_types_set = {
+        value for value in allowed_dep_types if isinstance(value, str) and value.strip()
+    } or DEFAULT_ALLOWED_DEPENDENCY_TYPES
+
+    if not topology_file.exists():
+        print(f"Missing required file: {topology_file}")
         return 1
 
-    text = read_text(TOPOLOGY_FILE)
-    _, errors = parse_spoke_repos(text)
-    errors.extend(validate_dependency_types(text))
+    text = read_text(topology_file)
+    _, errors = parse_spoke_repos(text, str(spoke_start), str(spoke_end))
+    errors.extend(
+        validate_dependency_types(
+            text,
+            str(dependency_start),
+            str(dependency_end),
+            allowed_dep_types_set,
+        )
+    )
 
     if errors:
         print("Repo topology validation failed:")

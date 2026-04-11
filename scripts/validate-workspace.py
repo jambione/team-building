@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from workspace_config import get_nested, load_workspace_config
+
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,8 +24,8 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def check_required_files(root: Path) -> list[str]:
-    required = [
+def check_required_files(root: Path, config: dict) -> list[str]:
+    default_required = [
         "docs/reference/STATUS.md",
         "docs/reference/TEAM-TOPOLOGY.md",
         "scripts/validate-agent-structure.py",
@@ -38,8 +40,15 @@ def check_required_files(root: Path) -> list[str]:
         ".github/workflows/kb-quality-check.yml",
         "knowledge_base/documents/index.md",
     ]
+
+    required = get_nested(config, ["required_files"], default_required)
+    if not isinstance(required, list):
+        required = default_required
+
     errors: list[str] = []
     for rel in required:
+        if not isinstance(rel, str) or not rel.strip():
+            continue
         if not (root / rel).exists():
             errors.append(f"Missing required file: {rel}")
     return errors
@@ -77,51 +86,56 @@ def assert_not_contains(path: Path, forbidden: str, label: str) -> list[str]:
     return []
 
 
-def check_workflow_alignment(root: Path) -> list[str]:
+def check_workflow_alignment(root: Path, config: dict) -> list[str]:
     errors: list[str] = []
 
-    ci = root / ".github" / "workflows" / "ci.yml"
-    agent = root / ".github" / "workflows" / "agent-structure-check.yml"
-    kb = root / ".github" / "workflows" / "kb-quality-check.yml"
+    default_assertions = {
+        "ci.yml": {
+            "contains": [
+                "python scripts/validate-workspace.py --check ci-core",
+            ],
+            "not_contains": ["npm ci"],
+        },
+        "agent-structure-check.yml": {
+            "contains": [
+                "docs/reference/TEAM-TOPOLOGY.md",
+                "docs/reference/STATUS.md",
+                "python scripts/validate-workspace.py --check agent-structure",
+            ]
+        },
+        "kb-quality-check.yml": {
+            "contains": [
+                "python scripts/validate-workspace.py --check kb-quality",
+            ]
+        },
+    }
+    assertions = get_nested(config, ["workflow_assertions"], default_assertions)
+    if not isinstance(assertions, dict):
+        assertions = default_assertions
 
-    errors += assert_contains(
-        ci,
-        "python scripts/validate-workspace.py --check ci-core",
-        "ci.yml",
-    )
-    errors += assert_not_contains(ci, "npm ci", "ci.yml")
-
-    errors += assert_contains(
-        agent,
-        "docs/reference/TEAM-TOPOLOGY.md",
-        "agent-structure-check.yml",
-    )
-    errors += assert_contains(
-        agent,
-        "docs/reference/STATUS.md",
-        "agent-structure-check.yml",
-    )
-    errors += assert_contains(
-        agent,
-        "python scripts/validate-workspace.py --check agent-structure",
-        "agent-structure-check.yml",
-    )
-
-    errors += assert_contains(
-        kb,
-        "python scripts/validate-workspace.py --check kb-quality",
-        "kb-quality-check.yml",
-    )
+    workflow_dir = root / ".github" / "workflows"
+    for filename, checks in assertions.items():
+        if not isinstance(filename, str) or not isinstance(checks, dict):
+            continue
+        path = workflow_dir / filename
+        label = filename
+        for expected in checks.get("contains", []):
+            if isinstance(expected, str):
+                errors += assert_contains(path, expected, label)
+        for forbidden in checks.get("not_contains", []):
+            if isinstance(forbidden, str):
+                errors += assert_not_contains(path, forbidden, label)
 
     return errors
 
 
 def run_check(root: Path, check: str) -> int:
+    config = load_workspace_config(root)
     errors: list[str] = []
 
     # Contract checks run for every mode to keep one strict entrypoint.
-    errors.extend(check_required_files(root))
-    errors.extend(check_workflow_alignment(root))
+    errors.extend(check_required_files(root, config))
+    errors.extend(check_workflow_alignment(root, config))
 
     if check in {"ci-core", "all"}:
         errors.extend(check_index_completeness(root))

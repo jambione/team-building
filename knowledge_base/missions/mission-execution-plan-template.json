@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "mission_slug": "<mission-slug>",
+  "mission_type": "multi-repo",
+  "repos": [
+    {
+      "repo": "<owner/repo-a>",
+      "branch": "mission/<mission-slug>",
+      "base_ref": "<branch-or-sha>",
+      "final_commit_sha": "<7-40-char-sha-or-n/a>",
+      "role": "primary",
+      "wave": 1,
+      "notes": ""
+    },
+    {
+      "repo": "<owner/repo-b>",
+      "branch": "mission/<mission-slug>",
+      "base_ref": "<branch-or-sha>",
+      "final_commit_sha": "<7-40-char-sha-or-n/a>",
+      "role": "integration",
+      "wave": 2,
+      "notes": ""
+    }
+  ],
+  "waves": [
+    {
+      "wave": 1,
+      "repo": "<owner/repo-a>",
+      "gate_commit_sha": "n/a",
+      "result": "pass"
+    },
+    {
+      "wave": 2,
+      "repo": "<owner/repo-b>",
+      "gate_commit_sha": "<wave-1-final-commit-sha-or-n/a>",
+      "result": "pass"
+    }
+  ],
+  "replay_hash": "<sha256-of-canonical-json-without-replay_hash>"
+}

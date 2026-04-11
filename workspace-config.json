@@ -1,0 +1,88 @@
+{
+  "required_files": [
+    "docs/reference/STATUS.md",
+    "docs/reference/TEAM-TOPOLOGY.md",
+    "scripts/validate-agent-structure.py",
+    "scripts/kb-lint.py",
+    "scripts/validate-discovery-kb-link.py",
+    "scripts/validate-repo-topology.py",
+    "scripts/validate-mission-manifests.py",
+    "scripts/validate-carryforward-state.py",
+    "scripts/validate-workspace.py",
+    "knowledge_base/missions/mission-execution-plan-template.json",
+    "knowledge_base/missions/schemas/mission-execution-plan.schema.json",
+    ".github/workflows/ci.yml",
+    ".github/workflows/agent-structure-check.yml",
+    ".github/workflows/kb-quality-check.yml",
+    "knowledge_base/documents/index.md"
+  ],
+  "paths": {
+    "topology": "WORKSPACE-TOPOLOGY.md",
+    "mission_index": "knowledge_base/missions/mission-index.md",
+    "sprint_state": "knowledge_base/documents/sprint-state.md"
+  },
+  "workflow_assertions": {
+    "ci.yml": {
+      "contains": ["python scripts/validate-workspace.py --check ci-core"],
+      "not_contains": ["npm ci"]
+    },
+    "agent-structure-check.yml": {
+      "contains": [
+        "docs/reference/TEAM-TOPOLOGY.md",
+        "docs/reference/STATUS.md",
+        "python scripts/validate-workspace.py --check agent-structure"
+      ]
+    },
+    "kb-quality-check.yml": {
+      "contains": ["python scripts/validate-workspace.py --check kb-quality"]
+    }
+  },
+  "topology": {
+    "spoke_section_start": "## Spoke Repos",
+    "spoke_section_end": "## Inter-Repo Dependency Map",
+    "dependency_section_start": "## Inter-Repo Dependency Map",
+    "dependency_section_end": "## Workspace Routing Rules",
+    "allowed_dependency_types": [
+      "api-contract",
+      "shared-lib",
+      "build-order",
+      "data-schema",
+      "config"
+    ]
+  },
+  "mission_manifests": {
+    "schema_version": "1.0.0",
+    "schema_file": "knowledge_base/missions/schemas/mission-execution-plan.schema.json",
+    "registry_start": "## Mission Registry",
+    "registry_end": "## Status Key",
+    "required_headers": ["Date", "Slug", "Repo(s)", "Log", "Manifest"],
+    "manifest_marker": "## Mission Execution Manifest",
+    "ledger_header_regex": "^\\|\\s*Repo\\s*\\|\\s*Branch\\s*\\|\\s*Final\\s+Commit\\s+SHA\\s*\\|"
+  },
+  "carryforward": {
+    "carry_section_start": "## Carry-Forward Items",
+    "carry_section_end": "## Cross-Repo Carry-Forwards",
+    "cross_section_start": "## Cross-Repo Carry-Forwards",
+    "cross_section_end": "## Open Conditional Close Checklists",
+    "required_carry_columns": [
+      "ID",
+      "Item",
+      "Owner",
+      "Source Mission",
+      "Priority",
+      "Target Sprint"
+    ],
+    "required_cross_columns": [
+      "ID",
+      "Item",
+      "Source Mission",
+      "Source Repo",
+      "Source Commit",
+      "Target Repo",
+      "Owner",
+      "Target Sprint"
+    ],
+    "valid_commit_regex": "^[0-9a-f]{7,40}$",
+    "valid_commit_special_values": ["n/a", "na"]
+  }
+}

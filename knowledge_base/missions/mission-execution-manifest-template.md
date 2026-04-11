@@ -2,6 +2,7 @@
 
 > Instructions: copy this template into `knowledge_base/missions/manifests/YYYY-MM-DD-<mission-slug>.manifest.md`.
 > Required for any mission where `Repo(s)` includes more than one repository.
+> Also create sibling JSON execution plan: `knowledge_base/missions/manifests/YYYY-MM-DD-<mission-slug>.manifest.json` from `mission-execution-plan-template.json`.
 
 ---
 
@@ -49,3 +50,4 @@
 - [ ] Every multi-repo wave gate references a concrete upstream commit SHA when applicable
 - [ ] Mission manifest link added to `knowledge_base/missions/mission-index.md`
 - [ ] Session journal and mission log links are valid
+- [ ] JSON execution plan exists, matches schema version, and `replay_hash` matches canonical payload hash
