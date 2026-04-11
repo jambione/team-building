@@ -27,6 +27,9 @@ class ValidateWorkspaceTests(unittest.TestCase):
         write_file(root, "scripts/validate-agent-structure.py", pass_script("agent"))
         write_file(root, "scripts/kb-lint.py", pass_script("kb"))
         write_file(root, "scripts/validate-discovery-kb-link.py", pass_script("discovery"))
+        write_file(root, "scripts/validate-repo-topology.py", pass_script("topology"))
+        write_file(root, "scripts/validate-mission-manifests.py", pass_script("manifest"))
+        write_file(root, "scripts/validate-carryforward-state.py", pass_script("carryforward"))
         # Required only for file-presence contract check.
         write_file(root, "scripts/validate-workspace.py", "# fixture placeholder\n")
 

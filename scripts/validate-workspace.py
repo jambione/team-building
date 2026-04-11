@@ -29,6 +29,9 @@ def check_required_files(root: Path) -> list[str]:
         "scripts/validate-agent-structure.py",
         "scripts/kb-lint.py",
         "scripts/validate-discovery-kb-link.py",
+        "scripts/validate-repo-topology.py",
+        "scripts/validate-mission-manifests.py",
+        "scripts/validate-carryforward-state.py",
         "scripts/validate-workspace.py",
         ".github/workflows/ci.yml",
         ".github/workflows/agent-structure-check.yml",
@@ -133,6 +136,14 @@ def run_check(root: Path, check: str) -> int:
         if run_python_script(root, "scripts/validate-agent-structure.py") != 0:
             return 1
 
+    if check in {"deterministic", "ci-core", "all"}:
+        if run_python_script(root, "scripts/validate-repo-topology.py") != 0:
+            return 1
+        if run_python_script(root, "scripts/validate-mission-manifests.py") != 0:
+            return 1
+        if run_python_script(root, "scripts/validate-carryforward-state.py") != 0:
+            return 1
+
     if check in {"kb-quality", "ci-core", "all"}:
         if run_python_script(root, "scripts/kb-lint.py") != 0:
             return 1
@@ -153,7 +164,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Unified workspace validation entrypoint.")
     parser.add_argument(
         "--check",
-        choices=["all", "ci-core", "agent-structure", "kb-quality"],
+        choices=["all", "ci-core", "agent-structure", "kb-quality", "deterministic"],
         default="all",
         help="Validation profile to run.",
     )

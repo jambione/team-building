@@ -56,6 +56,26 @@ When a mission genuinely touches two repos:
 3. Issue creation: include `Target-Repo: <owner>/<repo>` in each MDR signal to route issues correctly.
 4. Document the dependency in each session journal's `Cross-Repo Dependencies` field.
 5. Add a row to `sprint-state.md` Cross-Repo Carry-Forwards if any items span sprints.
+6. Record deterministic evidence for each repo: `base_ref`, `mission_branch`, `final_commit_sha`, and checkpoint commits.
+7. File a mission execution manifest at `knowledge_base/missions/manifests/YYYY-MM-DD-<mission-slug>.manifest.md`.
+
+### Deterministic Multi-Repo Rules
+
+For every mission that touches more than one repo:
+
+1. Use explicit wave gates with commit-level conditions:
+   - Wave 2 may not begin until Wave 1 has a recorded commit SHA.
+2. Record per-repo refs in both session and mission artifacts:
+   - `base_ref`
+   - `mission_branch`
+   - `final_commit_sha` (or `n/a` when no code changes occurred)
+3. Keep one manifest per mission slug and reference it from `mission-index.md`.
+4. Keep carry-forward provenance deterministic:
+   - Each cross-repo carry-forward must include source mission slug, source repo, and source commit (`n/a` allowed for non-code missions).
+5. Run deterministic validators before merge:
+   - `python scripts/validate-repo-topology.py`
+   - `python scripts/validate-mission-manifests.py`
+   - `python scripts/validate-carryforward-state.py`
 
 ### Onboarding a New Spoke Repo
 
@@ -102,6 +122,7 @@ Before every sprint close:
 #### External Storage (Optional — for high-criticality instances)
 
 For organizations requiring additional durability:
+
 - Maintain a separate read-only git mirror on external storage
 - Export KB documents to cold storage quarterly (e.g., S3 Glacier, archive.org)
 - Use `tar czf knowledge-base-backup-$(date +%Y-%m-%d).tar.gz knowledge_base/` for local backups
