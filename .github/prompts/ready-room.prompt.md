@@ -175,9 +175,47 @@ picard synthesizes the Mission Decision Record using picard-thinking's analysis:
 
 ---
 
+## STEP 5B — Acceptance Criteria
+
+Before the Ready Room can close, the crew must establish **what "done" looks like** in observable, testable terms. This is the spec contract. No code begins until it is approved.
+
+**troi** drafts the Acceptance Criteria using the template at `knowledge_base/missions/acceptance-criteria-template.md`. Each criterion follows Given/When/Then format:
+
+```
+### AC-<N>: <Short Title>
+
+**Scenario**: <situation this spec covers>
+
+- **Given** <precondition — system or user state>
+- **When** <action or event>
+- **Then** <expected observable outcome>
+- **And** <additional assertion> *(optional)*
+```
+
+Rules for troi:
+- Write at least one AC per decision outcome stated in the MDR
+- Rejection paths, error states, and edge cases each require a dedicated AC
+- Every **Then** must be observable and testable — "system behaves correctly" is not a valid Then
+- File the completed AC document at `knowledge_base/missions/acceptance-criteria/YYYY-MM-DD-<mission-slug>-ac.md`
+- Include a Traceability table mapping each AC to its MDR decision outcome
+
+troi ends with: `troi returns control to picard. [ac-draft-complete]`
+
+picard reviews the ACs against the MDR decision outcomes. If any AC is untestable, missing a decision outcome, or missing an error/rejection path, picard returns them to troi for revision. When all criteria are complete and testable, picard emits:
+
+```
+[AC-APPROVED: <mission-slug>]
+Scenarios: <N>
+Filed: knowledge_base/missions/acceptance-criteria/YYYY-MM-DD-<mission-slug>-ac.md
+```
+
+**Gate**: `[READY-ROOM-CLOSED]` may **not** be issued until picard has emitted `[AC-APPROVED: <mission-slug>]` this session.
+
+---
+
 ## STEP 6 — Close the Ready Room
 
-Once the MDR is complete, picard chooses one of two close signals:
+Once the MDR is complete and `[AC-APPROVED]` has been emitted, picard chooses one of two close signals:
 
 **Hard Close** — all P1 items fully resolved right now:
 ```

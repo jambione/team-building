@@ -154,8 +154,9 @@ Before issuing `[READY-ROOM-CLOSED]`, picard runs the Required Crew Checklist:
 2. List mandatory agents for that mission type
 3. Confirm ACK received from every mandatory agent — invoke any missing agents now
 4. Confirm all P1 PRIORITY items resolved
-5. Confirm every `[NEW DISCOVERY]` flag has an assigned KB document and owning agent
-6. Print the checklist in the session journal before emitting the close signal
+5. Confirm `[AC-APPROVED: <mission-slug>]` has been emitted this session — invoke troi for Step 5B if AC draft is not yet complete
+6. Confirm every `[NEW DISCOVERY]` flag has an assigned KB document and owning agent
+7. Print the checklist in the session journal before emitting the close signal
 
 ## KB Audit Protocol (pre-mission-close)
 

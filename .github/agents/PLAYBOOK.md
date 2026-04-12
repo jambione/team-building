@@ -23,7 +23,7 @@
 | **riker** | First Officer / Execution Lead | Not in Ready Room — Bridge only | `past-lessons-learned.md` | `[execution-complete]` | *"Engage."* |
 | **geordi** | Chief Engineer / DevOps | Analysis — infrastructure risk | `devops-best-practices.md` | `[automation-complete]` | *"I can make that work."* |
 | **worf** | Security Officer | Analysis — security & compliance | `github-actions-security-hardening.md` | `[security-review-complete]` | *"Qapla'!"* |
-| **troi** | Counselor / QA Lead | Analysis — UX & quality risk | *(testing KB doc)* | `[qa-strategy-complete]` | *"I sense something is wrong here."* |
+| **troi** | Counselor / QA Lead | Analysis — UX & quality risk; Acceptance Criteria lead | *(testing KB doc)* | `[qa-strategy-complete]`, `[ac-draft-complete]` | *"I sense something is wrong here."* |
 | **crusher** | CMO / Reliability Officer | Analysis — reliability & edge cases | *(reliability KB doc)* | `[reliability-assessment-complete]` | *"Stable is not healthy."* |
 | **barclay** | Tech Debt & Efficiency Engineer | Analysis — debt, quality, DRY/YAGNI, code-level performance | `tech-debt-register.md` | `[tech-debt-assessment-complete]` | *"barclay has run the simulations."* |
 | **guinan** | Institutional Memory | Analysis — historical context first | `past-lessons-learned.md` | `[context-retrieval-complete]` | *"guinan has heard that before."* |
@@ -40,15 +40,16 @@
 4. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, wes (optional) in one message; all return before picard proceeds
 5. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
 6. **Mission Decision Record** → picard synthesizes MDR; all P1s resolved
-7. **Close Ready Room** → picard issues `[READY-ROOM-CLOSED: <mission-slug>]`
-8. **Bridge execution** → riker produces wave plan; dispatches each wave as a parallel batch; waits for all returns before next wave
-9. **Track C review — single parallel batch** → picard dispatches worf, troi, crusher simultaneously; aggregates verdicts
-10. **KB updates — single parallel batch** → picard dispatches all domain specialists simultaneously; each updates their doc
-11. **Mission Debrief** → picard fills `mission-debrief-template.md`
-12. **Session journal close** → picard marks `status: closed`; notifies guinan
-13. **Performance log update** → picard updates `agent-performance-log.md`
-14. **Mission log** → picard files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
-15. **Close with "Make it so!"** — picard
+7. **Acceptance Criteria** → troi drafts Given/When/Then specs per MDR outcome; picard issues `[AC-APPROVED: <mission-slug>]`; gates `[READY-ROOM-CLOSED]`
+8. **Close Ready Room** → picard issues `[READY-ROOM-CLOSED: <mission-slug>]`
+9. **Bridge execution** → riker produces wave plan; dispatches each wave as a parallel batch; waits for all returns before next wave
+10. **Track C review — single parallel batch** → picard dispatches worf, troi, crusher simultaneously; aggregates verdicts
+11. **KB updates — single parallel batch** → picard dispatches all domain specialists simultaneously; each updates their doc
+12. **Mission Debrief** → picard fills `mission-debrief-template.md`
+13. **Session journal close** → picard marks `status: closed`; notifies guinan
+14. **Performance log update** → picard updates `agent-performance-log.md`
+15. **Mission log** → picard files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
+16. **Close with "Make it so!"** — picard
 
 ---
 
@@ -92,6 +93,7 @@ Pre-close Crew Checklist — <mission-slug>
 Mission type: <type>
 Mandatory crew ACKed: [ ] <agent-1>  [ ] <agent-2>  ...
 All P1s resolved: yes / no
+Acceptance Criteria approved: yes / no — [AC-APPROVED: <mission-slug>] emitted
 All [NEW DISCOVERY] flags have KB update assigned: yes / no
 ```
 If any mandatory crew checkbox is empty, picard invokes the missing agent before closing.
@@ -256,8 +258,8 @@ Agents have no inherent speed advantage on single sequential tasks — their str
 |-------|---------------|
 | Ready Room Step 2+3 overlap | picard reads KB docs while guinan scans history simultaneously |
 | Ready Room Step 3 (analysis) | picard-thinking, data, worf, troi, barclay, crusher, obrien, wes — all in one batch |
-| Track C review (Step 7) | worf, troi, crusher — all in one batch |
-| Mission close KB updates (Step 8) | all specialists update their domain docs in one batch |
+| Track C review (Step 10) | worf, troi, crusher — all in one batch |
+| Mission close KB updates (Step 11) | all specialists update their domain docs in one batch |
 | Bridge execution (each wave) | riker dispatches all agents in the same wave in one batch |
 
 ### Wave-structured execution
@@ -380,6 +382,7 @@ The webhook URL is stored in `knowledge_base/current/teams-webhook.md`. picard r
 | Signal | Teams message |
 |--------|--------------|
 | `[READY-ROOM-OPEN: <slug>]` | `🚀 Ready Room opened — <slug>` |
+| `[AC-APPROVED: <slug>]` | `📋 Specs approved — <slug>` |
 | `[READY-ROOM-CLOSED: <slug>]` | `✅ Ready Room closed — <slug>` |
 | `[READY-ROOM-CONDITIONAL-CLOSE: <slug>]` | `⏸️ Conditional close — <slug> (pre-reqs pending)` |
 | `[PRIORITY: P0 \| <agent> \| <summary>]` | `🚨 P0 — <agent>: <summary> [<slug>]` |
