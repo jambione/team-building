@@ -14,6 +14,7 @@
     ".github/workflows/ci.yml",
     ".github/workflows/agent-structure-check.yml",
     ".github/workflows/kb-quality-check.yml",
+    ".github/workflows/security-scan.yml",
     "knowledge_base/documents/index.md"
   ],
   "paths": {

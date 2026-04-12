@@ -4,7 +4,7 @@
 > Every agent reads this before beginning Ready Room analysis or Bridge execution.
 
 **Owner**: picard  
-**Last Updated**: 2026-04-11
+**Last Updated**: 2026-04-12
 
 ---
 
@@ -15,16 +15,16 @@
 | **Sprint**                   | Sprint 2                                                                                |
 | **Sprint Dates**             | 2026-04-06 – 2026-04-19                                                                 |
 | **Sprint Goal**              | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review |
-| **Health**                   | GREEN                                                                                   |
+| **Health**                   | AMBER — security-scan.yml absent; deploy workflows being created (2026-04-12)           |
 | **Active Repos This Sprint** | `team-building` _(add spoke repos as they are onboarded)_                               |
 
 ---
 
 ## Active Missions
 
-| Slug          | Description | Status | Owner |
-| ------------- | ----------- | ------ | ----- |
-| _(none open)_ |             |        |       |
+| Slug                       | Description                                         | Status      | Owner  |
+| -------------------------- | --------------------------------------------------- | ----------- | ------ |
+| `sprint-health-diagnostic` | Full-spectrum health check + hardening (2026-04-12) | in progress | picard |
 
 ---
 

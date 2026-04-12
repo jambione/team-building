@@ -10,9 +10,11 @@
 
 ## Last Mission Outcome
 
-**Mission**: `compare-team-building-vs-oio-agents` — Sprint 2 — 2026-04-11 — **success**
+**Mission**: `sprint-health-diagnostic` — Sprint 2 — 2026-04-12 — **in progress**
 
-The crew executed a full comparative mission with Ready Room, Bridge execution, and Track C review. team-building was assessed as stronger in orchestration depth and mission framework richness, while OIO.Agents was assessed as stronger in present-state build contract maturity and validation rigor. A weighted recommendation selected OIO.Agents as the current overall winner for operational reliability, with one carry-forward item opened to harden team-building validator and workflow path alignment.
+Three successive health check passes were run against team-building. Both CI validation scripts now pass clean (0 errors, 0 warnings). Key changes shipped: AC gate wired into copilot-instructions.md; acceptance-criteria/ directory created; spec-driven-development.md indexed; JSON injection in mdr-to-issue.yml fixed with jq; security-scan.yml created (Trivy + CodeQL); deploy-staging.yml skeleton created with health-check loop, rollback job, and deployment telemetry; adr-workflow.yml timeout added; workspace-config.json updated to gate on security-scan.yml presence. Health downgraded GREEN → AMBER during assessment; path back to GREEN is clear once security-scan.yml ships and deploy workflows are validated.
+
+**Prior mission**: `compare-team-building-vs-oio-agents` — Sprint 2 — 2026-04-11 — **success**
 
 ---
 
@@ -34,7 +36,7 @@ The crew executed a full comparative mission with Ready Room, Bridge execution, 
 | **Sprint** | Sprint 2 |
 | **Dates** | 2026-04-06 – 2026-04-19 |
 | **Goal** | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review |
-| **Health** | GREEN |
+| **Health** | AMBER — security-scan.yml and deploy-staging.yml created 2026-04-12; pending first successful run |
 
 ---
 
@@ -54,9 +56,12 @@ The crew executed a full comparative mission with Ready Room, Bridge execution, 
 
 ## Recommended Next Mission Focus
 
-First priority should be a targeted hardening mission for `team-building` to fix validator and workflow path drift and align CI assumptions with repository reality. This has direct impact on confidence in all future mission automation.
+The hardening mission is substantially complete (2026-04-12). Remaining open items:
 
-After hardening, rerun the same comparative scoring model to see if the overall ranking changes.
+1. **Validate security-scan.yml in CI** — confirm CodeQL and Trivy results appear in the Security tab after first push to main.
+2. **Create deploy-production.yml** — staging skeleton is in place; production workflow needs environment gate and stricter rollback policy.
+3. **Close Sprint 2 carry-forwards** — CF-001 (rate-limit handling) is the only Sprint 2 P3 still open; CF-008 (hardening) is resolved.
+4. **ADR for spec-driven development** — trigger adr-workflow.yml to create a formal record for the AC gate decision (D-4).
 
 ---
 
