@@ -2,27 +2,30 @@
 
 ## Current State
 
-**As of**: 2026-04-05  
-**Health**: GREEN  
-**Top active item**: Environment protection rules (2+ PR reviewers for production) — manual GitHub Settings step not yet completed.
+**As of**: 2026-04-12  
+**Health**: AMBER  
+**Top active item**: Environment protection rules — manual GitHub Settings step for production environment reviewers still outstanding. All workflows now created and correctly configured.
 
 ---
 
 ## Critical Items (Must-Have)
 
-- [x] **Least-Privilege Permissions**: `permissions:` block added to all 4 workflows (2026-04-05)
-- [ ] **Environment Protection Rules**: Require 2+ PR reviewers for production deployments (GitHub Settings — manual step)
-- [ ] **Dependency Scanning**: Trivy scheduled in `security-scan.yml` — FILE DOES NOT EXIST (re-opened 2026-04-12; was incorrectly marked complete)
-- [ ] **CodeQL Security Analysis**: Documented in `security-scan.yml` — FILE DOES NOT EXIST (re-opened 2026-04-12; was incorrectly marked complete)
+- [x] **Least-Privilege Permissions**: `permissions:` block added to all workflows (2026-04-05)
+- [ ] **Environment Protection Rules**: Require 2+ PR reviewers for production deployments (GitHub Settings → Environments → production → Required reviewers — manual step not yet completed)
+- [x] **Dependency Scanning**: Trivy running in `security-scan.yml` — created 2026-04-12 (Trivy misconfig + secret scan, SARIF upload to Security tab)
+- [x] **CodeQL Security Analysis**: CodeQL Python analysis running in `security-scan.yml` — created 2026-04-12 (scripts/ and tests/ scoped)
 
-### Permissions Model Reference (implemented 2026-04-05)
+### Permissions Model Reference (verified 2026-04-12)
 
-| Workflow              | permissions                                                       | Notes                                                 |
-| --------------------- | ----------------------------------------------------------------- | ----------------------------------------------------- |
-| ci.yml                | contents: read, actions: read, checks: write, pull-requests: read | checks: write for CI status posting                   |
-| security-scan.yml     | contents: read, actions: read, security-events: write             | security-events: write required for SARIF upload      |
-| deploy-staging.yml    | contents: read, actions: read, deployments: write                 | deployments: write for GitHub deployment records      |
-| deploy-production.yml | contents: read, actions: read, deployments: write                 | Same as staging; environment gate adds approval layer |
+| Workflow              | permissions                                                          | Notes                                                                   |
+| --------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| ci.yml                | contents: read                                                        | Minimal scope — validates Python only, no PR/check writes needed        |
+| security-scan.yml     | contents: read, actions: read, security-events: write                 | security-events: write required for SARIF upload                        |
+| deploy-staging.yml    | contents: read, actions: read, deployments: write, pages: write, id-token: write | pages + id-token required for OIDC-based Pages deploy    |
+| deploy-production.yml | contents: read, actions: read, deployments: write, pages: write, id-token: write | Same as staging; environment gate adds approval layer    |
+| kb-staleness-check.yml | contents: read, issues: write                                        | issues: write for opening staleness tracking issues                     |
+| adr-workflow.yml      | contents: write, pull-requests: write                                 | Wide but necessary — creates branches and PRs for ADR review            |
+| mdr-to-issue.yml      | contents: read, issues: write                                         | issues: write for creating MDR tracking issues                          |
 
 ### Critical Pattern: Rollback Jobs Require Full Git History
 
@@ -45,13 +48,17 @@ is needed most.
 | SOC 2/ISO 27001 | Access controls, workflow retention policies | ❌ Incomplete   |
 | PCI-DSS/HIPAA   | Artifact encryption verification             | ⚠️ Needs review |
 
-## Immediate Actions (Sprint 3 — 2026-04-12)
+## Sprint 3 Status — Completed 2026-04-12
 
-1. **[CRITICAL] Create `security-scan.yml`** — Trivy + CodeQL. Previously documented as complete; file absent. Owner: worf + geordi.
-2. **[CRITICAL] Create `deploy-staging.yml` and `deploy-production.yml`** — deployment automation prerequisite for all environment gates. Owner: geordi.
-3. **[HIGH] Fix Teams notification JSON injection** in `mdr-to-issue.yml` — use `jq` to construct payload safely instead of raw variable interpolation. Owner: worf.
-4. **[MEDIUM] Add environment protection rules** (manual GitHub Settings step) — only actionable after deploy workflows exist. Owner: picard.
-5. Configure artifact encryption and retention policies (carried forward).
+1. **[RESOLVED] `security-scan.yml` created** — Trivy (misconfig + secret, SARIF) + CodeQL (Python, scripts/ + tests/). Owner: worf + geordi.
+2. **[RESOLVED] `deploy-staging.yml` and `deploy-production.yml` created** — health-check polling, rollback with fetch-depth:0, structured telemetry, jq-safe Teams notifications. Owner: geordi.
+3. **[RESOLVED] JSON injection fixed** in `mdr-to-issue.yml`, `deploy-staging.yml`, `deploy-production.yml`. Owner: worf.
+
+## Open Items
+
+1. **[MEDIUM] Add environment protection rules** — GitHub Settings → Environments → production → Required reviewers. Manual step. Without this, `environment: production` in deploy-production.yml has no approval gate. Owner: picard.
+2. **[MEDIUM] Dependabot configuration** — No `.github/dependabot.yml`. Action versions in 7 workflows are manually pinned with no automated update signal. Owner: geordi. Sprint 3.
+3. Configure artifact encryption and retention policies (carried forward).
 
 ---
 

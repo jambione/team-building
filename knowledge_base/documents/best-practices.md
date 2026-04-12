@@ -29,6 +29,8 @@ All CI test runs must:
 
 A CI run that reports "tests passed" without an artifact and without a coverage gate is motion, not signal. Skipping coverage upload is only acceptable when the test framework explicitly does not support it — this must be documented, not silently absent.
 
+> **Status (2026-04-12)**: TD-004 (coverage gate) and TD-005 (test artifact upload) are both open in ci.yml. TD-004 is High severity and past-due from Sprint 2. Target: add `python -m pytest --cov --cov-fail-under=70 --junitxml=test-results.xml` and `actions/upload-artifact` step to ci.yml before Sprint 2 closes (2026-04-19).
+
 ### Test Naming and Types
 
 - Unit tests: co-located with source (`*.test.ts` / `*.spec.ts`)

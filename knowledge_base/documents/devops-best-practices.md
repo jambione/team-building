@@ -47,9 +47,32 @@ Static analysis (ESLint, type-check without emit) does not consume compiled outp
 
 ---
 
+## Dependabot for GitHub Actions
+
+Pin GitHub Actions by major version tag (`@v4`) and configure Dependabot to watch for updates.
+
+**Recommended `.github/dependabot.yml`**:
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+```
+
+Without Dependabot, pinned action versions become stale silently. A patched `actions/checkout@v4` will not be received unless someone manually updates the pin. This is the easiest supply-chain hygiene step available.
+
+**Rule**: Any new workflow using an action must check that the ecosystem is covered by Dependabot before merging. If adding a new package ecosystem (npm, pip, docker), add a matching Dependabot entry simultaneously.
+
+---
+
 ## Version History
 
 ```
 2026-04-05: picard — Initial document
 2026-04-12: geordi — Added artifact-sharing pattern and lint-vs-build dependency rule (Sprint Health Check findings G-1, G-2)
+2026-04-12: geordi — Added Dependabot section (closes TD-003 documentation gap; dependabot.yml created in repo)
 ```

@@ -68,9 +68,14 @@ Items not resolved last sprint. Every agent should know these exist before start
 
 Current debt health from `tech-debt-register.md` — top active items only.
 
-| ID     | Item                                           | Severity | Owner  | Target Sprint |
-| ------ | ---------------------------------------------- | -------- | ------ | ------------- |
-| TD-001 | `ci.yml.tmp` stray file — malformed YAML draft | Low      | geordi | Sprint 2      |
+| ID     | Item                                                                           | Severity | Owner  | Target Sprint |
+| ------ | ------------------------------------------------------------------------------ | -------- | ------ | ------------- |
+| TD-003 | No Dependabot configuration — action versions updated manually                 | High     | geordi | Sprint 3      |
+| TD-004 | No test coverage gate — coverage can regress silently                          | High     | troi   | Sprint 2      |
+| TD-005 | No test result artifact uploads from CI                                        | Medium   | troi   | Sprint 3      |
+| TD-008 | No main → production branch promotion workflow (partially addressed by deploy workflows) | Medium | geordi | Sprint 3 |
+
+> TD-001 (ci.yml.tmp stray file) — RESOLVED 2026-04-11. See tech-debt-register.md for full history.
 
 > For full register, read `knowledge_base/documents/tech-debt-register.md`.
 

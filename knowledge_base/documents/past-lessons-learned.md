@@ -1,5 +1,12 @@
 # Past Lessons Learned
 
+## 2026-04-12 – Sprint Health Check Second Pass
+
+- **Lesson (KB drift is never fully closed in one pass)**: Three KB documents were corrected in the first health-check pass but still showed pre-improvement state when re-read this pass. Each health check should explicitly re-read every KB document it updated in prior passes and verify the content reflects reality — not just that the update was committed.
+- **Lesson (Dependabot is a prerequisite, not an improvement)**: A repo with 7 workflows using pinned action versions and no Dependabot configuration is not hardened — it is frozen. TD-003 was High severity and sat open two sprints. Every repo should have `dependabot.yml` for `github-actions` ecosystem as a baseline requirement, added when the first workflow is written.
+- **Lesson (Validate-workspace index check has a semantic gap)**: The `check_index_completeness` regex matches backtick-wrapped filenames anywhere in index.md, including the Pending Additions backlog. A file in the backlog satisfies the validator even though it is not in a table row. The check confuses *mentioned* with *indexed*. Future improvement: restrict the regex to table rows only, or move the "pending" section to a non-backtick format.
+- **Decision**: AMBER held for second pass. All critical items from first pass confirmed resolved. Two High items remain (coverage gate, Dependabot). Dependabot created; coverage gate deferred to Sprint 2 close (2026-04-19).
+
 ## 2026-04-12 – Sprint Health Check (Full-Spectrum)
 
 - **Lesson (KB-vs-Reality Drift)**: A checklist item marked `[x]` with a date is not evidence of implementation. `security-scan.yml` was recorded as implemented in 2026-04-05 KB entries but does not exist in the repository. Any KB checklist item referencing a file must include the file path as its verification criterion. If the file cannot be confirmed to exist, the item is not complete.

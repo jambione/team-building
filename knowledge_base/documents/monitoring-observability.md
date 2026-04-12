@@ -130,25 +130,27 @@ Without this event, the first production incident has no deployment correlation 
 
 ---
 
-## 7. Current Observability Gaps (as of 2026-04-05, reviewed 2026-04-12)
+## 8. Current Observability Gaps (updated 2026-04-12)
 
-| Gap                                                    | Severity | Owner  | Sprint   |
-| ------------------------------------------------------ | -------- | ------ | -------- |
-| No application source code — nothing to instrument     | Critical | data   | Sprint 3 |
-| No observability platform configured                   | High     | obrien | Sprint 3 |
-| Deployment telemetry events not emitted from workflows | High     | geordi | Sprint 3 (escalated — no deploy workflows exist yet) |
-| No SLO burn-rate alerts defined                        | High     | obrien | Sprint 3 |
-| No structured logging library integrated               | Medium   | data   | Sprint 3 |
+| Gap                                                    | Severity | Owner  | Sprint   | Status |
+| ------------------------------------------------------ | -------- | ------ | -------- | ------ |
+| No application source code — nothing to instrument     | Critical | data   | Sprint 3 | open   |
+| No observability platform configured                   | High     | obrien | Sprint 3 | open   |
+| ~~Deployment telemetry events not emitted from workflows~~ | ~~High~~ | geordi | ~~Sprint 3~~ | **RESOLVED 2026-04-12** — deploy-staging.yml and deploy-production.yml both emit structured `DEPLOY_EVENT` telemetry |
+| No SLO burn-rate alerts defined                        | High     | obrien | Sprint 3 | open   |
+| No structured logging library integrated               | Medium   | data   | Sprint 3 | open   |
+| deploy-staging.yml rollback notification missing `actor` field | Low | geordi | Sprint 3 | open — inconsistency vs deploy-production.yml |
 
 ---
 
-## 8. Version History
+## 9. Version History
 
 ```markdown
 ---
 Version History:
     - 2026-04-05: picard — Initial monitoring and observability standards document
     - 2026-04-05: obrien — Added Three Core Operational Questions, SLO definitions, observability gaps; updated ownership
+    - 2026-04-12: crusher — Closed deployment telemetry gap (deploy workflows now emit structured events); fixed duplicate section 7; added staging rollback actor gap; renumbered sections 8/9
 ---
 ```
 

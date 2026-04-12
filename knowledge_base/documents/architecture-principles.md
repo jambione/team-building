@@ -2,9 +2,9 @@
 
 ## Current State
 
-**As of**: 2026-04-05  
+**As of**: 2026-04-12  
 **Health**: GREEN  
-**Top active item**: All foundational patterns (composition over inheritance, stateless components, built-in features first) accepted and active. ADR-001 through ADR-003 all in force. No active violations flagged.
+**Top active item**: ADR-004 (Spec-Driven Development Gate) accepted and enforced in three places. ADR-001 through ADR-004 all in force as separate files. No active violations flagged.
 
 ---
 

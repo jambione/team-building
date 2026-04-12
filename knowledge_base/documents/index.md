@@ -100,6 +100,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                      | Description                                                               | Last Updated | Owner  |
 | ----------------------------- | ------------------------------------------------------------------------- | ------------ | ------ |
 | `monitoring-observability.md` | Logging, metrics, alerting standards, SLO definitions, observability gaps | 2026-04-05   | obrien |
+| `database-migration-strategies.md` | Zero-downtime migration patterns, rollback procedures, verification checklist | 2026-04-05 | picard |
 
 ---
 
@@ -134,7 +135,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 ## Pending Additions (Backlog)
 
-- [ ] `database-migration-strategies.md` — Zero-downtime migration patterns
+_(No pending items — all top-level KB documents are indexed as of 2026-04-12)_
 
 ---
 
@@ -151,6 +152,7 @@ Version History:
     - 2026-04-11: picard — Indexed all top-level KB documents so kb-lint has full top-level coverage and no warning-only gaps
     - 2026-04-12: picard — Added spec-driven-development.md to new Quality Gates section (NEW-3 fix)
     - 2026-04-12: data — Added individual ADR files (adr-0001 through adr-0004) to Architecture index; ADR Coherence Rule applied
+    - 2026-04-12: picard — Moved database-migration-strategies.md from Pending backlog to Observability section (file was complete; D-NEW-4 finding); cleared Pending Additions backlog
 ---
 ```
 

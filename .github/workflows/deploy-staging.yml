@@ -139,18 +139,20 @@ jobs:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           FAILED_SHA: ${{ github.sha }}
           ROLLBACK_SHA: ${{ steps.prev.outputs.sha }}
+          ACTOR: ${{ github.actor }}
         run: |
           if [ -n "$TEAMS_WEBHOOK_URL" ]; then
             PAYLOAD=$(jq -n \
               --arg failed  "$FAILED_SHA" \
               --arg target  "$ROLLBACK_SHA" \
+              --arg actor   "$ACTOR" \
               '{
                 "@type": "MessageCard",
                 "summary": "Staging rollback triggered",
                 "themeColor": "FF0000",
                 "sections": [{
                   "activityTitle": "⚠️ Staging deploy failed — rollback initiated",
-                  "activityText": ("Failed SHA: " + $failed + " | Rollback target: " + $target)
+                  "activityText": ("Failed SHA: " + $failed + " | Rollback target: " + $target + " | Triggered by: " + $actor)
                 }]
               }')
             curl -s -X POST "$TEAMS_WEBHOOK_URL" \
