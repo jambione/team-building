@@ -25,7 +25,7 @@ Three successive health check passes were run against team-building. Both CI val
 | CF-001 | Rate-limit handling for burst PR windows | obrien + geordi | `claude-api-pr-review` | P3 | Sprint 2 |
 | CF-002 | Multi-agent review panel (WES-PROPOSAL-2) | wes | `claude-api-pr-review` | deferred | Sprint 3 |
 | CF-003 | AI review comment engagement metric | troi | `claude-api-pr-review` | P3 | Sprint 4 |
-| CF-008 | team-building validator/workflow path hardening (`STATUS.md` and `TEAM-TOPOLOGY.md` drift) | geordi + barclay | `compare-team-building-vs-oio-agents` | P2 | Sprint 3 |
+| ~~CF-008~~ | ~~team-building validator/workflow path hardening (`STATUS.md` and `TEAM-TOPOLOGY.md` drift)~~ | geordi + barclay | `compare-team-building-vs-oio-agents` | ~~P2~~ | **RESOLVED 2026-04-12** — deploy-production.yml created; ADR-001/002/003 migrated; workspace-config.json updated |
 
 ---
 
@@ -59,9 +59,8 @@ Three successive health check passes were run against team-building. Both CI val
 The hardening mission is substantially complete (2026-04-12). Remaining open items:
 
 1. **Validate security-scan.yml in CI** — confirm CodeQL and Trivy results appear in the Security tab after first push to main.
-2. **Create deploy-production.yml** — staging skeleton is in place; production workflow needs environment gate and stricter rollback policy.
-3. **Close Sprint 2 carry-forwards** — CF-001 (rate-limit handling) is the only Sprint 2 P3 still open; CF-008 (hardening) is resolved.
-4. **ADR for spec-driven development** — trigger adr-workflow.yml to create a formal record for the AC gate decision (D-4).
+2. **Close Sprint 2 carry-forwards** — CF-001 (rate-limit handling) is the only Sprint 2 P3 still open; CF-008 resolved 2026-04-12.
+3. **sprint-health-diagnostic close** — all open items from the diagnostic are resolved; picard to close the mission and update sprint-state.md.
 
 ---
 

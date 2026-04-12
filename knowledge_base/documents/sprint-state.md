@@ -15,7 +15,7 @@
 | **Sprint**                   | Sprint 2                                                                                |
 | **Sprint Dates**             | 2026-04-06 – 2026-04-19                                                                 |
 | **Sprint Goal**              | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review |
-| **Health**                   | AMBER — security-scan.yml absent; deploy workflows being created (2026-04-12)           |
+| **Health**                   | AMBER — security-scan.yml created; all deploy workflows created (2026-04-12); pending first CI run |
 | **Active Repos This Sprint** | `team-building` _(add spoke repos as they are onboarded)_                               |
 
 ---
