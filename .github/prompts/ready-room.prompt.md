@@ -22,6 +22,14 @@ picard announces:
 [READY-ROOM-OPEN: <mission-slug>]
 ```
 
+Before opening analysis, picard resolves the target repo from `knowledge_base/current/workspace-context.md` (`current_repo`) and creates a fresh mission branch in that repo:
+
+```
+[MISSION-BRANCH: <repo>: mission/<mission-slug>]
+```
+
+If the mission includes a Rally item ID (for example `DE12345`, `US12345`, `TA12345`), picard routes Rally lookup/update/comment work through `kc-rally-agent`.
+
 picard opens a session journal at `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md` using the template at `knowledge_base/sessions/session-template.md`.
 
 picard states:
