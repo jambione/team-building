@@ -75,6 +75,14 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 ---
 
+## Quality Gates & Spec-Driven Development
+
+| Document                     | Description                                                                        | Last Updated | Owner |
+| ---------------------------- | ---------------------------------------------------------------------------------- | ------------ | ----- |
+| `spec-driven-development.md` | AC gate mechanics, Given/When/Then format, traceability, role assignments, lessons | 2026-04-12   | troi  |
+
+---
+
 ## Technical Debt & Quality
 
 | Document                | Description                                                         | Last Updated | Owner   |
@@ -137,6 +145,7 @@ Version History:
     - 2026-04-11: geordi — Added notification-integration.md (connectivity layer: Teams/Slack webhooks, MDR-to-Issue workflow, signal mapping)
     - 2026-04-11: picard — Added multi-repo-conventions.md (hub model, workspace orientation, repo-scoped KB signals, cross-repo mission rules)
     - 2026-04-11: picard — Indexed all top-level KB documents so kb-lint has full top-level coverage and no warning-only gaps
+    - 2026-04-12: picard — Added spec-driven-development.md to new Quality Gates section (NEW-3 fix)
 ---
 ```
 
