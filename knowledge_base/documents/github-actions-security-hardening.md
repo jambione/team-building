@@ -12,8 +12,8 @@
 
 - [x] **Least-Privilege Permissions**: `permissions:` block added to all 4 workflows (2026-04-05)
 - [ ] **Environment Protection Rules**: Require 2+ PR reviewers for production deployments (GitHub Settings — manual step)
-- [x] **Dependency Scanning**: Trivy integrated via `aquasecurity/trivy-action@master` with weekly cron `0 4 * * 1` (2026-04-05)
-- [x] **CodeQL Security Analysis**: Correct `init` → `autobuild` → `analyze@v3` sequence implemented in security-scan.yml (2026-04-05)
+- [ ] **Dependency Scanning**: Trivy scheduled in `security-scan.yml` — FILE DOES NOT EXIST (re-opened 2026-04-12; was incorrectly marked complete)
+- [ ] **CodeQL Security Analysis**: Documented in `security-scan.yml` — FILE DOES NOT EXIST (re-opened 2026-04-12; was incorrectly marked complete)
 
 ### Permissions Model Reference (implemented 2026-04-05)
 
@@ -30,6 +30,14 @@ Any rollback job using `git rev-parse HEAD^1` MUST set `fetch-depth: 0` on `acti
 shallow clone does not include parent commits. Failure to set this causes rollback to fail exactly when it
 is needed most.
 
+### Critical Finding: KB-vs-Reality Drift (2026-04-12)
+
+> **KB-vs-Reality Drift Pattern**: Security checklist items marked `[x]` with implementation dates are assumptions, not verified states, unless the workflow file is confirmed to exist. Any checklist item that references a specific workflow file must include the file path as a verification criterion. If the referenced file does not exist, the item must be re-opened regardless of the recorded implementation date.
+>
+> **Current drift detected (2026-04-12)**: `security-scan.yml` is marked as implemented but does not exist in `.github/workflows/`. `deploy-staging.yml` and `deploy-production.yml` are referenced in the permissions table but also do not exist. These items are re-opened below.
+
+---
+
 ## Compliance Requirements
 
 | Standard        | Requirement                                  | Status          |
@@ -37,13 +45,13 @@ is needed most.
 | SOC 2/ISO 27001 | Access controls, workflow retention policies | ❌ Incomplete   |
 | PCI-DSS/HIPAA   | Artifact encryption verification             | ⚠️ Needs review |
 
-## Immediate Actions (Next Sprint)
+## Immediate Actions (Sprint 3 — 2026-04-12)
 
-1. Add environment protection rules requiring multi-PR reviewer approval
-2. Integrate Trivy dependency scanning for main branch pushes
-3. Enable CodeQL security analysis in GitHub Settings
-4. Implement scheduled weekly security scans
-5. Configure artifact encryption and retention policies
+1. **[CRITICAL] Create `security-scan.yml`** — Trivy + CodeQL. Previously documented as complete; file absent. Owner: worf + geordi.
+2. **[CRITICAL] Create `deploy-staging.yml` and `deploy-production.yml`** — deployment automation prerequisite for all environment gates. Owner: geordi.
+3. **[HIGH] Fix Teams notification JSON injection** in `mdr-to-issue.yml` — use `jq` to construct payload safely instead of raw variable interpolation. Owner: worf.
+4. **[MEDIUM] Add environment protection rules** (manual GitHub Settings step) — only actionable after deploy workflows exist. Owner: picard.
+5. Configure artifact encryption and retention policies (carried forward).
 
 ---
 

@@ -23,7 +23,22 @@
 
 ## Common Patterns Used by the Team
 
-- Clear separation of concerns (UI, business logic, data access)
-- Stateless services where possible
+- Clear separation of concerns (UI, business logic, data access) — see ADR-002
+- Stateless services where possible — see ADR-002 (Stateless Component Design)
 - Components should be easily testable
 - Use established patterns rather than inventing new ones
+- Composition over inheritance — see ADR-001
+- Built-in language features before external dependencies — see ADR-003
+
+## ADR Coherence Rule (added 2026-04-12)
+
+The KB must have exactly one canonical location for each ADR's full text. Because `adr-workflow.yml` creates separate files (`knowledge_base/documents/adr-NNNN-slug.md`), `architecture-decision-records.md` is the **index only** — not the full text. Inline ADR text in the index document must be migrated to separate files, and the index updated to point to those files. Mixing inline text and workflow-generated separate files creates two sources of truth.
+
+**Rule**: Any ADR proposed or accepted after ADR-003 must be stored as a separate file. ADR-001 through ADR-003 should be migrated in Sprint 3 (owner: data).
+
+## Version History
+
+```
+2026-04-05: picard — Initial architecture principles document
+2026-04-12: data — Added ADR links to common patterns; added ADR Coherence Rule (Sprint Health Check finding D-1, D-5)
+```

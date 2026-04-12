@@ -117,13 +117,26 @@ memory_usage_bytes{gc="young"}                       # Gauge
 
 ---
 
-## 7. Current Observability Gaps (as of 2026-04-05)
+## 7. Deployment Telemetry Prerequisite (added 2026-04-12)
+
+Before any spoke-repo service reaches production, at minimum one structured deployment event must be emitted from the deployment workflow. This event must include:
+
+- `environment` — staging / production / etc.
+- `commit_sha` — the exact SHA being deployed
+- `deployed_at` — ISO-8601 timestamp
+- `outcome` — success / failure / rolled-back
+
+Without this event, the first production incident has no deployment correlation data. "Is it up?" cannot be answered. This is the minimum viable deployment telemetry gate.
+
+---
+
+## 7. Current Observability Gaps (as of 2026-04-05, reviewed 2026-04-12)
 
 | Gap                                                    | Severity | Owner  | Sprint   |
 | ------------------------------------------------------ | -------- | ------ | -------- |
 | No application source code — nothing to instrument     | Critical | data   | Sprint 3 |
 | No observability platform configured                   | High     | obrien | Sprint 3 |
-| Deployment telemetry events not emitted from workflows | High     | geordi | Sprint 2 |
+| Deployment telemetry events not emitted from workflows | High     | geordi | Sprint 3 (escalated — no deploy workflows exist yet) |
 | No SLO burn-rate alerts defined                        | High     | obrien | Sprint 3 |
 | No structured logging library integrated               | Medium   | data   | Sprint 3 |
 

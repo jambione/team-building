@@ -1,13 +1,13 @@
 # Past Lessons Learned
 
-## 2026-04-11 - Comparative Framework Evaluation (team-building vs OIO.Agents)
+## 2026-04-12 – Sprint Health Check (Full-Spectrum)
 
-- **Lesson**: Framework richness and build maturity should be scored independently before selecting an overall winner; combining them too early distorts decision quality.
-- **Lesson**: Validation failures caused by local prerequisites must be classified separately from intrinsic repository drift (for example, path mismatches and broken assumptions).
-- **Observation**: team-building currently leads in orchestration depth, agent protocol richness, and mission lifecycle structure.
-- **Observation**: OIO.Agents currently leads in executable contract validation and workflow-level enforcement consistency.
-- **Decision**: Use a dual-layer verdict in comparative missions: category winners plus weighted overall recommendation.
-- **Outcome**: OIO.Agents selected as present-state overall winner for operational reliability; team-building retained as feature-rich orchestration benchmark.
+- **Lesson (KB-vs-Reality Drift)**: A checklist item marked `[x]` with a date is not evidence of implementation. `security-scan.yml` was recorded as implemented in 2026-04-05 KB entries but does not exist in the repository. Any KB checklist item referencing a file must include the file path as its verification criterion. If the file cannot be confirmed to exist, the item is not complete.
+- **Lesson (CI gate failure is silent until you run the script)**: `STATUS.md` is required by `validate-agent-structure.py` but was never created. The `agent-structure-check.yml` workflow has been failing on every push and PR since it was introduced. Scripts that gate CI must be run manually at least once after creation to confirm they pass against the current repo state.
+- **Lesson (deploy workflows are a prerequisite, not a follow-up)**: Documenting security requirements for deployment workflows (permissions, environment gates, rollback patterns) before the deployment workflows exist creates a false sense of security preparedness. Create the workflow skeleton — even a no-op — before documenting its security model.
+- **Lesson (lint depends only on prepare, not build)**: Static analysis jobs (ESLint, type-check) do not consume compiled output. Chaining them behind `build` adds latency to every PR. Parallelize lint with build after the prepare step.
+- **Pattern (KB index drift)**: 8 of 27 top-level KB documents are not indexed. The index is only useful if it is complete. Promote unindexed documents from lint warnings to lint errors so new documents cannot be added without indexing.
+- **Decision**: All 15 findings logged in `team-health-assessment-github-agents.md`. Health rating downgraded GREEN → AMBER. Two critical items (missing `security-scan.yml`, missing `STATUS.md`) assigned to Sprint 3 immediate lane.
 
 ## 2026-04-11 – Code Review & Framework Health Assessment
 
