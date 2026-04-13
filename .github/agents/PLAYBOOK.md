@@ -280,6 +280,103 @@ An agent has a dependency on another if it needs that agent's **output** to do i
 
 ---
 
+## Multi-Channel Communication Protocol
+
+Routing signals to dedicated channels means each agent and stakeholder receives only the communications relevant to their role. This reduces noise, shortens response latency, and allows parallel human observation of different mission phases without one phase obscuring another.
+
+### Channel Taxonomy
+
+| Channel slug | Audience | Purpose |
+|---|---|---|
+| `tng-bridge` | Full crew + audit log | Superset — every signal echoes here |
+| `tng-ready-room` | Decision makers, architects | Ready Room phase signals only |
+| `tng-execution` | riker and execution crew | Bridge wave dispatches and blockers |
+| `tng-review` | worf, troi, crusher, picard | Track C verdicts and fix-in-place items |
+| `tng-oncall` | On-call engineers | P0, P1, BLOCKER, ROLLBACK-FULL only |
+| `tng-stakeholders` | Business stakeholders | Mission open and close only |
+
+Webhook URLs for each channel are stored in `knowledge_base/current/channel-config.md` (gitignored). If a channel's URL is absent, that channel is silently skipped — mission progress is never blocked.
+
+### Signal Fan-out Routing
+
+Every signal always echoes to `tng-bridge`. The table below lists the **additional** channels each signal fans out to.
+
+| Signal | Primary channel | Additional fan-out |
+|---|---|---|
+| `[READY-ROOM-OPEN]` | `tng-ready-room` | `tng-stakeholders` |
+| `[READY-ROOM-CLOSED]` | `tng-ready-room` | `tng-engineering` |
+| `[READY-ROOM-CONDITIONAL-CLOSE]` | `tng-ready-room` | `tng-engineering` |
+| `[MDR-ISSUED]` | `tng-ready-room` | `tng-engineering` |
+| `[AC-APPROVED]` | `tng-ready-room` | — |
+| `[PRIORITY: P0]` | `tng-oncall` | `tng-ready-room` |
+| `[PRIORITY: P1]` | `tng-oncall` | `tng-ready-room` |
+| `[PRIORITY: P2/P3]` | `tng-ready-room` | — |
+| `[BLOCKER]` | `tng-oncall` | `tng-execution` |
+| `[execution-complete]` | `tng-execution` | — |
+| `[ROLLBACK-PARTIAL]` | `tng-execution` | `tng-oncall` |
+| `[ROLLBACK-FULL]` | `tng-oncall` | `tng-execution` |
+| Track C verdicts (`PASS/CONDITIONAL/FAIL`) | `tng-review` | — |
+| `[FIX-IN-PLACE]` | `tng-review` | — |
+| `[SCOPED-READY-ROOM]` | `tng-review` | `tng-ready-room` |
+| `[MISSION-CLOSED]` | `tng-stakeholders` | `tng-engineering` |
+| `[EXTERNAL-EVENT: critical]` | `tng-oncall` | `tng-ready-room` |
+| `[EXTERNAL-EVENT: significant/informational]` | `tng-ready-room` | — |
+
+### Channel Metadata on Signals
+
+Signals may carry an optional `| ch: <slug>` suffix to log the routing decision in the session journal. This does not change signal semantics.
+
+```
+[READY-ROOM-OPEN: build-sso-auth | ch: tng-ready-room]
+[PRIORITY: P1 | worf | token expiry too short | ch: tng-oncall]
+[execution-complete | ch: tng-execution]
+```
+
+### Direct Agent Signals
+
+For peer consultations that do not require picard's orchestration loop, agents may use direct signals. picard is always copied via the session journal. Responses route back to the originating channel and echo to `tng-bridge`.
+
+**Format**:
+```
+[DIRECT: <from-agent> → <to-agent> | <signal> | topic: <brief> | ch: <channel>]
+```
+
+**Permitted direct signals**:
+
+| Signal | From | To | Channel | When |
+|---|---|---|---|---|
+| `[guinan-consult: <topic>]` | any agent | guinan | `tng-ready-room` | Mid-session historical lookup (existing protocol) |
+| `[wes-escalate: <proposal-id>]` | wes | data | `tng-ready-room` | wes escalates a proposal for data's architectural pre-review |
+| `[track-c-consult: <item>]` | worf / troi / crusher | peer reviewer | `tng-review` | Peer consultation on a borderline Track C verdict |
+| `[blocker-escalate: <item>]` | any agent | riker | `tng-execution` | Execution blocker needing riker's wave re-plan |
+
+Rules:
+- Direct signals are peer consultations only — they do not replace picard's orchestration.
+- Any KB work triggered by a direct signal still requires `[KB-UPDATED]` or `[KB-NO-CHANGE]`.
+- picard ACKs every direct signal in the session journal: `[direct-signal-logged ✓ picard]`.
+
+### Multi-Webhook Dispatch
+
+When multiple channel webhooks are configured, picard fires them all in parallel — fire-and-forget. No fan-out blocks mission progress.
+
+```bash
+# Example: [READY-ROOM-OPEN] fans out to tng-ready-room, tng-stakeholders, and tng-bridge
+_tng_notify() {
+  local url="$1" msg="$2"
+  [ -n "$url" ] && curl -s -X POST "$url" \
+    -H 'Content-Type: application/json' \
+    -d "{\"text\":\"$msg\"}" &
+}
+_tng_notify "$TEAMS_WEBHOOK_READY_ROOM"    "🚀 Ready Room opened — <slug>"
+_tng_notify "$TEAMS_WEBHOOK_STAKEHOLDERS"  "🚀 Ready Room opened — <slug>"
+_tng_notify "$TEAMS_WEBHOOK_BRIDGE"        "🚀 [READY-ROOM-OPEN] Ready Room opened — <slug>"
+# No wait — all fire-and-forget
+```
+
+Channel URLs are read from environment variables or from `knowledge_base/current/channel-config.md`. See `knowledge_base/documents/notification-integration.md` for the full reference.
+
+---
+
 ## Action Announcement Protocol
 
 **Default: Upfront mode.** The crew is always visible. Every delegation is announced before it runs. Parallel batches get a full dispatch board so the user can see all agents working simultaneously. "Behind the scenes" is an opt-in quiet mode — not the default.
