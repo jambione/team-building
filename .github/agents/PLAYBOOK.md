@@ -37,19 +37,20 @@
 1. **Open session journal** (`knowledge_base/sessions/`) — picard
 2. **Activate Ready Room** → picard opens `[READY-ROOM-OPEN: <mission-slug>]`
 3. **Historical context + KB reads overlap** → guinan scans history while picard reads KB docs — dispatched in parallel
-4. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, wes (optional) in one message; all return before picard proceeds
-5. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
-6. **Mission Decision Record** → picard synthesizes MDR; all P1s resolved
-7. **Acceptance Criteria** → troi drafts Given/When/Then specs per MDR outcome; picard issues `[AC-APPROVED: <mission-slug>]`; gates `[READY-ROOM-CLOSED]`
+4. **Context Briefing** → before dispatching analysts, picard distills a 3–5 bullet summary from `past-lessons-learned.md` and `sprint-state.md` and injects it into every analyst's task brief; analysts do not reload these documents independently
+5. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, wes (optional) in one message; all return before picard proceeds
+6. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
+7. **MDR + Acceptance Criteria — parallel** → picard dispatches picard-thinking (MDR synthesis) and troi (AC drafting) simultaneously — both draw from the same Ready Room findings, no dependency between them; picard reviews both outputs, reconciles any divergence, issues `[AC-APPROVED: <mission-slug>]`, then `[READY-ROOM-CLOSED: <mission-slug>]`
 8. **Close Ready Room** → picard issues `[READY-ROOM-CLOSED: <mission-slug>]`
 9. **Bridge execution** → riker produces wave plan; dispatches each wave as a parallel batch; waits for all returns before next wave
-10. **Track C review — single parallel batch** → picard dispatches worf, troi, crusher simultaneously; aggregates verdicts
-11. **KB updates — single parallel batch** → picard dispatches all domain specialists simultaneously; each updates their doc
-12. **Mission Debrief** → picard fills `mission-debrief-template.md`
-13. **Session journal close** → picard marks `status: closed`; notifies guinan
-14. **Performance log update** → picard updates `agent-performance-log.md`
-15. **Mission log** → picard files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
-16. **Close with "Make it so!"** — picard
+10. **Track C + KB updates — single parallel batch** → picard dispatches worf, troi, crusher (Track C review) and all domain specialists (KB updates) simultaneously; Track C verdicts and KB updates are independent — neither waits for the other; if Track C raises a CONDITIONAL or FAIL, the affected specialist emits a targeted supplemental KB update after the verdict resolves
+11. **Mission close — single pass** → picard completes all close steps together:
+    - Fills `mission-debrief-template.md`
+    - Marks session journal `status: closed`
+    - Updates `agent-performance-log.md`
+    - Files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
+    - Emits `[GUINAN-SYNTHESIZE: <mission-slug>]`
+12. **Close with "Make it so!"** — picard
 
 ---
 
@@ -108,13 +109,13 @@ When any agent updates a KB document during a mission, they **must** emit a form
 [KB-UPDATED: <document-path> | Added: <specific description of what was written and why>]
 ```
 
-When no KB update was needed (agent found nothing new), the agent emits:
+`[KB-NO-CHANGE]` is **opt-in**, not mandatory. Emit it only when the explicit absence of a finding is meaningful — for example, worf confirming no security issues after a security-focused mission, or crusher confirming no reliability regressions after a stability fix. Routine "found nothing" returns do not require a signal.
 
 ```
 [KB-NO-CHANGE: <document-path> | reason: <brief>]
 ```
 
-Both signals are **mandatory** on every agent return — missing signals are treated as incomplete handoffs. picard tracks them in the session journal's KB Update Audit section.
+picard tracks all `[KB-UPDATED]` signals in the session journal's KB Update Audit section. Missing `[KB-NO-CHANGE]` signals are never treated as incomplete handoffs.
 
 **KB Update Quality Standard** — the `<specific description>` in a `[KB-UPDATED]` signal must:
 - Name the actual content added (not just "updated the document")
@@ -129,6 +130,13 @@ picard rejects any `[KB-UPDATED]` signal that does not meet this standard and re
 2. For each flag: confirm a matching `[KB-UPDATED]` signal exists from the named agent **and** that the signal description is specific (Quality Standard above)
 3. Any `[NEW DISCOVERY]` with no valid `[KB-UPDATED]` blocks mission close — picard re-invokes the owning agent
 4. After all flags are resolved: picard notifies guinan that KB documents have been updated; guinan runs cross-session synthesis and updates `knowledge_base/current/session-continuity.md`
+
+**Progressive KB updates** — agents do not have to wait for the Step 10 mission close batch to update the KB. When an agent raises `[NEW DISCOVERY]` during Ready Room analysis or Bridge execution, they should update the relevant KB document immediately if:
+- The finding is time-sensitive (a security vulnerability, a reliability risk, a breaking change)
+- A parallel agent in the same batch would benefit from the updated context
+- The agent has enough confidence to write a durable KB entry now rather than at close
+
+Progressive updates still require the `[KB-UPDATED]` signal meeting the Quality Standard above and count toward the Learning Loop Audit. An agent that updates progressively does not need to re-update the same document at Step 10 unless Track C review reveals additional content to add.
 
 ---
 
@@ -256,11 +264,13 @@ Agents have no inherent speed advantage on single sequential tasks — their str
 
 | Phase | Parallel batch |
 |-------|---------------|
-| Ready Room Step 2+3 overlap | picard reads KB docs while guinan scans history simultaneously |
-| Ready Room Step 3 (analysis) | picard-thinking, data, worf, troi, barclay, crusher, obrien, wes — all in one batch |
-| Track C review (Step 10) | worf, troi, crusher — all in one batch |
-| Mission close KB updates (Step 11) | all specialists update their domain docs in one batch |
+| Ready Room Step 3 overlap | picard reads KB docs while guinan scans history simultaneously |
+| Ready Room Step 4 context briefing | picard distills `past-lessons-learned.md` + `sprint-state.md` into a shared brief — one read, injected into all analyst briefs |
+| Ready Room Step 5 (analysis) | picard-thinking, data, worf, troi, barclay, crusher, obrien, wes — all in one batch |
+| Ready Room Step 7 (MDR + AC) | picard-thinking (MDR synthesis) and troi (AC drafting) — dispatched in parallel after analysis batch returns |
+| Track C + KB updates (Step 10) | worf, troi, crusher (review) and all domain specialists (KB updates) — all in one batch |
 | Bridge execution (each wave) | riker dispatches all agents in the same wave in one batch |
+| Mission close (Step 11) | picard writes debrief, journal close, perf log, mission log in a single pass |
 
 ### Wave-structured execution
 
@@ -532,6 +542,15 @@ wes never implements without explicit picard approval:
 - `[WES-APPROVED: WES-PROPOSAL-<N>]` — picard approves; wes may implement
 - `[WES-REJECTED: WES-PROPOSAL-<N>: <reason>]` — documented and closed
 - `[WES-DEFERRED: WES-PROPOSAL-<N>: sprint-N]` — added to backlog
+
+**Fast-track tier** — low-risk proposals bypass the full approval gate. wes flags them with `[WES-FAST-TRACK: WES-PROPOSAL-<N>]`; picard ACKs with `[WES-FAST-TRACK-APPROVED: WES-PROPOSAL-<N>]` without a Scoped Ready Room. Fast-track is limited to:
+
+- Documentation additions or corrections
+- New test cases with no implementation changes
+- KB updates clarifying existing documented patterns
+- Code comment improvements
+
+Proposals touching architecture, security, infrastructure, external dependencies, or APIs are **not eligible** for fast-track regardless of apparent risk. When in doubt, use the standard approval gate.
 
 ---
 

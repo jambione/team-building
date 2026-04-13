@@ -136,23 +136,41 @@ Agents emit structured signals throughout missions. The table below shows each s
 
 ## Multi-Channel Dispatch Pattern
 
-When a signal fans out to multiple channels, fire all webhooks in parallel — fire-and-forget.
+When a signal fans out to multiple channels, fire all webhooks in parallel — fire-and-forget. Failures are logged to `knowledge_base/current/webhook-errors.log` so they surface during the next mission open rather than disappearing silently.
 
 ```bash
-# Reusable helper: silently skips blank URLs, never blocks on failure
+# Webhook error log — failures append here; missions never block on it
+_TNG_WEBHOOK_ERROR_LOG="knowledge_base/current/webhook-errors.log"
+
+# Reusable helper: skips blank URLs, logs failures, never blocks
 _tng_notify() {
-  local url="$1" msg="$2"
-  [ -n "$url" ] && curl -s -X POST "$url" \
-    -H 'Content-Type: application/json' \
-    -d "{\"text\":\"$msg\"}" &
+  local url="$1" msg="$2" channel="$3"
+  if [ -z "$url" ]; then return; fi
+  (
+    response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$url" \
+      -H 'Content-Type: application/json' \
+      -d "{\"text\":\"$msg\"}")
+    if [ "$response" != "200" ] && [ "$response" != "1" ]; then
+      echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) WEBHOOK_FAIL channel=${channel} http=${response} msg=${msg}" \
+        >> "$_TNG_WEBHOOK_ERROR_LOG"
+    fi
+  ) &
 }
 
 # Example: [READY-ROOM-OPEN] fans out to tng-ready-room, tng-stakeholders, tng-bridge
-_tng_notify "$TEAMS_WEBHOOK_READY_ROOM"   "🚀 Ready Room opened — <slug>"
-_tng_notify "$TEAMS_WEBHOOK_STAKEHOLDERS" "🚀 Ready Room opened — <slug>"
-_tng_notify "$TEAMS_WEBHOOK_BRIDGE"       "🚀 [READY-ROOM-OPEN] Ready Room opened — <slug>"
-# No wait — all fire-and-forget
+_tng_notify "$TEAMS_WEBHOOK_READY_ROOM"   "🚀 Ready Room opened — <slug>" "tng-ready-room"
+_tng_notify "$TEAMS_WEBHOOK_STAKEHOLDERS" "🚀 Ready Room opened — <slug>" "tng-stakeholders"
+_tng_notify "$TEAMS_WEBHOOK_BRIDGE"       "🚀 [READY-ROOM-OPEN] Ready Room opened — <slug>" "tng-bridge"
+# No wait — all fire-and-forget; failures logged to webhook-errors.log
 ```
+
+picard checks `webhook-errors.log` at session open. If the file exists and is non-empty, picard surfaces a one-line warning before proceeding:
+
+```
+⚠️  webhook-errors.log has N entries — check notification-integration.md for remediation.
+```
+
+The log is not gitignored (low-sensitivity metadata), but should be cleared after investigation.
 
 ---
 
@@ -221,6 +239,7 @@ You do not need all channels active. A minimal setup with only `tng-bridge` and 
 ## Version History
 
 ```
+2026-04-13: geordi — (v2) Webhook failure logging added. _tng_notify now captures HTTP status and appends failures to webhook-errors.log; picard surfaces warning at session open if log is non-empty.
 2026-04-13: geordi — Multi-channel routing added. Expanded from 2 channels to 6 logical channels with fan-out routing table, multi-webhook dispatch pattern, and per-channel env var naming convention.
 2026-04-11: geordi — Created. Covers Teams, Slack, payload formats, signal mapping, security requirements.
 ```
