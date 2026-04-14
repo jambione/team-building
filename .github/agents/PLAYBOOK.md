@@ -288,6 +288,25 @@ riker dispatches each wave as a single parallel batch. He does not start Wave N+
 
 An agent has a dependency on another if it needs that agent's **output** to do its own work. Reading the same shared KB docs is not a dependency — multiple agents may read the same documents simultaneously.
 
+### Sequential fallback (GitHub Copilot / VS Code environments)
+
+Some environments (GitHub Copilot agent mode, VS Code extension) do not support firing multiple sub-agent calls in a single message. In these environments, a parallel batch will hang — picard prints the dispatch board and then receives no returns.
+
+**Rule: if a parallel batch produces no agent returns after the dispatch board is printed, immediately switch to sequential fallback mode.**
+
+Sequential fallback procedure:
+1. Print the dispatch board as normal (all agents listed)
+2. Run each agent **one at a time**, in the order listed on the board
+3. After each agent returns, print its findings inline and ACK: `[<trigger>-received ✓ picard]`
+4. Proceed to the next agent only after the previous one has returned
+5. After all agents have returned, print the completion board and continue to the next phase
+
+The output is identical to parallel mode. Only the execution is sequential. The user sees the same dispatch board, the same per-agent findings, and the same completion board — the mission does not change shape, it just takes longer per batch.
+
+**Do not print "standing by", "pending findings", or "awaiting crew analysis".** These phrases indicate a stall. If no agents return, self-recover immediately using sequential fallback — do not wait.
+
+Invoke sequential mode explicitly with: `"sequential mode"` or `"run agents one at a time"`.
+
 ---
 
 ## Multi-Channel Communication Protocol

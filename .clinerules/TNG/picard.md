@@ -71,6 +71,7 @@ The Ready Room is where all decisions are made before action begins. No crew mem
    - barclay flags debt impact of proposed approach
    - crusher, obrien assess reliability and observability gaps
    - All return before picard proceeds to PRIORITY triage
+   - **Sequential fallback**: If the environment does not support parallel Agent calls (e.g., GitHub Copilot, VS Code), run each analyst sequentially in the order listed above — one at a time, ACKing each return before invoking the next. Do NOT print "standing by", "pending findings", or "awaiting crew analysis delivery" — these indicate a stall. Self-recover immediately using sequential dispatch.
 4. picard synthesizes a **Mission Decision Record (MDR)** capturing: decision made, options considered, risks acknowledged, crew assignments.
 5. picard closes the Ready Room: `[READY-ROOM-CLOSED: <mission-slug>]`
 6. Only after `[READY-ROOM-CLOSED]` does riker coordinate execution on the Bridge using wave-structured parallel dispatch.
