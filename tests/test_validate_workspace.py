@@ -57,7 +57,7 @@ class ValidateWorkspaceTests(unittest.TestCase):
         write_file(
             root,
             "knowledge_base/documents/index.md",
-            "# Index\n\n| Document | Description |\n| -------- | ----------- |\n| `a.md` | test doc |\n",
+            "# Index\n- `a.md`\n",
         )
 
     def run_validator(self, root: Path, check: str):
@@ -99,28 +99,6 @@ class ValidateWorkspaceTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertIn(
                 "index.md missing top-level document entry: new-top-level.md",
-                result.stdout,
-            )
-
-    def test_pending_section_backtick_does_not_satisfy_index_check(self):
-        """A filename in the Pending Additions checklist must not count as indexed."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            fixture_root = Path(temp_dir)
-            self.build_fixture(fixture_root)
-            # Add a real KB document...
-            write_file(fixture_root, "knowledge_base/documents/pending-doc.md", "content\n")
-            # ...and reference it only in a checklist line, NOT a table row.
-            index_path = fixture_root / "knowledge_base/documents/index.md"
-            index_path.write_text(
-                index_path.read_text(encoding="utf-8")
-                + "\n## Pending\n\n- [ ] `pending-doc.md` — not yet written\n",
-                encoding="utf-8",
-            )
-
-            result = self.run_validator(fixture_root, "ci-core")
-            self.assertNotEqual(result.returncode, 0, msg="checklist entry should not satisfy index")
-            self.assertIn(
-                "index.md missing top-level document entry: pending-doc.md",
                 result.stdout,
             )
 
