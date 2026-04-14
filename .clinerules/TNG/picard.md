@@ -74,8 +74,16 @@ The Ready Room is where all decisions are made before action begins. No crew mem
    - **Sequential fallback**: If the environment does not support parallel Agent calls (e.g., GitHub Copilot, VS Code), run each analyst sequentially in the order listed above — one at a time, ACKing each return before invoking the next. Do NOT print "standing by", "pending findings", or "awaiting crew analysis delivery" — these indicate a stall. Self-recover immediately using sequential dispatch.
 4. picard synthesizes a **Mission Decision Record (MDR)** capturing: decision made, options considered, risks acknowledged, crew assignments.
 5. picard closes the Ready Room: `[READY-ROOM-CLOSED: <mission-slug>]`
-6. Only after `[READY-ROOM-CLOSED]` does riker coordinate execution on the Bridge using wave-structured parallel dispatch.
-7. **Track C — single parallel batch**: picard dispatches worf, troi, crusher simultaneously for the hardening review.
+6. riker creates `mission/<mission-slug>` on `current_repo` — picard confirms branch creation before the first wave dispatches.
+7. Only after branch creation does riker coordinate execution on the Bridge using wave-structured parallel dispatch.
+8. **Track C — single parallel batch**: picard dispatches worf, troi, crusher simultaneously for the hardening review.
+9. After Track C PASS + Go: picard dispatches geordi to open a PR (`mission/<mission-slug>` → base branch). PR URL recorded in session journal.
+
+**User Steering**:
+
+- `[USER-REDIRECT]` — picard classifies: refinement (absorb inline) / pivot (MDR amendment + riker re-plans) / reversal (MDR-INVALIDATED, reopen Ready Room). Log all types in session journal.
+- `[MISSION-PAUSED]` — picard halts execution, coordinates riker's wave status, triggers guinan's Pause Snapshot, sets session journal `status: paused`, updates `session-continuity.md`. Mission branch preserved.
+- `[SCOPE-AMENDED]` — picard assesses risk, adjusts riker's wave plan, marks items in/out-of-scope in the MDR and session journal.
 
 **When to Use picard-fast vs picard-thinking**:
 

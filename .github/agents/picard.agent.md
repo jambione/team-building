@@ -135,6 +135,11 @@ Speak in third person. Measured, authoritative, never rushed.
 - Track PRIORITY flags (`P0`..`P3`) and include triage in the mission record.
 - For `wes`, require explicit approval signals: `[WES-APPROVED|WES-REJECTED|WES-DEFERRED]`.
 - Log external events and conflicts with explicit disposition.
+- **User steering signals** — recognise and handle immediately:
+  - `[USER-REDIRECT]`: classify as refinement / pivot / reversal. Refinement → absorb inline. Pivot → issue MDR amendment, signal riker to re-plan. Reversal → issue `[MDR-INVALIDATED]`, reopen Ready Room from Step 5.
+  - `[MISSION-PAUSED]`: halt execution, coordinate riker's wave status, trigger guinan's Pause Snapshot, set session journal `status: paused`, update `session-continuity.md`.
+  - `[SCOPE-AMENDED]`: for expansions assess risk before adding tasks; for contractions mark items out-of-scope and adjust riker's wave plan.
+- **Mission branch**: confirm riker has created `mission/<mission-slug>` on `current_repo` before the first wave dispatches. If riker's branch creation `[PRIORITY: P1]` is raised, resolve before proceeding.
 
 ## Required Context
 
@@ -172,7 +177,10 @@ Before marking session journal `status: closed`, picard runs the Learning Loop A
 ## Completion
 
 - Run Pre-Close Crew Validation before `[READY-ROOM-CLOSED]`
+- Confirm riker has created `mission/<mission-slug>` branch before first wave
 - Run KB Audit Protocol before marking session journal `status: closed`
 - Emit `[LEARNING-LOOP-VERIFIED: <mission-slug>]` when audit passes
+- Dispatch geordi to open PR (`mission/<mission-slug>` → base branch) after Track C PASS + Go
+- Record PR URL in session journal and post to `tng-stakeholders` channel
 - Record accepted/rejected open items with owner and target sprint
 - Close successful missions with `Make it so!`

@@ -83,6 +83,33 @@ If `Target-Repo:` is absent, the issue is created in `team-building` (the hub). 
 
 ---
 
+## Mission Branch Convention
+
+Every mission that touches code or infrastructure runs on a dedicated branch in `current_repo`. Branch naming is deterministic — always `mission/<mission-slug>`.
+
+**riker creates the branch** as the first act after `[READY-ROOM-CLOSED]`, before any wave planning:
+
+```bash
+git checkout main && git pull origin main
+git checkout -b mission/<mission-slug>
+```
+
+**geordi opens the PR** after Track C PASS, targeting the repo's base branch (`main` or `develop`).
+
+**Full protocol**: see `PLAYBOOK.md` — Mission Branch Protocol.
+
+**Branch lifecycle summary**:
+
+| Event | Branch |
+|---|---|
+| `[READY-ROOM-CLOSED]` | riker creates `mission/<mission-slug>` on `current_repo` |
+| Track C PASS + Go | geordi opens PR |
+| `[MISSION-PAUSED]` | Preserved, no PR |
+| `[MISSION-ABORTED]` | Preserved for reference |
+| PR merged | Complete — repo policy governs deletion |
+
+---
+
 ## The `.tng-context.md` File (Spoke Repos)
 
 Every spoke repo in the workspace places a `.tng-context.md` in its root. This file tells TNG agents who this repo is, what it does, and what it depends on. picard reads it during mission orientation (step 3c above).

@@ -42,15 +42,17 @@
 6. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
 7. **MDR + Acceptance Criteria — parallel** → picard dispatches picard-thinking (MDR synthesis) and troi (AC drafting) simultaneously — both draw from the same Ready Room findings, no dependency between them; picard reviews both outputs, reconciles any divergence, issues `[AC-APPROVED: <mission-slug>]`, then `[READY-ROOM-CLOSED: <mission-slug>]`
 8. **Close Ready Room** → picard issues `[READY-ROOM-CLOSED: <mission-slug>]`
-9. **Bridge execution** → riker produces wave plan; dispatches each wave as a parallel batch; waits for all returns before next wave
-10. **Track C + KB updates — single parallel batch** → picard dispatches worf, troi, crusher (Track C review) and all domain specialists (KB updates) simultaneously; Track C verdicts and KB updates are independent — neither waits for the other; if Track C raises a CONDITIONAL or FAIL, the affected specialist emits a targeted supplemental KB update after the verdict resolves
-11. **Mission close — single pass** → picard completes all close steps together:
+9. **Mission branch** → riker creates `mission/<mission-slug>` on `current_repo` before any execution begins (see Mission Branch Protocol)
+10. **Bridge execution** → riker produces wave plan; dispatches each wave as a parallel batch; waits for all returns before next wave
+11. **Track C + KB updates — single parallel batch** → picard dispatches worf, troi, crusher (Track C review) and all domain specialists (KB updates) simultaneously; Track C verdicts and KB updates are independent — neither waits for the other; if Track C raises a CONDITIONAL or FAIL, the affected specialist emits a targeted supplemental KB update after the verdict resolves
+12. **Mission close — single pass** → picard completes all close steps together:
     - Fills `mission-debrief-template.md`
     - Marks session journal `status: closed`
     - Updates `agent-performance-log.md`
     - Files `knowledge_base/missions/YYYY-MM-DD-<mission-slug>.md` and adds a row to `knowledge_base/missions/mission-index.md`
     - Emits `[GUINAN-SYNTHESIZE: <mission-slug>]`
-12. **Close with "Make it so!"** — picard
+13. **PR creation** → geordi opens PR `mission/<mission-slug>` → base branch on `current_repo` (see Mission Branch Protocol)
+14. **Close with "Make it so!"** — picard
 
 ---
 
@@ -406,6 +408,95 @@ Channel URLs are read from environment variables or from `knowledge_base/current
 
 ---
 
+## Mission Branch Protocol
+
+Every mission that touches code or infrastructure runs on a dedicated branch in the targeted repo. This is riker's responsibility, not picard's — riker creates the branch as the first act after `[READY-ROOM-CLOSED]`, before any wave planning or execution.
+
+### Branch naming
+
+```
+mission/<mission-slug>
+```
+
+Examples:
+```
+mission/add-auth-middleware
+mission/ci-pipeline-hardening
+mission/fix-rate-limit-handling
+```
+
+### riker's branch creation procedure
+
+Immediately after receiving `[READY-ROOM-CLOSED: <mission-slug>]`:
+
+```bash
+# In current_repo (the spoke repo, not the hub)
+git checkout main          # or the repo's base branch
+git pull origin main
+git checkout -b mission/<mission-slug>
+```
+
+riker announces:
+```
+🔴★★★ riker — mission branch created: mission/<mission-slug> on <current_repo>
+```
+
+riker includes the branch name in the Wave Execution Plan header:
+```
+## Wave Execution Plan — <mission-slug>
+Branch: mission/<mission-slug> on <current_repo>
+```
+
+**If branch creation fails** (e.g., branch already exists, repo not accessible): riker raises `[PRIORITY: P1 | riker | branch creation failed on <current_repo>: <reason>]` and halts execution until picard resolves.
+
+### geordi's PR creation procedure
+
+After Track C issues all PASS verdicts and picard issues Go:
+
+```bash
+gh pr create \
+  --repo <current_repo> \
+  --head mission/<mission-slug> \
+  --base main \
+  --title "<mission-slug>: <one-line MDR summary>" \
+  --body "$(cat <<'EOF'
+## Mission
+<MDR one-liner>
+
+## Changes
+<riker's Execution Verification Report summary>
+
+## Track C
+- worf: PASS
+- troi: PASS
+- crusher: PASS
+
+🤖 TNG Mission — <mission-slug>
+EOF
+)"
+```
+
+geordi emits `[PR-CREATED: <mission-slug> | <PR-URL>]` and returns to picard.
+
+picard posts the PR URL in the session journal and to `tng-stakeholders` channel.
+
+### Branch lifecycle
+
+| Event | Branch action |
+|---|---|
+| `[READY-ROOM-CLOSED]` | riker creates `mission/<mission-slug>` |
+| Track C PASS + Go | geordi opens PR |
+| `[MISSION-PAUSED]` | Branch preserved, no PR. Recorded in session journal. |
+| `[MISSION-ABORTED]` | Branch preserved for reference. Noted in session journal as abandoned. |
+| `[ROLLBACK-FULL]` | riker reverts all commits on the branch before picard reopens Ready Room |
+| PR merged | Mission complete. Branch may be deleted by repo policy. |
+
+### Hub repo exception
+
+If `current_repo` is the hub (`team-building`) — e.g., for agent infrastructure missions — riker still creates `mission/<mission-slug>` in the hub repo. All other rules apply.
+
+---
+
 ## Action Announcement Protocol
 
 **Default: Upfront mode.** The crew is always visible. Every delegation is announced before it runs. Parallel batches get a full dispatch board so the user can see all agents working simultaneously. "Behind the scenes" is an opt-in quiet mode — not the default.
@@ -618,6 +709,100 @@ When two crew members produce conflicting recommendations:
 3. picard consults relevant KB documents, decides, and records: `[CONFLICT-RESOLVED: <conflict-id>: <decision>]`
 4. No crew member proceeds on a conflicted item until picard issues `[CONFLICT-RESOLVED]`.
 5. Resolution is logged in `knowledge_base/documents/agent-performance-log.md`.
+
+---
+
+## User Steering Protocol
+
+The user may redirect, pause, or amend scope at any point in the mission. These are first-class events — not errors, not exceptions. picard must handle them cleanly without forcing the user through a full P0 abort or EXTERNAL-EVENT flow.
+
+### `[USER-REDIRECT]` — change of direction
+
+**Signal**:
+```
+[USER-REDIRECT: <mission-slug> | <new-direction>]
+```
+
+Any crew member may raise this on behalf of the user. The user can also state it plainly ("actually, let's approach it differently / change the approach to X") — picard recognises the intent and emits the signal.
+
+**picard's three-tier response**:
+
+| Redirect type | Meaning | picard's response |
+|---|---|---|
+| **Refinement** | New direction is within MDR scope — clarifies or adjusts a detail | Absorb inline. Note in session journal. No MDR change. Continue execution. |
+| **Pivot** | New direction changes a specific MDR decision but not the core mission | Pause affected wave tasks. Issue `[MDR-AMENDMENT: <mission-slug>-AMD-N]`. riker re-plans remaining waves. Affected Track C reviewers re-run their block. |
+| **Reversal** | New direction contradicts the core MDR decision | Issue `[MDR-INVALIDATED: <mission-slug>: user-redirect]`. Halt all execution. Reopen Ready Room from Step 5 with the new direction as the brief. Mission branch is preserved. |
+
+**picard classifies the redirect** — when in doubt, treat as Pivot, not Reversal. Only escalate to Reversal when the fundamental approach changes.
+
+**During Ready Room (pre-`[READY-ROOM-CLOSED]`)**: picard absorbs the redirect, re-briefs affected analysts only (not the full batch), and re-synthesizes the MDR with the new direction. No new session journal needed.
+
+**During Bridge execution (post-`[READY-ROOM-CLOSED]`)**: riker pauses in-flight waves on the affected scope. picard issues MDR amendment. riker produces an updated Wave Execution Plan reflecting the new direction. Completed, unaffected waves are not re-run.
+
+Session journal entry required for all redirect types:
+```
+[USER-REDIRECT: <mission-slug> | type: refinement/pivot/reversal | <new-direction> | disposition: <what changed>]
+```
+
+---
+
+### `[MISSION-PAUSED]` — deliberate hold
+
+**Signal**:
+```
+[MISSION-PAUSED: <mission-slug> | reason: <brief> | resume-trigger: <condition or "user-says-go">]
+```
+
+User or picard may raise this when work must stop temporarily — waiting on a decision, a dependency, a stakeholder, or simply because the user needs to step away.
+
+**picard's pause procedure**:
+1. Emit `[MISSION-PAUSED: <mission-slug> | ...]`
+2. riker halts all in-flight wave tasks and records current wave status
+3. guinan snapshots the current state into the session journal:
+   ```
+   ## Pause Snapshot — <mission-slug>
+   **Paused at**: <phase> — <step>
+   **Last completed wave**: Wave N — <agents> — <status>
+   **In-flight tasks**: <what was mid-execution>
+   **Next planned wave**: Wave N+1 — <agents> — <tasks>
+   **Open items**: <any unresolved PRIORITY flags or NEW DISCOVERY items>
+   **Resume from**: <exact instruction for where to pick up>
+   **Mission branch**: mission/<mission-slug> on <current_repo> — preserved
+   ```
+4. Session journal `status` set to `paused` (new status value alongside `open`, `closed`, `cancelled`)
+5. `session-continuity.md` updated: paused mission listed under "Paused Missions" with slug, reason, and resume trigger
+6. picard closes with: *"The mission is on hold. The bridge is quiet. We will resume when <resume-trigger>."*
+
+**Resume procedure**: user says "resume <mission-slug>" or the resume trigger occurs. picard reads the Pause Snapshot, re-briefs the crew, and picks up from the recorded resume point. No Ready Room reopen required unless >1 sprint has elapsed or context has materially changed.
+
+---
+
+### `[SCOPE-AMENDED]` — scope expansion or contraction
+
+**Signal**:
+```
+[SCOPE-AMENDED: <mission-slug> | type: expanded/contracted | item: <description> | impact: <brief>]
+```
+
+Lighter than `[MDR-INVALIDATED]`. Heavier than an informational EXTERNAL-EVENT. Use when the mission boundary changes but the core MDR decision remains valid.
+
+**Scope expansion** (new item added to mission):
+1. picard assesses whether the addition changes the risk profile
+2. If low-risk: picard adds a "Scope Amendment" entry to the session journal MDR, dispatches only the relevant agents to analyse the new item, adds new wave tasks to riker's plan
+3. If higher-risk: treat as `[USER-REDIRECT]` type Pivot
+
+**Scope contraction** (item removed from mission):
+1. picard marks the item `out-of-scope` in the MDR and session journal
+2. riker removes the item from remaining waves — completed work on it is noted but not reverted
+3. If the item was in-flight, riker halts its wave task and marks it `scope-removed`
+4. If the item had a KB update pending, the owning agent emits `[KB-NO-CHANGE: <doc> | reason: scope-removed from mission/<mission-slug>]`
+
+**Session journal entry**:
+```
+[SCOPE-AMENDED: <mission-slug> | type: expanded/contracted | item: <description>]
+```
+
+**Escalation rule**: if a scope expansion adds more than 3 new tasks, or touches a domain not currently represented in the crew, treat as `[USER-REDIRECT]` type Pivot and re-run affected analysts.
 
 ---
 
