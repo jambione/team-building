@@ -117,25 +117,40 @@ memory_usage_bytes{gc="young"}                       # Gauge
 
 ---
 
-## 7. Current Observability Gaps (as of 2026-04-05)
+## 7. Deployment Telemetry Prerequisite (added 2026-04-12)
 
-| Gap                                                    | Severity | Owner  | Sprint   |
-| ------------------------------------------------------ | -------- | ------ | -------- |
-| No application source code — nothing to instrument     | Critical | data   | Sprint 3 |
-| No observability platform configured                   | High     | obrien | Sprint 3 |
-| Deployment telemetry events not emitted from workflows | High     | geordi | Sprint 2 |
-| No SLO burn-rate alerts defined                        | High     | obrien | Sprint 3 |
-| No structured logging library integrated               | Medium   | data   | Sprint 3 |
+Before any spoke-repo service reaches production, at minimum one structured deployment event must be emitted from the deployment workflow. This event must include:
+
+- `environment` — staging / production / etc.
+- `commit_sha` — the exact SHA being deployed
+- `deployed_at` — ISO-8601 timestamp
+- `outcome` — success / failure / rolled-back
+
+Without this event, the first production incident has no deployment correlation data. "Is it up?" cannot be answered. This is the minimum viable deployment telemetry gate.
 
 ---
 
-## 8. Version History
+## 8. Current Observability Gaps (updated 2026-04-12)
+
+| Gap                                                    | Severity | Owner  | Sprint   | Status |
+| ------------------------------------------------------ | -------- | ------ | -------- | ------ |
+| No application source code — nothing to instrument     | Critical | data   | Sprint 3 | open   |
+| No observability platform configured                   | High     | obrien | Sprint 3 | open   |
+| ~~Deployment telemetry events not emitted from workflows~~ | ~~High~~ | geordi | ~~Sprint 3~~ | **RESOLVED 2026-04-12** — deploy-staging.yml and deploy-production.yml both emit structured `DEPLOY_EVENT` telemetry |
+| No SLO burn-rate alerts defined                        | High     | obrien | Sprint 3 | open   |
+| No structured logging library integrated               | Medium   | data   | Sprint 3 | open   |
+| deploy-staging.yml rollback notification missing `actor` field | Low | geordi | Sprint 3 | open — inconsistency vs deploy-production.yml |
+
+---
+
+## 9. Version History
 
 ```markdown
 ---
 Version History:
     - 2026-04-05: picard — Initial monitoring and observability standards document
     - 2026-04-05: obrien — Added Three Core Operational Questions, SLO definitions, observability gaps; updated ownership
+    - 2026-04-12: crusher — Closed deployment telemetry gap (deploy workflows now emit structured events); fixed duplicate section 7; added staging rollback actor gap; renumbered sections 8/9
 ---
 ```
 

@@ -1,0 +1,92 @@
+# Security Scan Workflow
+#
+# Runs two complementary scans:
+#   1. CodeQL — static analysis of Python scripts in scripts/ and tests/
+#   2. Trivy  — misconfiguration and secret detection across the repo
+#
+# Triggers:
+#   - Push to main (fast feedback on merged code)
+#   - Pull requests to main (gate on every PR)
+#   - Weekly schedule (Monday 04:00 UTC) — catches newly published CVEs
+#     against a snapshot that has not changed since the last push
+#   - Manual dispatch — for on-demand scans
+#
+# Owner: worf | Reviewed by: geordi
+
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write   # required for SARIF upload to GitHub Security tab
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: CodeQL — Python static analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: python
+          # Focus analysis on the scripts and tests directories —
+          # knowledge_base/ and docs/ are markdown/YAML, not executable code.
+          config: |
+            paths:
+              - scripts
+              - tests
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:python
+
+  trivy:
+    name: Trivy — misconfig and secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          # Scan for workflow misconfigurations and accidental secret exposure.
+          # No Docker image or package lock — skip vuln scan for this hub repo.
+          scanners: misconfig,secret
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: '0'        # never block CI — report findings, don't gate
+          severity: CRITICAL,HIGH,MEDIUM
+
+      - name: Upload Trivy SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy

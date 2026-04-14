@@ -1,0 +1,16 @@
+[run]
+branch = True
+# Exclude subprocess-invoked scripts from direct coverage measurement.
+# These are covered by integration tests (subprocess calls) and will be
+# added to direct-import coverage when TD-010 (unit tests for validation
+# scripts) is completed in Sprint 3.
+omit =
+    scripts/validate-*.py
+    scripts/kb-lint.py
+    tests/*
+
+[report]
+show_missing = True
+exclude_lines =
+    if __name__ == .__main__.:
+    pragma: no cover

@@ -36,3 +36,8 @@ Thumbs.db
 # Local testing
 test-output/
 debug-logs/
+
+# Webhook secrets (never commit)
+knowledge_base/current/teams-webhook.md
+knowledge_base/current/slack-webhook.md
+knowledge_base/current/channel-config.md

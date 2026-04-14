@@ -30,6 +30,7 @@ jobs:
   create-adr:
     name: Generate ADR Draft
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -42,9 +43,15 @@ jobs:
         env:
           TITLE: ${{ github.event.inputs.title }}
         run: |
-          # Find next ADR number
-          EXISTING=$(find knowledge_base/documents -name "adr-*.md" 2>/dev/null | wc -l)
-          ADR_NUM=$(printf "%04d" $((EXISTING + 1)))
+          # Derive next ADR number from the highest existing ADR number, not the
+          # file count. Using wc -l would produce collisions if any ADR file is
+          # ever deleted or if files are out of sequence.
+          HIGHEST=$(find knowledge_base/documents -name "adr-[0-9]*.md" 2>/dev/null \
+            | sed 's|.*/adr-\([0-9]*\)-.*|\1|' \
+            | sort -n \
+            | tail -1)
+          NEXT=$((${HIGHEST:-0} + 1))
+          ADR_NUM=$(printf "%04d" "$NEXT")
 
           # Generate slug from title
           SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
