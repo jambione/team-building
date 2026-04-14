@@ -14,10 +14,27 @@ All notifications are **fire-and-forget** — agents never block on delivery. A 
 
 ## Supported Channels
 
-| Channel | Env Var | Config File | Protocol |
-|---------|---------|-------------|----------|
-| Microsoft Teams | `TEAMS_WEBHOOK_URL` | `knowledge_base/current/teams-webhook.md` | Incoming Webhook (Adaptive Cards) |
-| Slack | `SLACK_WEBHOOK_URL` | `knowledge_base/current/slack-webhook.md` | Incoming Webhook (Block Kit) |
+### Platform channels
+
+| Platform | Env Var prefix | Protocol |
+|----------|---------------|----------|
+| Microsoft Teams | `TEAMS_WEBHOOK_*` | Incoming Webhook (MessageCard / Adaptive Cards) |
+| Slack | `SLACK_WEBHOOK_*` | Incoming Webhook (Block Kit) |
+
+### Logical channels
+
+Each logical channel has its own webhook URL per platform. All URLs live in `knowledge_base/current/channel-config.md` (gitignored) and the corresponding GitHub secrets.
+
+| Logical channel | Env var | Audience | Signals |
+|---|---|---|---|
+| `tng-bridge` | `TEAMS_WEBHOOK_BRIDGE` / `SLACK_WEBHOOK_BRIDGE` | Full crew + audit | Every signal (superset) |
+| `tng-ready-room` | `TEAMS_WEBHOOK_READY_ROOM` / `SLACK_WEBHOOK_READY_ROOM` | Decision makers, architects | Ready Room lifecycle, MDR, AC, PRIORITY, CONFLICT |
+| `tng-execution` | `TEAMS_WEBHOOK_EXECUTION` / `SLACK_WEBHOOK_EXECUTION` | riker, execution crew | Wave dispatches, BLOCKER, execution-complete, ROLLBACK |
+| `tng-review` | `TEAMS_WEBHOOK_REVIEW` / `SLACK_WEBHOOK_REVIEW` | worf, troi, crusher, picard | Track C verdicts, FIX-IN-PLACE, SCOPED-READY-ROOM |
+| `tng-oncall` | `TEAMS_WEBHOOK_ONCALL` / `SLACK_WEBHOOK_ONCALL` | On-call engineers | P0, P1, BLOCKER, ROLLBACK-FULL, EXTERNAL-EVENT:critical |
+| `tng-stakeholders` | `TEAMS_WEBHOOK_STAKEHOLDERS` / `SLACK_WEBHOOK_STAKEHOLDERS` | Business stakeholders | READY-ROOM-OPEN, MISSION-CLOSED |
+
+You do not need to configure every channel. Any channel with a blank or absent URL is silently skipped — no channel's absence blocks mission progress.
 
 ---
 
@@ -42,17 +59,28 @@ All notifications are **fire-and-forget** — agents never block on delivery. A 
 
 ## Agent Signals That Trigger Notifications
 
-Agents emit structured signals throughout missions. The following signals fire external notifications when a webhook is configured.
+Agents emit structured signals throughout missions. The table below shows each signal's urgency and which logical channels receive it. `tng-bridge` always receives every signal and is omitted from the fan-out column for brevity.
 
-| Signal | Sender | Target Channel | Urgency |
-|--------|--------|---------------|---------|
-| `[READY-ROOM-OPEN: <slug>]` | picard | Stakeholder channel | Info |
-| `[READY-ROOM-CLOSED: <slug>]` | picard | Engineering channel | Info |
-| `[MDR-ISSUED: <slug>]` | picard | Engineering channel | Info |
-| `[BLOCKER: <description>]` | any agent | On-call / urgent channel | High |
-| `[MISSION-CLOSED: <slug>]` | picard | Team summary channel | Info |
-| `[P0: <description>]` | picard | On-call channel | Critical |
-| `[P1: <description>]` | picard | Engineering channel | High |
+| Signal | Sender | Urgency | Primary channel | Fan-out channels |
+|--------|--------|---------|----------------|-----------------|
+| `[READY-ROOM-OPEN: <slug>]` | picard | Info | `tng-ready-room` | `tng-stakeholders` |
+| `[READY-ROOM-CLOSED: <slug>]` | picard | Info | `tng-ready-room` | `tng-engineering` |
+| `[READY-ROOM-CONDITIONAL-CLOSE: <slug>]` | picard | Info | `tng-ready-room` | `tng-engineering` |
+| `[MDR-ISSUED: <slug>]` | picard | Info | `tng-ready-room` | `tng-engineering` |
+| `[AC-APPROVED: <slug>]` | picard | Info | `tng-ready-room` | — |
+| `[PRIORITY: P0 \| ...]` | any agent | Critical | `tng-oncall` | `tng-ready-room` |
+| `[PRIORITY: P1 \| ...]` | any agent | High | `tng-oncall` | `tng-ready-room` |
+| `[PRIORITY: P2/P3 \| ...]` | any agent | Medium/Low | `tng-ready-room` | — |
+| `[BLOCKER: <description>]` | any agent | High | `tng-oncall` | `tng-execution` |
+| `[execution-complete]` | riker | Info | `tng-execution` | — |
+| `[ROLLBACK-PARTIAL: <slug>]` | riker | High | `tng-execution` | `tng-oncall` |
+| `[ROLLBACK-FULL: <slug>]` | riker | Critical | `tng-oncall` | `tng-execution` |
+| Track C verdict (PASS/CONDITIONAL/FAIL) | worf/troi/crusher | Info/High | `tng-review` | — |
+| `[FIX-IN-PLACE: <item>]` | picard | Info | `tng-review` | — |
+| `[SCOPED-READY-ROOM: <item>]` | picard | Info | `tng-review` | `tng-ready-room` |
+| `[MISSION-CLOSED: <slug>]` | picard | Info | `tng-stakeholders` | `tng-engineering` |
+| `[EXTERNAL-EVENT: ... severity: critical]` | any agent | Critical | `tng-oncall` | `tng-ready-room` |
+| `[EXTERNAL-EVENT: ... severity: significant/informational]` | any agent | Info | `tng-ready-room` | — |
 
 ---
 
@@ -106,30 +134,60 @@ Agents emit structured signals throughout missions. The following signals fire e
 
 ---
 
+## Multi-Channel Dispatch Pattern
+
+When a signal fans out to multiple channels, fire all webhooks in parallel — fire-and-forget. Failures are logged to `knowledge_base/current/webhook-errors.log` so they surface during the next mission open rather than disappearing silently.
+
+```bash
+# Webhook error log — failures append here; missions never block on it
+_TNG_WEBHOOK_ERROR_LOG="knowledge_base/current/webhook-errors.log"
+
+# Reusable helper: skips blank URLs, logs failures, never blocks
+_tng_notify() {
+  local url="$1" msg="$2" channel="$3"
+  if [ -z "$url" ]; then return; fi
+  (
+    response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$url" \
+      -H 'Content-Type: application/json' \
+      -d "{\"text\":\"$msg\"}")
+    if [ "$response" != "200" ] && [ "$response" != "1" ]; then
+      echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) WEBHOOK_FAIL channel=${channel} http=${response} msg=${msg}" \
+        >> "$_TNG_WEBHOOK_ERROR_LOG"
+    fi
+  ) &
+}
+
+# Example: [READY-ROOM-OPEN] fans out to tng-ready-room, tng-stakeholders, tng-bridge
+_tng_notify "$TEAMS_WEBHOOK_READY_ROOM"   "🚀 Ready Room opened — <slug>" "tng-ready-room"
+_tng_notify "$TEAMS_WEBHOOK_STAKEHOLDERS" "🚀 Ready Room opened — <slug>" "tng-stakeholders"
+_tng_notify "$TEAMS_WEBHOOK_BRIDGE"       "🚀 [READY-ROOM-OPEN] Ready Room opened — <slug>" "tng-bridge"
+# No wait — all fire-and-forget; failures logged to webhook-errors.log
+```
+
+picard checks `webhook-errors.log` at session open. If the file exists and is non-empty, picard surfaces a one-line warning before proceeding:
+
+```
+⚠️  webhook-errors.log has N entries — check notification-integration.md for remediation.
+```
+
+The log is not gitignored (low-sensitivity metadata), but should be cleared after investigation.
+
+---
+
 ## GitHub Actions Integration
 
-For automated workflows (e.g., CI failures, MDR-to-issue creation), use the `curl` step pattern:
+For automated workflows (e.g., CI failures, MDR-to-issue creation), use the `curl` step pattern with per-channel secrets:
 
 ```yaml
-- name: Notify Teams on completion
+- name: Notify on completion
   if: always()
   env:
-    TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+    TEAMS_WEBHOOK_BRIDGE: ${{ secrets.TEAMS_WEBHOOK_BRIDGE }}
+    TEAMS_WEBHOOK_EXECUTION: ${{ secrets.TEAMS_WEBHOOK_EXECUTION }}
   run: |
-    if [ -n "$TEAMS_WEBHOOK_URL" ]; then
-      curl -s -X POST "$TEAMS_WEBHOOK_URL" \
-        -H "Content-Type: application/json" \
-        -d "{
-          \"@type\": \"MessageCard\",
-          \"summary\": \"TNG Bridge Signal\",
-          \"themeColor\": \"0076D7\",
-          \"sections\": [{
-            \"activityTitle\": \"🖖 TNG Bridge — CI Complete\",
-            \"activitySubtitle\": \"${{ github.repository }}\",
-            \"activityText\": \"Workflow: ${{ github.workflow }} | Status: ${{ job.status }}\"
-          }]
-        }" || true
-    fi
+    _notify() { [ -n "$1" ] && curl -s -X POST "$1" -H "Content-Type: application/json" -d "{\"text\":\"$2\"}" || true; }
+    _notify "$TEAMS_WEBHOOK_EXECUTION" "🖖 TNG Bridge — CI Complete | ${{ github.workflow }} | ${{ job.status }}"
+    _notify "$TEAMS_WEBHOOK_BRIDGE"    "🖖 TNG Bridge — CI Complete | ${{ github.workflow }} | ${{ job.status }}"
 ```
 
 The `|| true` ensures a webhook failure never fails the workflow step.
@@ -165,17 +223,23 @@ curl -X POST "$SLACK_WEBHOOK_URL" \
 
 ## Recommended Channel Topology
 
-| Channel Name | Purpose | Signals |
-|-------------|---------|---------|
-| `#tng-bridge` | All agent signals, main feed | All signals |
-| `#tng-engineering` | Dev team notifications | MDR-ISSUED, READY-ROOM-CLOSED, MISSION-CLOSED |
-| `#tng-oncall` | Urgent escalations only | P0, P1, BLOCKER |
-| `#tng-stakeholders` | Business-level visibility | READY-ROOM-OPEN, MISSION-CLOSED |
+| Channel name | Slug | Purpose | Key signals |
+|---|---|---|---|
+| `#tng-bridge` | `tng-bridge` | Full audit feed — all signals | Everything |
+| `#tng-ready-room` | `tng-ready-room` | Decision phase visibility | READY-ROOM-OPEN/CLOSED, MDR, AC, PRIORITY, CONFLICT |
+| `#tng-execution` | `tng-execution` | Bridge execution feed | Wave dispatches, BLOCKER, execution-complete, ROLLBACK |
+| `#tng-review` | `tng-review` | Track C review feed | Verdicts, FIX-IN-PLACE, SCOPED-READY-ROOM |
+| `#tng-oncall` | `tng-oncall` | Urgent escalations only | P0, P1, BLOCKER, ROLLBACK-FULL |
+| `#tng-stakeholders` | `tng-stakeholders` | Business-level visibility | READY-ROOM-OPEN, MISSION-CLOSED |
+
+You do not need all channels active. A minimal setup with only `tng-bridge` and `tng-oncall` covers the most important cases.
 
 ---
 
 ## Version History
 
 ```
+2026-04-13: geordi — (v2) Webhook failure logging added. _tng_notify now captures HTTP status and appends failures to webhook-errors.log; picard surfaces warning at session open if log is non-empty.
+2026-04-13: geordi — Multi-channel routing added. Expanded from 2 channels to 6 logical channels with fan-out routing table, multi-webhook dispatch pattern, and per-channel env var naming convention.
 2026-04-11: geordi — Created. Covers Teams, Slack, payload formats, signal mapping, security requirements.
 ```

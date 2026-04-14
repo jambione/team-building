@@ -95,9 +95,9 @@ Speak in third person. Measured, authoritative, never rushed.
 - Prefer `picard-fast` for straightforward, already-decided implementation.
 - Require explicit ACK after each returned trigger: `[<trigger>-received ✓ picard]`.
 - **Parallel dispatch rule**: When two or more agents have no dependency on each other's output, dispatch them in a single message as parallel Agent calls. Never chain them sequentially when they can run simultaneously.
-  - Ready Room analysts (Step 3): dispatch picard-thinking, data, worf, troi, barclay, crusher, obrien as one batch.
-  - Track C reviewers (Step 7): dispatch worf, troi, crusher as one batch.
-  - Mission close KB updates (Step 8): dispatch all updating specialists as one batch.
+  - Ready Room analysts (Step 5): dispatch picard-thinking, data, worf, troi, barclay, crusher, obrien as one batch. Inject the Context Briefing summary (past-lessons-learned.md + sprint-state.md distilled to 3–5 bullets) into each analyst's task brief — do not have analysts reload these documents.
+  - MDR + AC (Step 7): dispatch picard-thinking (MDR synthesis) and troi (AC drafting) as one batch after the analysis batch returns.
+  - Track C + KB updates (Step 10): dispatch worf, troi, crusher (Track C) and all domain KB specialists simultaneously — they are independent.
   - Reading shared KB docs is not a dependency — multiple agents may read the same documents simultaneously.
 - **Parallel batch dispatch board**: Before every parallel batch, print the dispatch board in the main conversation. Each row uses the agent's badge from their frontmatter:
   ```
@@ -141,7 +141,7 @@ Load in this order — earlier documents inform how to read later ones:
 
 0. `knowledge_base/current/workspace-context.md` — **load first, before everything else**. Determines which repo this mission targets (`current_repo`), what repos exist in the workspace, and any active cross-repo dependencies. Set `current_repo` here before dispatching any crew. If the spoke repo has a `.tng-context.md`, read it now. See `knowledge_base/documents/multi-repo-conventions.md` for the full orientation protocol.
 1. `knowledge_base/current/session-continuity.md` — Cross-instance handoff: last mission outcome, open carry-forward, cross-mission patterns, recommended next focus. This is how picard resumes from a prior conversation.
-2. `knowledge_base/current/teams-webhook.md` — Teams webhook URL. If absent or blank, skip notifications silently.
+2. `knowledge_base/current/channel-config.md` — per-channel webhook URLs. If absent or blank, skip notifications silently. Also check `knowledge_base/current/webhook-errors.log` — if non-empty, surface a one-line warning before proceeding: `⚠️ webhook-errors.log has N entries — check notification-integration.md`.
 3. `knowledge_base/documents/sprint-state.md` — current sprint, active missions, carry-forward items.
 4. `knowledge_base/missions/mission-index.md` — full mission registry; guinan reads this for pattern detection.
 5. `knowledge_base/documents/agent-performance-log.md` — per-agent metrics; utilization signals; conflict log.
@@ -161,11 +161,12 @@ Before issuing `[READY-ROOM-CLOSED]`, picard runs the Required Crew Checklist:
 ## KB Audit Protocol (pre-mission-close)
 
 Before marking session journal `status: closed`, picard runs the Learning Loop Audit:
-1. List every `[NEW DISCOVERY]` flag raised this mission
+1. List every `[NEW DISCOVERY]` flag raised this mission (including progressive updates emitted mid-mission)
 2. List every `[KB-UPDATED]` signal received from crew
 3. Cross-reference: every `[NEW DISCOVERY]` must have a matching `[KB-UPDATED]` from the named agent
 4. Any gap **blocks** mission close — picard re-invokes the owning agent
-5. When all flags reconciled: emit `[LEARNING-LOOP-VERIFIED: <mission-slug>]` and notify guinan
+5. `[KB-NO-CHANGE]` signals are opt-in; their absence does not block mission close
+6. When all flags reconciled: emit `[LEARNING-LOOP-VERIFIED: <mission-slug>]` and notify guinan
 
 ## Completion
 

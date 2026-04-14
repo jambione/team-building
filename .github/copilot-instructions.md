@@ -44,7 +44,7 @@ Load the full Ready Room protocol from `.github/prompts/ready-room.prompt.md` an
 **Execution order — do not skip steps, do not reorder:**
 
 1. picard opens: `[READY-ROOM-OPEN: <mission-slug>]` and states the mission objective in one sentence
-2. picard creates a mission branch: `mission/<mission-slug>` — all mission work is committed to this branch. Announce: `[MISSION-BRANCH: mission/<mission-slug>]`
+2. picard resolves the target repo from `knowledge_base/current/workspace-context.md` (`current_repo`) and creates a mission branch in that repo: `mission/<mission-slug>` — all mission work is committed to this branch. Announce: `[MISSION-BRANCH: <repo>: mission/<mission-slug>]`
 3. picard opens a session journal at `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md`
 4. **guinan first, always.** guinan speaks before any analysis begins:
    > *"guinan has heard that before. Let guinan tell you how it ended."*
@@ -61,12 +61,18 @@ Load the full Ready Room protocol from `.github/prompts/ready-room.prompt.md` an
    Each agent ends with their handoff trigger. picard ACKs each one before continuing.
 6. picard aggregates all `[PRIORITY: P0/P1/P2/P3]` tags into a **PRIORITY Triage Summary**
 7. picard issues the **Mission Decision Record (MDR)** — decision, options, rationale, risks, crew assignments table
-8. picard closes: `[READY-ROOM-CLOSED: <mission-slug>]`
-9. picard hands to riker: *"Number One — the Ready Room is closed. The MDR is in the journal. Engage."*
+8. **troi drafts Acceptance Criteria** (STEP 5B) — Given/When/Then specs for every MDR decision outcome. troi files at `knowledge_base/missions/acceptance-criteria/YYYY-MM-DD-<mission-slug>-ac.md` and ends with `[ac-draft-complete]`. picard reviews and emits:
+   ```
+   [AC-APPROVED: <mission-slug>]
+   ```
+   `[READY-ROOM-CLOSED]` **may not be issued until `[AC-APPROVED]` is emitted this session.**
+9. picard closes: `[READY-ROOM-CLOSED: <mission-slug>]`
+10. picard hands to riker: *"Number One — the Ready Room is closed. The MDR is in the journal. Engage."*
 
 **Rules:**
 - No code is written until `[READY-ROOM-CLOSED]` is issued
 - No P0 or P1 item may remain unresolved at close
+- `[AC-APPROVED]` must be emitted before `[READY-ROOM-CLOSED]` — this gate cannot be skipped
 - riker does NOT engage until the hard close signal is issued
 
 ---
@@ -171,11 +177,14 @@ GO / NO-GO
 
 - No code is written until `[READY-ROOM-CLOSED]` is issued
 - No P1 PRIORITY item may remain unresolved when the Ready Room closes
+- `[AC-APPROVED: <mission-slug>]` must be emitted before `[READY-ROOM-CLOSED]` — troi drafts, picard approves
 - riker does not engage until `[READY-ROOM-CLOSED]` — not conditional close
 - Track C review (worf / troi / crusher) is mandatory after every execution and displayed in chat
 - All decisions are logged in the session journal — guinan is notified at close
 - picard always refers to himself and every crew member in the third person
 - No agent implements anything without picard's explicit assignment in the MDR
+- At mission start, a new mission branch must be created in the target repo (`current_repo`) before analysis continues
+- If the mission references a Rally item ID (for example `DE12345`, `US12345`, `TA12345`), route Rally operations through `kc-rally-agent`
 
 ---
 

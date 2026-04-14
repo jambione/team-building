@@ -1,0 +1,220 @@
+# Production Deployment Workflow
+#
+# Publishes the team-building knowledge base and agent framework to the
+# production GitHub Pages environment. Stricter than staging:
+#   - Manual dispatch only — no automatic trigger on push to main.
+#   - Requires environment approval gate ("production") configured in
+#     GitHub Settings → Environments → production → Required reviewers.
+#     Set at least 1 required reviewer before enabling this workflow.
+#   - More conservative health-check (12 × 10s = 2 min ceiling).
+#   - Post-deploy success notification in addition to rollback alert.
+#   - Rollback is automatic on failure; manual re-deploy is required to advance.
+#
+# Adapt this file for spoke repo deployments:
+#   - Replace the Pages steps with rsync+SSH, Docker push, or kubectl apply.
+#   - Keep the health-check loop, rollback job, fetch-depth: 0, and telemetry.
+#   - See knowledge_base/documents/github-actions-security-hardening.md for
+#     the full permissions model and compliance requirements.
+#
+# Owner: geordi | Security review: worf | Reliability: crusher
+
+name: Deploy — Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for production deploy (logged in deployment record)'
+        required: true
+        default: ''
+      staging_sha:
+        description: 'Commit SHA that passed staging (leave blank to use HEAD)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  actions: read
+  deployments: write   # required to create GitHub deployment records
+  pages: write         # required for GitHub Pages publish
+  id-token: write      # required for OIDC-based Pages deploy
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false   # never cancel an in-flight production deploy
+
+env:
+  DEPLOY_ENV: production
+
+jobs:
+  preflight:
+    name: Pre-deploy preflight checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate reason provided
+        env:
+          REASON: ${{ github.event.inputs.reason }}
+        run: |
+          if [ -z "$REASON" ]; then
+            echo "Error: deploy reason is required for production deployments."
+            exit 1
+          fi
+          echo "Deploy reason: $REASON"
+
+      - name: Confirm commit SHA
+        env:
+          STAGING_SHA: ${{ github.event.inputs.staging_sha }}
+        run: |
+          TARGET="${STAGING_SHA:-$(git rev-parse HEAD)}"
+          echo "Deploying commit: $TARGET"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Reason: ${{ github.event.inputs.reason }}"
+
+  deploy:
+    name: Publish to GitHub Pages (production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [preflight]
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.page_url }}
+      # Required reviewers must be configured in GitHub Settings → Environments
+      # before this job will proceed. Without that configuration, this job runs
+      # without approval — set up the environment gate before using in production.
+
+    steps:
+      - name: Checkout repository (full history for rollback)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static site from knowledge base
+        run: |
+          mkdir -p _site
+          cp -r docs/. _site/
+          cp -r knowledge_base/. _site/knowledge_base/
+          cp README.md _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Health check — verify production deployment is reachable
+        env:
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        run: |
+          echo "Checking production deployment health at: $PAGE_URL"
+          MAX_ATTEMPTS=12
+          ATTEMPT=0
+          until curl -sf --max-time 10 "$PAGE_URL" > /dev/null 2>&1; do
+            ATTEMPT=$((ATTEMPT + 1))
+            if [ "$ATTEMPT" -ge "$MAX_ATTEMPTS" ]; then
+              echo "Health check failed after $MAX_ATTEMPTS attempts (2 min)."
+              exit 1
+            fi
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS — waiting 10s..."
+            sleep 10
+          done
+          echo "Production deployment healthy."
+
+      - name: Emit deployment telemetry
+        if: always()
+        env:
+          OUTCOME: ${{ job.status }}
+          COMMIT_SHA: ${{ github.sha }}
+          REASON: ${{ github.event.inputs.reason }}
+        run: |
+          echo "DEPLOY_EVENT: environment=production commit_sha=$COMMIT_SHA deployed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ) outcome=$OUTCOME reason=$REASON actor=${{ github.actor }}"
+
+      - name: Notify Teams — deploy success
+        if: success()
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          COMMIT_SHA: ${{ github.sha }}
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+          REASON: ${{ github.event.inputs.reason }}
+        run: |
+          if [ -n "$TEAMS_WEBHOOK_URL" ]; then
+            PAYLOAD=$(jq -n \
+              --arg sha    "$COMMIT_SHA" \
+              --arg url    "$PAGE_URL" \
+              --arg reason "$REASON" \
+              --arg actor  "${{ github.actor }}" \
+              '{
+                "@type": "MessageCard",
+                "summary": "Production deploy succeeded",
+                "themeColor": "00AA00",
+                "sections": [{
+                  "activityTitle": "✅ Production deploy succeeded",
+                  "activityText": ("SHA: " + $sha + " | By: " + $actor + " | Reason: " + $reason + " | URL: " + $url)
+                }]
+              }')
+            curl -s -X POST "$TEAMS_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "$PAYLOAD" || true
+          fi
+
+  rollback:
+    name: Rollback on production deploy failure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [deploy]
+    if: failure()
+
+    steps:
+      - name: Checkout repository (full history required)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Identify previous stable commit
+        id: prev
+        run: |
+          PREV=$(git rev-parse HEAD^1)
+          echo "Rolling back to: $PREV"
+          echo "sha=$PREV" >> "$GITHUB_OUTPUT"
+
+      - name: Emit rollback telemetry
+        run: |
+          echo "ROLLBACK_EVENT: environment=production failed_sha=${{ github.sha }} rollback_target=${{ steps.prev.outputs.sha }} initiated_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+      - name: Notify Teams — production rollback (high urgency)
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          FAILED_SHA: ${{ github.sha }}
+          ROLLBACK_SHA: ${{ steps.prev.outputs.sha }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ -n "$TEAMS_WEBHOOK_URL" ]; then
+            PAYLOAD=$(jq -n \
+              --arg failed  "$FAILED_SHA" \
+              --arg target  "$ROLLBACK_SHA" \
+              --arg actor   "$ACTOR" \
+              '{
+                "@type": "MessageCard",
+                "summary": "PRODUCTION deploy failed — rollback initiated",
+                "themeColor": "FF0000",
+                "sections": [{
+                  "activityTitle": "🚨 PRODUCTION deploy failed — rollback initiated",
+                  "activityText": ("Failed SHA: " + $failed + " | Rollback target: " + $target + " | Triggered by: " + $actor)
+                }]
+              }')
+            curl -s -X POST "$TEAMS_WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -d "$PAYLOAD" || true
+          fi
