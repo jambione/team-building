@@ -13,7 +13,7 @@
 | ------------------ | ---------------------- |
 | **Workspace Name** | _(set workspace name)_ |
 | **Hub Repo**       | `team-building`        |
-| **Last Updated**   | 2026-04-12             |
+| **Last Updated**   | 2026-04-11             |
 
 ---
 
@@ -23,9 +23,9 @@
 
 | Field            | Value                       |
 | ---------------- | --------------------------- |
-| **current_repo** | `team-building`             |
-| **mission_slug** | `sprint-health-diagnostic`  |
-| **mission_type** | `health check / hardening`  |
+| **current_repo** | `alpaca_trading_bot`        |
+| **mission_slug** | `improve-alpaca-bot`        |
+| **mission_type** | `assessment / architecture` |
 
 **How to set `current_repo`**: At the start of a Ready Room, picard reads the requester's context. If invoked inside a spoke repo with a `.tng-context.md`, that repo is `current_repo`. Otherwise picard asks. Then picard updates this field before dispatching crew.
 

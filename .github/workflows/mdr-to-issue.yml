@@ -121,7 +121,6 @@ jobs:
               ``,
               `### Checklist`,
               `- [ ] Mission scope confirmed`,
-              `- [ ] \`[AC-APPROVED: ${slug}]\` emitted by picard (troi drafts Given/When/Then specs — required before implementation begins)`,
               `- [ ] Implementation complete`,
               `- [ ] Track C review passed (worf, troi, crusher)`,
               `- [ ] KB updated`,
@@ -173,8 +172,6 @@ jobs:
             });
 
       - name: Notify Teams (fire-and-forget)
-        # secrets context may be empty for fork-originated issue_comment events —
-        # the [ -n "$TEAMS_WEBHOOK_URL" ] guard handles this gracefully (no-op).
         if: always()
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
@@ -183,23 +180,16 @@ jobs:
           SOURCE_URL: ${{ steps.extract.outputs.source_url }}
         run: |
           if [ -n "$TEAMS_WEBHOOK_URL" ]; then
-            # Use jq to build the payload — prevents JSON injection from
-            # user-controlled values (slug, priority, source_url).
-            PAYLOAD=$(jq -n \
-              --arg slug    "$SLUG" \
-              --arg priority "$PRIORITY" \
-              --arg source  "$SOURCE_URL" \
-              '{
-                "@type": "MessageCard",
-                "summary": "TNG MDR Issued",
-                "themeColor": "0076D7",
-                "sections": [{
-                  "activityTitle": "🖖 TNG Bridge — MDR Issued",
-                  "activitySubtitle": ("Mission: " + $slug),
-                  "activityText":    ("Priority: " + $priority + " | Source: " + $source)
-                }]
-              }')
             curl -s -X POST "$TEAMS_WEBHOOK_URL" \
               -H "Content-Type: application/json" \
-              -d "$PAYLOAD" || true
+              -d "{
+                \"@type\": \"MessageCard\",
+                \"summary\": \"TNG MDR Issued\",
+                \"themeColor\": \"0076D7\",
+                \"sections\": [{
+                  \"activityTitle\": \"🖖 TNG Bridge — MDR Issued\",
+                  \"activitySubtitle\": \"Mission: $SLUG\",
+                  \"activityText\": \"Priority: $PRIORITY | Source: $SOURCE_URL\"
+                }]
+              }" || true
           fi

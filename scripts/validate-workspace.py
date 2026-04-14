@@ -62,12 +62,7 @@ def check_index_completeness(root: Path) -> list[str]:
         return ["knowledge_base/documents/index.md not found"]
 
     index_text = read_text(index_file)
-    # Only collect filenames from Markdown table rows (lines starting with `|`).
-    # This prevents backtick-wrapped names in prose, checklists, or "Pending
-    # Additions" sections from satisfying the index check — a file is only
-    # considered indexed when it appears in an actual table entry.
-    table_lines = [line for line in index_text.splitlines() if line.lstrip().startswith("|")]
-    indexed_names = set(re.findall(r"`([A-Za-z0-9._-]+\.md)`", "\n".join(table_lines)))
+    indexed_names = set(re.findall(r"`([A-Za-z0-9._-]+\.md)`", index_text))
     top_level_docs = {p.name for p in docs_dir.glob("*.md") if p.name != "index.md"}
 
     missing = sorted(top_level_docs - indexed_names)

@@ -10,11 +10,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 | Document                     | Description                                             | Last Updated | Owner  |
 | ---------------------------- | ------------------------------------------------------- | ------------ | ------ |
-| `architecture-decision-records.md` | ADR index — links to all individual ADR files; no inline ADR text | 2026-04-12   | data   |
-| `adr-0001-composition-over-inheritance.md` | ADR-001: Composition Over Inheritance Pattern | 2026-04-12   | data   |
-| `adr-0002-stateless-component-design.md` | ADR-002: Stateless Component Design | 2026-04-12   | data   |
-| `adr-0003-built-in-language-features-first.md` | ADR-003: Built-in Language Features First | 2026-04-12   | data   |
-| `adr-0004-spec-driven-development-gate.md` | ADR-004: Spec-Driven Development Gate (AC hard gate) | 2026-04-12   | troi   |
+| `architecture-decision-records.md` | Formal ADR index and decision rationale history            | 2026-04-05   | data   |
 | `architecture-principles.md` | Foundational rules, decision framework, common patterns | 2026-04-04   | data   |
 | `system-design-patterns.md`  | Reusable system design templates and implementation patterns | 2026-04-11   | data   |
 | `coding-standards.md`        | Readability, naming conventions, style guidelines       | 2026-04-04   | picard |
@@ -79,14 +75,6 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 ---
 
-## Quality Gates & Spec-Driven Development
-
-| Document                     | Description                                                                        | Last Updated | Owner |
-| ---------------------------- | ---------------------------------------------------------------------------------- | ------------ | ----- |
-| `spec-driven-development.md` | AC gate mechanics, Given/When/Then format, traceability, role assignments, lessons | 2026-04-12   | troi  |
-
----
-
 ## Technical Debt & Quality
 
 | Document                | Description                                                         | Last Updated | Owner   |
@@ -100,7 +88,6 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                      | Description                                                               | Last Updated | Owner  |
 | ----------------------------- | ------------------------------------------------------------------------- | ------------ | ------ |
 | `monitoring-observability.md` | Logging, metrics, alerting standards, SLO definitions, observability gaps | 2026-04-05   | obrien |
-| `database-migration-strategies.md` | Zero-downtime migration patterns, rollback procedures, verification checklist | 2026-04-05 | picard |
 
 ---
 
@@ -136,7 +123,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 ## Pending Additions (Backlog)
 
-_(No pending items — all top-level KB documents are indexed as of 2026-04-12)_
+- [ ] `database-migration-strategies.md` — Zero-downtime migration patterns
 
 ---
 
@@ -151,9 +138,6 @@ Version History:
     - 2026-04-11: geordi — Added notification-integration.md (connectivity layer: Teams/Slack webhooks, MDR-to-Issue workflow, signal mapping)
     - 2026-04-11: picard — Added multi-repo-conventions.md (hub model, workspace orientation, repo-scoped KB signals, cross-repo mission rules)
     - 2026-04-11: picard — Indexed all top-level KB documents so kb-lint has full top-level coverage and no warning-only gaps
-    - 2026-04-12: picard — Added spec-driven-development.md to new Quality Gates section (NEW-3 fix)
-    - 2026-04-12: data — Added individual ADR files (adr-0001 through adr-0004) to Architecture index; ADR Coherence Rule applied
-    - 2026-04-12: picard — Moved database-migration-strategies.md from Pending backlog to Observability section (file was complete; D-NEW-4 finding); cleared Pending Additions backlog
 ---
 ```
 

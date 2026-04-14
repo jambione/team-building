@@ -2,9 +2,9 @@
 
 ## Current State
 
-**As of**: 2026-04-12  
-**Health**: AMBER  
-**Top active item**: ADR-004 (Spec-Driven Development Gate) accepted 2026-04-12 — AC gate is now enforced in three places. Owner is troi.
+**As of**: 2026-04-05  
+**Health**: GREEN  
+**Top active item**: ADR-003 (Built-in Language Features First) is newest — verify all new dependency introductions against it. Owner is data for Sprint 2 onward.
 
 ---
 
@@ -12,14 +12,13 @@
 
 Agents: scan this table before beginning architecture analysis. Do not propose or implement anything that contradicts an Accepted ADR without explicitly flagging and resolving the conflict first.
 
-| ID | Title | Status | Date | Domain | Owner | File |
-|----|-------|--------|------|--------|-------|------|
-| ADR-001 | Composition Over Inheritance Pattern | Accepted | 2026-03-15 | Architecture | data | [adr-0001-composition-over-inheritance.md](adr-0001-composition-over-inheritance.md) |
-| ADR-002 | Stateless Component Design | Accepted | 2026-03-20 | Architecture | data | [adr-0002-stateless-component-design.md](adr-0002-stateless-component-design.md) |
-| ADR-003 | Built-in Language Features First | Accepted | 2026-04-01 | Architecture | data | [adr-0003-built-in-language-features-first.md](adr-0003-built-in-language-features-first.md) |
-| ADR-004 | Spec-Driven Development Gate | Accepted | 2026-04-12 | Process / Quality | troi | [adr-0004-spec-driven-development-gate.md](adr-0004-spec-driven-development-gate.md) |
+| ID | Title | Status | Date | Domain | Owner |
+|----|-------|--------|------|--------|-------|
+| ADR-001 | Composition Over Inheritance Pattern | Accepted | 2026-03-15 | Architecture | data |
+| ADR-002 | Stateless Component Design | Accepted | 2026-03-20 | Architecture | data |
+| ADR-003 | Built-in Language Features First | Accepted | 2026-04-01 | Architecture | data |
 
-> data adds a row here when picard approves a new ADR. Each ADR lives in its own file — this table is the index only. ADR Coherence Rule: never duplicate ADR content inline here.
+> data adds a row here when picard approves a new ADR. The full ADR text lives in the sections below.
 
 ---
 
@@ -61,14 +60,35 @@ Document significant architectural decisions with context, alternatives consider
 
 ---
 
-## ADR Full Text
+## Historical ADRs — data's Contributions
 
-Each ADR lives in its own canonical file. This section is intentionally empty — do not add inline ADR text here.
+### ADR-001: Composition Over Inheritance Pattern (2026-03-15)
 
-- [ADR-001](adr-0001-composition-over-inheritance.md) — Composition Over Inheritance Pattern
-- [ADR-002](adr-0002-stateless-component-design.md) — Stateless Component Design
-- [ADR-003](adr-0003-built-in-language-features-first.md) — Built-in Language Features First
-- [ADR-004](adr-0004-spec-driven-development-gate.md) — Spec-Driven Development Gate
+**Status:** Accepted
+
+**Context:** Team was using deep inheritance hierarchies causing fragile base class problems.
+
+**Decision:** All new components must use composition; existing hierarchies to be refactored over 2 sprints.
+
+---
+
+### ADR-002: Stateless Component Design (2026-03-20)
+
+**Status:** Accepted
+
+**Context:** Components were maintaining state internally, causing testing difficulties and memory leaks.
+
+**Decision:** All components must be stateless by default; state lifted to parent or external store.
+
+---
+
+### ADR-003: Built-in Language Features First (2026-04-01)
+
+**Status:** Accepted
+
+**Context:** Heavy dependency on utility libraries for basic operations.
+
+**Decision:** Prefer native language features and standard library before adding dependencies.
 
 ---
 
