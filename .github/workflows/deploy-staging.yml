@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Checkout repository (full history for rollback)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # fetch-depth: 0 is required — any rollback job using git rev-parse HEAD^1
           # needs the full commit graph. Shallow clones will fail at the worst moment.
@@ -119,7 +119,7 @@ jobs:
 
     steps:
       - name: Checkout repository (full history required for rollback)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
