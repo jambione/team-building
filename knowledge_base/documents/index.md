@@ -121,6 +121,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | `knowledge_base/sessions/`                            | Per-mission session journals for cross-session continuity | guinan        |
 | `knowledge_base/sessions/session-template.md`         | Template for opening new session journals                 | picard        |
 | `knowledge_base/sessions/mission-debrief-template.md` | Post-mission debrief template filled by picard at close   | picard        |
+| `knowledge_base/current/ops-log.md`                   | Rolling lightweight log — Computer-recorded notes and queries (50-entry window) | Computer |
 
 ---
 

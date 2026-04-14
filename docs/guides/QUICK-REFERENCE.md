@@ -28,6 +28,47 @@
 | `@obrien`  | Monitoring, metrics, alerting, observability     |
 | `@wes`     | Experimental solutions (approval required)       |
 | `@guinan`  | Historical context, past lessons, carry-forwards |
+| `Computer` | KB queries, note recording, doc lookup, quick answers — no ceremony |
+
+---
+
+## Computer — Always-On Lightweight Agent
+
+**Invoke with**: `Computer: [query or command]`
+
+No phases. No Ready Room. No crew dispatch. Just an answer or a record.
+
+### When to Use Computer vs Full Team
+
+| Task | Use |
+|---|---|
+| Query a KB document | Computer |
+| Look up document ownership | Computer |
+| Record a quick observation | Computer |
+| Check current sprint / carry-forward state | Computer |
+| Get a session-continuity summary | Computer |
+| Make an architecture or design decision | Full team (picard) |
+| Security review or code change | Full team (picard) |
+| Multiple agents needed | Full team (picard) |
+
+### Invocation Examples
+
+```
+Computer: what does architecture-principles.md say about stateless design?
+Computer: record — worf and crusher should be mandatory for any external integration
+Computer: who owns monitoring-observability.md?
+Computer: look up the circuit breaker pattern
+Computer: what are the open carry-forwards for this sprint?
+Computer: summarize ops-log from this week
+```
+
+### Parallel Diff Scan
+
+Run `/computer-scan` to dispatch sub-agents in parallel against all uncommitted changes. Each agent analyzes the diff through their domain lens, flags discoveries, and updates their KB document. Results recorded to ops-log.
+
+```
+/computer-scan
+```
 
 ---
 
@@ -206,6 +247,7 @@ If no `.tng-context.md` exists, routing falls back to `knowledge_base/current/wo
 | `knowledge_base/documents/index.md`                | KB navigation                                                        |
 | `knowledge_base/documents/past-lessons-learned.md` | Lessons from prior missions                                          |
 | `knowledge_base/documents/sprint-state.md`         | Open carry-forwards                                                  |
+| `knowledge_base/current/ops-log.md`                | Rolling lightweight log — Computer-recorded notes and queries        |
 | `.tng-context.md` (optional in spoke repos)        | Service identity override for repo-local auto-routing                |
 
 ---
