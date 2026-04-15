@@ -26,7 +26,7 @@
 | `@crusher` | Reliability, edge cases, failure modes, rollback |
 | `@barclay` | Technical debt, refactoring, DRY/YAGNI           |
 | `@obrien`  | Monitoring, metrics, alerting, observability     |
-| `@wes`     | Experimental solutions (approval required)       |
+| `@wes`     | Cross-model alternative proposals — runs on a different Copilot model than the crew (approval required) |
 | `@guinan`  | Historical context, past lessons, carry-forwards |
 | `Computer` | KB queries, note recording, doc lookup, quick answers — no ceremony |
 
@@ -69,6 +69,20 @@ Run `/computer-scan` to dispatch sub-agents in parallel against all uncommitted 
 ```
 /computer-scan
 ```
+
+### wes Diff Suggestions (cross-model, no mission needed)
+
+Run `/wes-diff` to invoke wes standalone against uncommitted changes. **First switch Copilot's model picker to wes's designated model** (opposite series from the crew — see routing table in `wes.agent.md`). wes reads the diff and produces up to 3 cross-model proposals on how the changes could be approached differently. No picard required. No mission ceremony.
+
+```
+/wes-diff
+```
+
+| Crew's active model | Switch Copilot to before running /wes-diff |
+|---|---|
+| Claude | GPT-4o mini → GPT-4o → o3-mini |
+| GPT-4o / GPT-4o mini | Claude 3.5 Sonnet → Claude 3.7 Sonnet |
+| Gemini | GPT-4o mini → GPT-4o → o1 |
 
 ---
 
