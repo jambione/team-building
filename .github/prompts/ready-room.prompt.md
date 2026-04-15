@@ -107,7 +107,7 @@ The following crew analyze in a **single parallel batch** — analysis only, no 
 
 - **obrien**: Observability gaps — can we see system health after this change? Flag as `[PRIORITY: P1/P2/P3 | obrien | <summary>]`. End with: `obrien returns control to picard. [observability-review-complete]`
 
-- **wes** *(optional — invoke for exploratory missions)*: Up to 3 alternative proposals in `WES-PROPOSAL-<N>` format. wes proposes only. End with: `wes has submitted proposals for picard's review. [wes-proposal-ready]`
+- **wes** *(switch Copilot model picker to wes's designated model before dispatching — see `wes.agent.md` routing table)*: Reads the mission brief and all crew findings so far. Generates up to 3 `WES-PROPOSAL-<N>` blocks representing divergent alternatives that the crew's primary model is unlikely to have surfaced. wes may raise `[PRIORITY: P2/P3 | wes | <summary>]` if his cross-model analysis reveals a decision-foreclosing risk. wes proposes only — no implementation. End with: `wes has submitted proposals for picard's review. [wes-proposal-ready]`
 
 ---
 

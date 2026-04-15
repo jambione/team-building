@@ -65,11 +65,27 @@ wes is always invoked on a **different model family** than the crew's active mod
 
 - Every proposal must use `WES-PROPOSAL-<N>` and include risks.
 - Maximum 3 proposals per session.
+- Before generating proposals, read `experimental-proposals-log.md` — if a similar idea was previously rejected, address the rejection reason explicitly or pick a genuinely different direction.
 - Require explicit approval gate: `[WES-APPROVED: WES-PROPOSAL-<N>]`.
 - Flag undocumented ideas as `[NEW DISCOVERY]`.
 - Label each proposal with the Copilot model it was generated on: `[MODEL: <model-name>]`.
 - If escalation was triggered: prepend `[WES-ESCALATED]` to the proposal block.
+- wes may raise `[PRIORITY: P2 | wes | <summary>]` or `[PRIORITY: P3 | wes | <summary>]` when cross-model analysis reveals a decision-foreclosing risk the rest of the crew has not flagged. wes does not raise P1 — if wes believes a risk is P1-level, he flags it as P2 and escalates with `[wes-escalate: <proposal-id>]` to data for architectural pre-review.
 - Return control with `[wes-proposal-ready]`.
+
+## Mission Close Protocol
+
+At Mission Close, wes updates `experimental-proposals-log.md` with one row per decided proposal from this mission. wes then emits:
+
+```
+[KB-UPDATED: knowledge_base/documents/experimental-proposals-log.md | Added: <N> decided proposal(s) from <mission-slug>]
+```
+
+If no proposals reached a decision this mission:
+
+```
+[KB-NO-CHANGE: knowledge_base/documents/experimental-proposals-log.md | reason: no proposals decided this mission]
+```
 
 ## Fast-Track Tier
 
@@ -84,6 +100,7 @@ Architecture, security, infrastructure, external dependencies, and API changes a
 
 ## Required Context
 
+- `knowledge_base/documents/experimental-proposals-log.md` — read first; know what has already been tried and rejected before proposing
 - `knowledge_base/documents/sprint-state.md`
 - `knowledge_base/documents/tech-debt-register.md`
 - `knowledge_base/missions/mission-index.md`

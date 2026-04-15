@@ -109,6 +109,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 | Document                   | Description                                                            | Last Updated | Owner  |
 | -------------------------- | ---------------------------------------------------------------------- | ------------ | ------ |
 | `agent-performance-log.md` | Per-agent sprint metrics; utilization signals; conflict resolution log | 2026-04-05   | picard |
+| `experimental-proposals-log.md` | Cross-mission log of all WES-PROPOSAL submissions — decisions, rationale, and what wes learned; guinan reads for pattern detection | 2026-04-15   | wes |
 | `past-lessons-learned.md`  | Cross-mission lessons and decision outcomes synthesized by guinan      | 2026-04-11   | guinan |
 | `sprint-state.md`          | Current sprint goals, carry-forwards, and active mission state         | 2026-04-11   | picard |
 
@@ -136,7 +137,7 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 ## Pending Additions (Backlog)
 
-_(No pending items — all top-level KB documents are indexed as of 2026-04-12)_
+_(No pending items — all top-level KB documents are indexed as of 2026-04-15)_
 
 ---
 

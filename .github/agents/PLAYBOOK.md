@@ -28,7 +28,7 @@
 | **barclay** | Tech Debt & Efficiency Engineer | Analysis — debt, quality, DRY/YAGNI, code-level performance | `tech-debt-register.md` | `[tech-debt-assessment-complete]` | *"barclay has run the simulations."* |
 | **guinan** | Institutional Memory | Analysis — historical context first | `past-lessons-learned.md` | `[context-retrieval-complete]` | *"guinan has heard that before."* |
 | **obrien** | Chief of Operations | Analysis — observability gaps | `monitoring-observability.md` | `[observability-review-complete]` | *"If you can't see it, you can't fix it."* |
-| **wes** | Junior Ensign / Experimenter | Analysis — exploratory proposals only | *(contributes to KB via approved proposals)* | `[wes-proposal-ready]` | *"I know I'm just an ensign, but..."* |
+| **wes** | Junior Ensign / Cross-Model Experimenter | Analysis — divergent proposals from a different Copilot model family than the crew's active model | `experimental-proposals-log.md` | `[wes-proposal-ready]` | *"I know I'm just an ensign, but..."* |
 
 ---
 
@@ -38,7 +38,7 @@
 2. **Activate Ready Room** → picard opens `[READY-ROOM-OPEN: <mission-slug>]`
 3. **Historical context + KB reads overlap** → guinan scans history while picard reads KB docs — dispatched in parallel
 4. **Context Briefing** → before dispatching analysts, picard distills a 3–5 bullet summary from `past-lessons-learned.md` and `sprint-state.md` and injects it into every analyst's task brief; analysts do not reload these documents independently
-5. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, wes (optional) in one message; all return before picard proceeds
+5. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, and wes in one message; all return before picard proceeds. **Before dispatching wes, switch the Copilot model picker to wes's designated model** (see `wes.agent.md` routing table) so his proposals come from a different reasoning architecture than the rest of the crew.
 6. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
 7. **MDR + Acceptance Criteria — parallel** → picard dispatches picard-thinking (MDR synthesis) and troi (AC drafting) simultaneously — both draw from the same Ready Room findings, no dependency between them; picard reviews both outputs, reconciles any divergence, issues `[AC-APPROVED: <mission-slug>]`, then `[READY-ROOM-CLOSED: <mission-slug>]`
 8. **Close Ready Room** → picard issues `[READY-ROOM-CLOSED: <mission-slug>]`
@@ -79,11 +79,13 @@ picard consults this table before closing the Ready Room. A mission may not reac
 | Mission Type | Mandatory Crew | Recommended Crew | Optional |
 |-------------|---------------|-----------------|---------|
 | **Infrastructure / CI change** | geordi, worf, obrien | data, barclay, crusher | troi, wes |
-| **Feature / application** | data, troi, worf | barclay, crusher, obrien | geordi, wes |
+| **Feature / application** | data, troi, worf | barclay, crusher, obrien, **wes** | geordi |
 | **Security audit** | worf, obrien | data, barclay, crusher | troi, wes |
-| **Refactor / debt** | barclay, data | troi, crusher | worf, obrien, wes |
+| **Refactor / debt** | barclay, data | troi, crusher, **wes** | worf, obrien |
 | **Reliability / incident** | crusher, obrien | data, geordi | worf, troi, wes |
-| **Sprint planning** | all active domain leads | — | wes |
+| **Sprint planning** | all active domain leads | **wes** | — |
+
+**wes note**: wes's value is highest in Feature/Application and Refactor/Debt missions — these are the moments the crew is converging on a design and a different-model perspective is most likely to surface an angle that wasn't on the table. On Security Audit and Infrastructure missions, wes is optional because domain precision outweighs divergent alternatives. **Regardless of mission type, wes must be invoked on a different Copilot model family than the crew's active model — this is what makes his proposals genuinely divergent, not just stylistically different.**
 
 **Universal rules (all mission types)**:
 - guinan is always first — no mission type exempts her
