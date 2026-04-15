@@ -1,0 +1,51 @@
+{
+  // TNG Agent Team — VS Code Workspace File
+  //
+  // PURPOSE: Open THIS file in VS Code (File → Open Workspace from File) to get
+  // consistent crew activation in any context. team-building MUST be listed first
+  // so VS Code treats it as the workspace root and Copilot Chat loads its
+  // .github/copilot-instructions.md as the primary system instructions.
+  //
+  // HOW TO ADD A SPOKE REPO:
+  //   1. Add an entry to the "folders" array below (team-building must stay first)
+  //   2. Add a .tng-context.md to the spoke repo root (copy from team-building/.tng-context.md)
+  //   3. Add the repo to WORKSPACE-TOPOLOGY.md and knowledge_base/current/workspace-context.md
+  //   4. Notify guinan: [GUINAN-SYNTHESIZE: workspace-onboarding-<repo-name>]
+  //
+  // DO NOT reorder folders — team-building hub must always be the first entry.
+
+  "folders": [
+    {
+      "name": "team-building (hub)",
+      "path": "."
+    }
+    // Add spoke repos below this line. Example:
+    // ,{
+    //   "name": "my-service (spoke)",
+    //   "path": "../my-service"
+    // }
+  ],
+
+  "settings": {
+    // Tell VS Code which folder is the workspace root for git, search, and Copilot context.
+    // Keep this pointing at team-building so Copilot loads its copilot-instructions.md first.
+    "git.openRepositoryInParentFolders": "always",
+
+    // Copilot Chat: ensure instructions are loaded from workspace root (team-building).
+    // If you add spoke repos and Copilot stops loading the crew, check this setting.
+    "github.copilot.chat.welcomeMessage": "enabled",
+
+    // File nesting — keeps team-building's config files tidy in the Explorer.
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+      "*.code-workspace": ".tng-context.md,WORKSPACE-TOPOLOGY.md"
+    }
+  },
+
+  "extensions": {
+    "recommendations": [
+      "GitHub.copilot",
+      "GitHub.copilot-chat"
+    ]
+  }
+}

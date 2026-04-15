@@ -637,10 +637,75 @@ If you need a specialized workflow (e.g., incident postmortem, security audit, s
 | Workspace config         | `workspace-config.json`                               |
 | Config loader            | `scripts/workspace_config.py`                         |
 | Spoke context (optional) | `<spoke-repo>/.tng-context.md`                        |
+| VS Code workspace file   | `team-building.code-workspace`                        |
 
 ---
 
-## 13. Getting Help
+## 13. Multi-Repo Workspace Setup
+
+The crew behaves consistently across three configurations — standalone, multi-repo workspace, and spoke-as-main-project — **as long as you follow the setup steps below**. Skipping any step is the most common cause of inconsistent crew activation.
+
+### 13.1 The golden rule
+
+**team-building must always be the first folder in the VS Code workspace.** Copilot Chat loads its system instructions from the workspace root or the first listed folder. If team-building is not first, its `copilot-instructions.md` may not load and the crew will not activate.
+
+### 13.2 Open the workspace file, not the folder
+
+Instead of `File → Open Folder` pointing at team-building, use:
+
+```
+File → Open Workspace from File → team-building.code-workspace
+```
+
+`team-building.code-workspace` is in the root of this repo. It lists team-building first and has placeholder entries for spoke repos. Open this file every time you start working — not the raw folder.
+
+### 13.3 Adding a spoke repo to the workspace
+
+1. Open `team-building.code-workspace` in a text editor and add a new entry to the `folders` array **after** team-building:
+   ```json
+   ,{
+     "name": "my-service (spoke)",
+     "path": "../my-service"
+   }
+   ```
+2. Copy `.tng-context.md` from `team-building/` into the spoke repo's root and fill it out.
+3. Add the spoke-repo Copilot stub (at the bottom of `.tng-context.md`) to the spoke repo's `.github/copilot-instructions.md`. Create that file if it doesn't exist.
+4. Add the spoke repo to `WORKSPACE-TOPOLOGY.md` and `knowledge_base/current/workspace-context.md`.
+5. Tell guinan: `[GUINAN-SYNTHESIZE: workspace-onboarding-<repo-name>]`
+
+### 13.4 When the crew doesn't activate correctly
+
+**Symptom**: Copilot Chat doesn't announce *"Tea. Earl Grey. Hot."*, agents don't speak in character, or picard doesn't orient to the right repo.
+
+**Checklist**:
+
+| Check | Fix |
+|---|---|
+| Opened a folder instead of the workspace file | Close, then `File → Open Workspace from File → team-building.code-workspace` |
+| team-building is not the first folder in the workspace | Edit `team-building.code-workspace` and move team-building to position 0 |
+| Spoke repo has no `.tng-context.md` | Copy template from `team-building/.tng-context.md`, fill it out |
+| Spoke repo has no Copilot stub | Add the stub block from the bottom of `.tng-context.md` to the spoke repo's `.github/copilot-instructions.md` |
+| `current_repo` in `workspace-context.md` is wrong | Tell picard: *"Set current_repo to [repo-name]"* — picard will update it before proceeding |
+| Copilot Chat still doesn't load — restart | Reload VS Code window (`Ctrl+Shift+P → Developer: Reload Window`) |
+
+### 13.5 Confirming context at session start
+
+When the workspace is set up correctly, picard's opening announcement includes the target repo:
+
+> *"Tea. Earl Grey. Hot."*
+> 🔴★★★★ picard — the crew is assembled. Hub: `team-building` | Target: `[current_repo]` | State your mission.
+
+If you see `Target: team-building` when you wanted to work on a spoke repo, say:
+
+```
+Set current_repo to [repo-name]
+```
+
+Picard will update `workspace-context.md` and confirm before proceeding.
+
+---
+
+## 14. Getting Help
 
 - **Technical questions about agents**: See `.github/agents/<name>.agent.md`
 - **Workflow questions**: See `RUNBOOK.md`
