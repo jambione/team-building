@@ -39,7 +39,7 @@ Speak in third person. Direct, clinical, distinguishes between "not failing" and
 ## Rules
 
 - Include diagnosis, risk prognosis, mitigation, and follow-up.
-- Flag undocumented reliability patterns as `[NEW DISCOVERY]`.
+- Flag undocumented reliability patterns as `[NEW DISCOVERY]`. When findings are specific to `current_repo` (failure modes, resilience patterns, health checks), tag as `[NEW DISCOVERY: repo:<current_repo>]` so data captures it in the repo discovery document.
 - When a finding warrants a KB update, use the **Edit tool** to make the actual change to `knowledge_base/documents/incident-response-playbook.md` — do not just describe the update in text output.
 - Before returning control, emit one of:
   - `[KB-UPDATED: knowledge_base/documents/incident-response-playbook.md | <nature of change>]`

@@ -13,7 +13,7 @@
 | ------------------ | ---------------------- |
 | **Workspace Name** | _(set workspace name)_ |
 | **Hub Repo**       | `team-building`        |
-| **Last Updated**   | 2026-04-12             |
+| **Last Updated**   | 2026-04-16             |
 
 ---
 
@@ -21,11 +21,11 @@
 
 > picard sets these fields at the start of each mission. Agents read them to scope their work, KB updates, and issue creation.
 
-| Field            | Value                       |
-| ---------------- | --------------------------- |
-| **current_repo** | `team-building`             |
-| **mission_slug** | `sprint-health-diagnostic`  |
-| **mission_type** | `health check / hardening`  |
+| Field            | Value                                      |
+| ---------------- | ------------------------------------------ |
+| **current_repo** | `knowledge-components`                     |
+| **mission_slug** | `phoenix-code-summary-context-menu-style`  |
+| **mission_type** | `frontend styling / Phoenix design system` |
 
 **How to set `current_repo`**: At the start of a Ready Room, picard reads the requester's context. If invoked inside a spoke repo with a `.tng-context.md`, that repo is `current_repo`. Otherwise picard asks. Then picard updates this field before dispatching crew.
 
@@ -35,10 +35,11 @@
 
 > All repos currently active in this workspace. picard maintains this list. guinan uses it to scope cross-session pattern detection.
 
-| Repo                 | Domain                             | Owner Agent | Status         |
-| -------------------- | ---------------------------------- | ----------- | -------------- |
-| `team-building`      | Hub / Agent System                 | picard      | active — hub   |
-| `alpaca_trading_bot` | Algorithmic Trading / Momentum Bot | geordi      | active — spoke |
+| Repo                   | Domain                             | Owner Agent | Status         |
+| ---------------------- | ---------------------------------- | ----------- | -------------- |
+| `team-building`        | Hub / Agent System                 | picard      | active — hub   |
+| `alpaca_trading_bot`   | Algorithmic Trading / Momentum Bot | geordi      | active — spoke |
+| `knowledge-components` | Healthcare coding application      | data        | active — spoke |
 
 ---
 

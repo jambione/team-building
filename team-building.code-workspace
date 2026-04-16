@@ -18,12 +18,10 @@
     {
       "name": "team-building (hub)",
       "path": "."
+    },
+    {
+      "path": "../../../../inetpub/wwwroot/knowledge-components"
     }
-    // Add spoke repos below this line. Example:
-    // ,{
-    //   "name": "my-service (spoke)",
-    //   "path": "../my-service"
-    // }
   ],
 
   "settings": {
@@ -43,9 +41,6 @@
   },
 
   "extensions": {
-    "recommendations": [
-      "GitHub.copilot",
-      "GitHub.copilot-chat"
-    ]
+    "recommendations": ["GitHub.copilot", "GitHub.copilot-chat"]
   }
 }

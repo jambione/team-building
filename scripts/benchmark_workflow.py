@@ -214,6 +214,36 @@ def _pct(saved: float, total: float) -> str:
     return f"{saved / total * 100:>5.1f}%"
 
 
+def discovery_totals(
+    before_samples: Dict[str, List[float]],
+    after_samples: Dict[str, List[float]],
+) -> tuple:
+    """
+    Returns mean discovery-stage totals for BEFORE and AFTER.
+
+    Discovery stage is defined as the work done before mission decisions are
+    synthesized:
+      BEFORE: 03 History + KB reads + 04 Ready Room analysis
+      AFTER:  03 History + KB reads + 04 Context Briefing + 05 Ready Room analysis
+    """
+
+    before_list = list(before_samples.values())
+    after_list = list(after_samples.values())
+
+    before_discovery = statistics.mean([
+        run["03  History + KB reads"] + run["04  Ready Room analysis (7 agents)"]
+        for run in before_list
+    ])
+    after_discovery = statistics.mean([
+        run["03  History + KB reads"] +
+        run["04  Context Briefing (picard)"] +
+        run["05  Ready Room analysis (7 agents)"]
+        for run in after_list
+    ])
+
+    return before_discovery, after_discovery
+
+
 def print_phase_table(
     before_phases: Dict[str, List[float]],
     after_phases:  Dict[str, List[float]],
@@ -460,6 +490,26 @@ def main(agent_ms: float, picard_ms: float, runs: int) -> None:
     print("               sequential picard close steps.")
     print()
 
+    # ── Table 4: Discovery-stage metrics ─────────────────────────────────────
+    print("─" * 66)
+    print("  Table 4 — Discovery-Stage Bottleneck Metrics")
+    print("─" * 66)
+    print()
+
+    discovery_before, discovery_after = discovery_totals(before_samples, after_samples)
+    discovery_saved = discovery_before - discovery_after
+    discovery_before_share = discovery_before / total_before * 100
+    discovery_after_share = discovery_after / total_after * 100
+
+    print(f"  {'Metric':<42}  {'BEFORE':>10}  {'AFTER':>10}  {'Change':>10}")
+    print("  " + "─" * 78)
+    print(f"  {'Discovery-stage wall clock':<42}  {_ms(discovery_before):>10}  {_ms(discovery_after):>10}  {_ms(discovery_saved):>10}")
+    print(f"  {'Discovery share of mission':<42}  {discovery_before_share:>8.1f}%  {discovery_after_share:>8.1f}%  {(discovery_after_share - discovery_before_share):>+8.1f}%")
+    print()
+    print("  Discovery stage includes shared KB reads, context formation, and")
+    print("  analyst discovery before MDR synthesis begins.")
+    print()
+
     # ── Summary ───────────────────────────────────────────────────────────────
     print("═" * 66)
     print("  Summary")
@@ -473,6 +523,10 @@ def main(agent_ms: float, picard_ms: float, runs: int) -> None:
     print(f"  {'Time saved per mission':<42}  {_ms(saved_ms):>20}")
     print(f"  {'Speedup':<42}  {speedup:>19.2f}x")
     print(f"  {'Percentage faster':<42}  {pct:>19.1f}%")
+    print(f"  {'Discovery-stage time (BEFORE)':<42}  {_ms(discovery_before):>20}")
+    print(f"  {'Discovery-stage time (AFTER)':<42}  {_ms(discovery_after):>20}")
+    print(f"  {'Discovery-stage share (BEFORE)':<42}  {discovery_before_share:>19.1f}%")
+    print(f"  {'Discovery-stage share (AFTER)':<42}  {discovery_after_share:>19.1f}%")
     print(f"  {'KB reads eliminated per Ready Room':<42}  {bm['KB doc reads per Ready Room'] - am['KB doc reads per Ready Room']:>20}")
     print(f"  {'Redundant signals eliminated':<42}  {bm['[KB-NO-CHANGE] signals per mission'] - am['[KB-NO-CHANGE] signals per mission']:>20}")
     print(f"  {'Sequential gates eliminated':<42}  {bm['Sequential blocking gates (beyond waves)'] - am['Sequential blocking gates (beyond waves)']:>20}")

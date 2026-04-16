@@ -47,10 +47,10 @@ This allows guinan to filter lessons learned by repo when surfacing historical c
 
 Every session journal (copied from `session-template.md`) must populate these fields at the top of **Session Metadata**:
 
-| Field | Value |
-|-------|-------|
-| **Repo** | _(which spoke repo this mission targets — set by picard at start)_ |
-| **Affected Repos** | _(comma-separated list if mission touches multiple repos; usually same as Repo)_ |
+| Field                       | Value                                                                                           |
+| --------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Repo**                    | _(which spoke repo this mission targets — set by picard at start)_                              |
+| **Affected Repos**          | _(comma-separated list if mission touches multiple repos; usually same as Repo)_                |
 | **Cross-Repo Dependencies** | _(describe any dependencies on other repos relevant to this mission; "none" if not applicable)_ |
 
 Decisions that apply only to one repo go in the **Decisions Made** table with a `[repo-scoped]` tag in the Rationale column.
@@ -100,13 +100,13 @@ git checkout -b mission/<mission-slug>
 
 **Branch lifecycle summary**:
 
-| Event | Branch |
-|---|---|
+| Event                 | Branch                                                   |
+| --------------------- | -------------------------------------------------------- |
 | `[READY-ROOM-CLOSED]` | riker creates `mission/<mission-slug>` on `current_repo` |
-| Track C PASS + Go | geordi opens PR |
-| `[MISSION-PAUSED]` | Preserved, no PR |
-| `[MISSION-ABORTED]` | Preserved for reference |
-| PR merged | Complete — repo policy governs deletion |
+| Track C PASS + Go     | geordi opens PR                                          |
+| `[MISSION-PAUSED]`    | Preserved, no PR                                         |
+| `[MISSION-ABORTED]`   | Preserved for reference                                  |
+| PR merged             | Complete — repo policy governs deletion                  |
 
 ---
 
@@ -117,6 +117,7 @@ Every spoke repo in the workspace places a `.tng-context.md` in its root. This f
 See the `.tng-context.md` template at the root of `team-building` for the full format.
 
 Minimum required fields:
+
 - `repo_name` — matches the entry in `WORKSPACE-TOPOLOGY.md`
 - `service_domain` — what this repo does in one phrase
 - `owner_agent` — the TNG agent responsible for this repo's domain
@@ -133,12 +134,14 @@ Because repos are loosely coupled, true cross-repo missions are uncommon. When o
 picard opens sequential Mission Decision Records — one per affected repo — never a combined MDR. This keeps KB updates, issue creation, and session journals cleanly scoped.
 
 **Execution sequencing (riker):**
+
 - If repo-A changes must precede repo-B changes, riker structures waves accordingly:
   - Wave 1: repo-A tasks (deploy, merge, validate)
   - Wave 2: repo-B tasks — gated on Wave 1 ACK from picard
 - Document the dependency in the session journal's `Cross-Repo Dependencies` field.
 
 **When NOT to use cross-repo missions:**
+
 - If the only "cross-repo" concern is an API contract change — raise it as a `[NEW DISCOVERY]` in the primary repo's mission and create a follow-up carry-forward item for the dependent repo.
 - If repos share only configuration or documentation — handle in separate, independent missions.
 
@@ -151,6 +154,34 @@ guinan scans mission journals and carry-forwards across all repos. When detectin
 - Tag each pattern with source repo: `Pattern detected in: <repo-A>, <repo-B>` (or `team-wide`)
 - When a pattern is **repo-specific** (e.g., geordi's CI cache misses always happen in repo-ui), note the repo in `past-lessons-learned.md`
 - When a pattern is **cross-repo** (e.g., auth failures cascade from service-auth to service-api), flag it as a workspace-level risk
+
+---
+
+## Repo Discovery Protocol
+
+Each spoke repo accumulates a **living discovery document** at `knowledge_base/documents/repo-discoveries/<repo>.md`. These capture everything the crew learns about a repo through missions — feature locations, architecture patterns, build/test commands, integration points, and gotchas.
+
+**data owns all repo discovery documents.** Other agents contribute findings via `[NEW DISCOVERY: repo:<current_repo>]` tags; data incorporates them.
+
+### When to Create
+
+- **New repo enters workspace**: guinan checks for the doc during Ready Room context-retrieval. If missing, guinan flags `[NEW DISCOVERY]`. data bootstraps a skeleton from available sources (`.tng-context.md`, `.github/copilot-instructions.md`, or crew exploration).
+- **Two-pass approach**: data creates a skeleton during the Ready Room (so analysts have a shared reference), then enriches it at mission close with everything learned during execution.
+
+### When to Update
+
+- **Every mission that touches the repo**: data updates the Feature Map and Mission Discovery Log at minimum.
+- **Significant architectural findings**: New patterns, dependency chains, integration points, or gotchas.
+
+### Relationship to `.tng-context.md`
+
+- `.tng-context.md` lives in the **spoke repo** and declares identity, stack, and dependencies. It is the initial seed.
+- The repo discovery doc lives in the **hub** (`team-building`) and is the living, growing version enriched by every mission.
+- When a new repo has `.tng-context.md`, data reads it to populate the initial discovery doc. After that, the discovery doc is the authoritative reference.
+
+### Template
+
+See `knowledge_base/documents/repo-discoveries/_template.md` for the standard 7-section format (Overview, Feature Map, Architecture Discoveries, Integration Points, Build & Test, Gotchas, Mission Discovery Log).
 
 ---
 
@@ -184,4 +215,5 @@ The workspace is dynamic — repos can appear or disappear at any time. The team
 
 ```
 2026-04-11: picard — Created. Hub model + loosely coupled repos. Covers orientation protocol, KB signal format, repo fields, issue targeting, .tng-context.md spec, cross-repo mission rules, guinan workspace-awareness.
+2026-04-16: data — Added Repo Discovery Protocol section (per-repo living documents for feature maps and architecture knowledge).
 ```

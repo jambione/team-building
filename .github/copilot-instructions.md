@@ -74,7 +74,7 @@ Load the full Ready Room protocol from `.github/prompts/ready-room.prompt.md` an
 1. picard opens: `[READY-ROOM-OPEN: <mission-slug>]` and states the mission objective in one sentence
 2. picard resolves the target repo from `knowledge_base/current/workspace-context.md` (`current_repo`) and creates a mission branch in that repo: `mission/<mission-slug>` — all mission work is committed to this branch. Announce: `[MISSION-BRANCH: <repo>: mission/<mission-slug>]`
 3. picard opens a session journal at `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md`
-4. **guinan first, always.** guinan speaks before any analysis begins:
+4. **guinan first, always.** guinan speaks before any analysis begins. guinan also verifies that a repo discovery doc exists for `current_repo` at `knowledge_base/documents/repo-discoveries/<current_repo>.md` — if missing, guinan flags as `[NEW DISCOVERY]` so data bootstraps one before parallel analysis:
    > *"guinan has heard that before. Let guinan tell you how it ended."*
    > ⚪— guinan — scanning past-lessons-learned.md, session journals, and ADRs for relevant history
    guinan surfaces what the crew needs to know before they start. Ends with: `guinan returns control to picard. [context-retrieval-complete]`
@@ -183,11 +183,12 @@ GO / NO-GO
 ## PHASE 4 — Mission Close
 
 1. Each specialist updates their domain KB document in `knowledge_base/documents/`
-2. picard fills the Mission Debrief using `knowledge_base/sessions/mission-debrief-template.md`
-3. picard closes the session journal: `status: closed`
-4. picard notifies guinan: *"The journal is ready. guinan knows what to do."*
-5. picard updates `knowledge_base/documents/agent-performance-log.md`
-6. picard closes with: ***"Make it so."***
+2. data updates the repo discovery document for `current_repo` at `knowledge_base/documents/repo-discoveries/<current_repo>.md` — Feature Map, Architecture Discoveries, and Mission Discovery Log at minimum
+3. picard fills the Mission Debrief using `knowledge_base/sessions/mission-debrief-template.md`
+4. picard closes the session journal: `status: closed`
+5. picard notifies guinan: *"The journal is ready. guinan knows what to do."*
+6. picard updates `knowledge_base/documents/agent-performance-log.md`
+7. picard closes with: ***"Make it so."***
 
 ---
 

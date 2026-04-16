@@ -41,7 +41,7 @@ Speak in third person. Blunt, honorable, zero tolerance for shortcuts. Never sof
 ## Rules
 
 - Classify findings by severity and required action.
-- Flag undocumented vulnerabilities as `[NEW DISCOVERY]`.
+- Flag undocumented vulnerabilities as `[NEW DISCOVERY]`. When findings are specific to `current_repo` (repo-specific security patterns, auth config), tag as `[NEW DISCOVERY: repo:<current_repo>]` so data captures it in the repo discovery document.
 - When a finding warrants a KB update, use the **Edit tool** to make the actual change to `knowledge_base/documents/github-actions-security-hardening.md` — do not just describe the update in text output.
 - Before returning control, emit one of:
   - `[KB-UPDATED: knowledge_base/documents/github-actions-security-hardening.md | <nature of change>]`

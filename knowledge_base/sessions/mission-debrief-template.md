@@ -8,24 +8,24 @@
 
 ## Debrief Metadata
 
-| Field | Value |
-|-------|-------|
-| **Mission** | _One-line description_ |
-| **Date** | YYYY-MM-DD |
-| **Session Journal** | `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md` |
-| **MDR** | `[READY-ROOM-CLOSED: <mission-slug>]` — link to MDR in journal |
-| **Mission Status** | success / partial / blocked / cancelled |
-| **Debrief Author** | picard |
+| Field               | Value                                                          |
+| ------------------- | -------------------------------------------------------------- |
+| **Mission**         | _One-line description_                                         |
+| **Date**            | YYYY-MM-DD                                                     |
+| **Session Journal** | `knowledge_base/sessions/YYYY-MM-DD-HH-<mission-slug>.md`      |
+| **MDR**             | `[READY-ROOM-CLOSED: <mission-slug>]` — link to MDR in journal |
+| **Mission Status**  | success / partial / blocked / cancelled                        |
+| **Debrief Author**  | picard                                                         |
 
 ---
 
 ## Mission Objective vs Outcome
 
-| | Detail |
-|--|--------|
+|               | Detail                                   |
+| ------------- | ---------------------------------------- |
 | **Objective** | _What the mission set out to accomplish_ |
-| **Outcome** | _What was actually accomplished_ |
-| **Delta** | _What was not accomplished and why_ |
+| **Outcome**   | _What was actually accomplished_         |
+| **Delta**     | _What was not accomplished and why_      |
 
 ---
 
@@ -35,20 +35,20 @@
 > 5 = decisive contribution that changed the mission outcome; 4 = substantive, domain-specific value; 3 = present and correct, no surprises; 2 = contributed but findings were shallow or late; 1 = invoked but no meaningful output.
 > Score only agents that were active this mission. Leave inactive agents blank.
 
-| Agent | Contribution Quality (1–5) | PRIORITY Items Raised | Conflicts Raised | Conflicts Resolved | KB Updated | New Discoveries | Notes |
-|-------|---------------------------|----------------------|------------------|--------------------|-----------|-----------------|-------|
-| picard | | — | | | | | |
-| picard-thinking | | — | — | — | | | |
-| data | | | | — | | | |
-| riker | | — | — | — | | | |
-| geordi | | | — | — | | | |
-| worf | | | | — | | | |
-| troi | | | — | — | | | |
-| crusher | | | — | — | | | |
-| barclay | | | — | — | | | |
-| guinan | | — | — | — | | | |
-| obrien | | | — | — | | | |
-| wes | | — | — | — | | | |
+| Agent           | Contribution Quality (1–5) | PRIORITY Items Raised | Conflicts Raised | Conflicts Resolved | KB Updated | New Discoveries | Notes |
+| --------------- | -------------------------- | --------------------- | ---------------- | ------------------ | ---------- | --------------- | ----- |
+| picard          |                            | —                     |                  |                    |            |                 |       |
+| picard-thinking |                            | —                     | —                | —                  |            |                 |       |
+| data            |                            |                       |                  | —                  |            |                 |       |
+| riker           |                            | —                     | —                | —                  |            |                 |       |
+| geordi          |                            |                       | —                | —                  |            |                 |       |
+| worf            |                            |                       |                  | —                  |            |                 |       |
+| troi            |                            |                       | —                | —                  |            |                 |       |
+| crusher         |                            |                       | —                | —                  |            |                 |       |
+| barclay         |                            |                       | —                | —                  |            |                 |       |
+| guinan          |                            | —                     | —                | —                  |            |                 |       |
+| obrien          |                            |                       | —                | —                  |            |                 |       |
+| wes             |                            | —                     | —                | —                  |            |                 |       |
 
 ---
 
@@ -57,32 +57,42 @@
 _Every KB update made. picard verified these before closing._
 
 | Document | Updated By | Nature of Change |
-|----------|-----------|-----------------|
-| | | |
+| -------- | ---------- | ---------------- |
+|          |            |                  |
+
+---
+
+## Repo Knowledge Captured
+
+_Repo-specific knowledge captured in `knowledge_base/documents/repo-discoveries/<repo>.md`. data is responsible for this update._
+
+| Repo | Feature Area | What Was Learned | Updated By |
+| ---- | ------------ | ---------------- | ---------- |
+|      |              |                  | data       |
 
 ---
 
 ## PRIORITY Items — Resolution Summary
 
-| ID | Severity | Raised By | Summary | Resolution | Resolved In |
-|----|----------|-----------|---------|------------|-------------|
-| | P1/P2/P3 | | | resolved / deferred / accepted-risk | |
+| ID  | Severity | Raised By | Summary | Resolution                          | Resolved In |
+| --- | -------- | --------- | ------- | ----------------------------------- | ----------- |
+|     | P1/P2/P3 |           |         | resolved / deferred / accepted-risk |             |
 
 ---
 
 ## WES Proposals — Disposition
 
-| Proposal | Decision | Rationale | Implemented By |
-|----------|----------|-----------|----------------|
-| WES-PROPOSAL-N | approved / rejected / deferred | | |
+| Proposal       | Decision                       | Rationale | Implemented By |
+| -------------- | ------------------------------ | --------- | -------------- |
+| WES-PROPOSAL-N | approved / rejected / deferred |           |                |
 
 ---
 
 ## Conflicts — Resolution Summary
 
 | Conflict ID | Agents | Topic | Decision | Logged In Performance Log |
-|-------------|--------|-------|----------|--------------------------|
-| — | — | None | — | — |
+| ----------- | ------ | ----- | -------- | ------------------------- |
+| —           | —      | None  | —        | —                         |
 
 ---
 
@@ -90,9 +100,9 @@ _Every KB update made. picard verified these before closing._
 
 _Significant decisions that may warrant a formal ADR. picard flags these for data._
 
-| # | Decision | ADR Needed? | Owner |
-|---|----------|------------|-------|
-| 1 | | yes / no / pending | |
+| #   | Decision | ADR Needed?        | Owner |
+| --- | -------- | ------------------ | ----- |
+| 1   |          | yes / no / pending |       |
 
 ---
 
@@ -100,9 +110,9 @@ _Significant decisions that may warrant a formal ADR. picard flags these for dat
 
 _Cross-cutting lessons that should be added to `past-lessons-learned.md`. guinan will incorporate these._
 
-| # | Lesson | Category | Applies To |
-|---|--------|----------|------------|
-| 1 | | process / technical / team | all / <specific agent> |
+| #   | Lesson | Category                   | Applies To             |
+| --- | ------ | -------------------------- | ---------------------- |
+| 1   |        | process / technical / team | all / <specific agent> |
 
 ---
 
@@ -110,9 +120,9 @@ _Cross-cutting lessons that should be added to `past-lessons-learned.md`. guinan
 
 _Items not resolved this mission. Each has an owner and target sprint._
 
-| # | Item | Owner | Target Sprint | Priority |
-|---|------|-------|---------------|----------|
-| 1 | | | | P1/P2/P3 |
+| #   | Item | Owner | Target Sprint | Priority |
+| --- | ---- | ----- | ------------- | -------- |
+| 1   |      |       |               | P1/P2/P3 |
 
 ---
 
@@ -130,14 +140,14 @@ _picard's recommendations for what the team should tackle next, in priority orde
 
 _Was the Ready Room protocol followed? Did it surface what it needed to?_
 
-| Question | Answer |
-|----------|--------|
-| Ready Room opened before execution? | yes / no / partial |
+| Question                                          | Answer             |
+| ------------------------------------------------- | ------------------ |
+| Ready Room opened before execution?               | yes / no / partial |
 | All P1 items resolved before [READY-ROOM-CLOSED]? | yes / no — reason: |
-| MDR completed before riker engaged? | yes / no |
-| picard-thinking used appropriately? | yes / no — reason: |
-| picard-fast used appropriately? | yes / no — reason: |
-| Anything the Ready Room missed? | |
+| MDR completed before riker engaged?               | yes / no           |
+| picard-thinking used appropriately?               | yes / no — reason: |
+| picard-fast used appropriately?                   | yes / no — reason: |
+| Anything the Ready Room missed?                   |                    |
 
 ---
 
@@ -156,4 +166,4 @@ _Was the Ready Room protocol followed? Did it surface what it needed to?_
 
 **Debrief Status**: complete
 
-*"Make it so."* — picard
+_"Make it so."_ — picard

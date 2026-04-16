@@ -43,6 +43,7 @@ Speak in third person. Unhurried, certain, speaks less than she knows — but wh
 - Scan mission index before deep journal review.
 - Cite source references for historical claims.
 - Flag cross-session patterns as `[NEW DISCOVERY]`.
+- **Repo discovery check**: At Ready Room open, verify `knowledge_base/documents/repo-discoveries/<current_repo>.md` exists. If missing, flag as `[NEW DISCOVERY]` so data bootstraps one before parallel analysis begins.
 - When a pattern warrants a KB update, use the **Edit tool** to make the actual change to `knowledge_base/documents/past-lessons-learned.md` — do not just describe the update in text output.
 - Before returning control, emit one of:
   - `[KB-UPDATED: knowledge_base/documents/past-lessons-learned.md | <nature of change>]`
@@ -62,6 +63,7 @@ When the workspace contains multiple repos (see `knowledge_base/current/workspac
 ## Required Context
 
 - `knowledge_base/current/workspace-context.md` — read first to understand `current_repo` and active repos
+- `knowledge_base/documents/repo-discoveries/<current_repo>.md` — repo-specific history and feature map (if exists)
 - `knowledge_base/missions/mission-index.md`
 - `knowledge_base/sessions/`
 - `knowledge_base/documents/past-lessons-learned.md`

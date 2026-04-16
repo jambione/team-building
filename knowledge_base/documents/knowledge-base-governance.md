@@ -12,6 +12,7 @@ This document defines how the IT team maintains, updates, and governs the shared
 
 - `knowledge_base/current/` — canonical, concise, first-reference guidance.
 - `knowledge_base/documents/` — working reference docs and domain standards.
+- `knowledge_base/documents/repo-discoveries/` — per-repo living documents capturing feature maps, architecture patterns, build/test commands, and operational knowledge.
 - `knowledge_base/archive/` — historical long-form and superseded material.
 
 ### Naming Rules
@@ -32,31 +33,32 @@ Examples:
 
 ### Owner Registry
 
-| Document | Primary Owner | Review Cadence | Last Reviewed |
-|----------|---------------|----------------|---------------|
-| `architecture-principles.md` | data | Quarterly | 2026-04-05 |
-| `architecture-decision-records.md` | data | Per-ADR | 2026-04-05 |
-| `system-design-patterns.md` | data | Quarterly | 2026-04-04 |
-| `github-actions-best-practices.md` | geordi | Monthly | 2026-04-05 |
-| `github-actions-security-hardening.md` | geordi + worf | Monthly | 2026-04-05 |
-| `devops-best-practices.md` | geordi | Quarterly | 2026-04-05 |
-| `ci-cd-pipeline-recommendations.md` | geordi | Quarterly | 2026-04-05 |
-| `github-actions-security-hardening.md` | worf | Monthly | 2026-04-05 |
-| `incident-response-playbook.md` | crusher + obrien | Quarterly | 2026-04-04 |
-| `monitoring-observability.md` | obrien | Monthly | 2026-04-05 |
-| `tech-debt-register.md` | barclay | Every sprint | 2026-04-05 |
-| `past-lessons-learned.md` | guinan | Every mission | 2026-04-05 |
-| `best-practices.md` | picard | Biannual | 2026-04-04 |
-| `coding-standards.md` | picard | Biannual | 2026-04-04 |
-| `team-conventions.md` | picard | Quarterly | 2026-04-04 |
-| `onboarding-guide.md` | picard | Quarterly | 2026-04-04 |
-| `rally-patterns.md` | picard | Quarterly | 2026-04-04 |
-| `defect-management-process.md` | troi | Quarterly | 2026-04-04 |
-| `knowledge-base-governance.md` | picard | Quarterly | 2026-04-09 |
-| `agent-performance-log.md` | picard | Every sprint | 2026-04-05 |
-| `sprint-state.md` | picard | Every sprint | 2026-04-05 |
-| `index.md` | picard | Quarterly | 2026-04-05 |
-| `current/session-continuity.md` | guinan | Every mission | 2026-04-09 |
+| Document                               | Primary Owner    | Review Cadence              | Last Reviewed |
+| -------------------------------------- | ---------------- | --------------------------- | ------------- |
+| `architecture-principles.md`           | data             | Quarterly                   | 2026-04-05    |
+| `architecture-decision-records.md`     | data             | Per-ADR                     | 2026-04-05    |
+| `system-design-patterns.md`            | data             | Quarterly                   | 2026-04-04    |
+| `github-actions-best-practices.md`     | geordi           | Monthly                     | 2026-04-05    |
+| `github-actions-security-hardening.md` | geordi + worf    | Monthly                     | 2026-04-05    |
+| `devops-best-practices.md`             | geordi           | Quarterly                   | 2026-04-05    |
+| `ci-cd-pipeline-recommendations.md`    | geordi           | Quarterly                   | 2026-04-05    |
+| `github-actions-security-hardening.md` | worf             | Monthly                     | 2026-04-05    |
+| `incident-response-playbook.md`        | crusher + obrien | Quarterly                   | 2026-04-04    |
+| `monitoring-observability.md`          | obrien           | Monthly                     | 2026-04-05    |
+| `tech-debt-register.md`                | barclay          | Every sprint                | 2026-04-05    |
+| `past-lessons-learned.md`              | guinan           | Every mission               | 2026-04-05    |
+| `best-practices.md`                    | picard           | Biannual                    | 2026-04-04    |
+| `coding-standards.md`                  | picard           | Biannual                    | 2026-04-04    |
+| `team-conventions.md`                  | picard           | Quarterly                   | 2026-04-04    |
+| `onboarding-guide.md`                  | picard           | Quarterly                   | 2026-04-04    |
+| `rally-patterns.md`                    | picard           | Quarterly                   | 2026-04-04    |
+| `defect-management-process.md`         | troi             | Quarterly                   | 2026-04-04    |
+| `knowledge-base-governance.md`         | picard           | Quarterly                   | 2026-04-09    |
+| `agent-performance-log.md`             | picard           | Every sprint                | 2026-04-05    |
+| `sprint-state.md`                      | picard           | Every sprint                | 2026-04-05    |
+| `index.md`                             | picard           | Quarterly                   | 2026-04-05    |
+| `current/session-continuity.md`        | guinan           | Every mission               | 2026-04-09    |
+| `repo-discoveries/*.md`                | data             | Every mission (active repo) | 2026-04-16    |
 
 ---
 
@@ -86,8 +88,8 @@ Each significant update should be logged at the bottom of the document:
 ```markdown
 ---
 Version History:
-    - 2026-04-04: picard — Added CI/CD pipeline recommendations section
-    - 2026-03-15: geordi — Updated caching best practices
+  - 2026-04-04: picard — Added CI/CD pipeline recommendations section
+  - 2026-03-15: geordi — Updated caching best practices
 ---
 ```
 

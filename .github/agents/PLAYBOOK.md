@@ -37,7 +37,7 @@
 1. **Open session journal** (`knowledge_base/sessions/`) — picard
 2. **Activate Ready Room** → picard opens `[READY-ROOM-OPEN: <mission-slug>]`
 3. **Historical context + KB reads overlap** → guinan scans history while picard reads KB docs — dispatched in parallel
-4. **Context Briefing** → before dispatching analysts, picard distills a 3–5 bullet summary from `past-lessons-learned.md` and `sprint-state.md` and injects it into every analyst's task brief; analysts do not reload these documents independently
+4. **Context Briefing** → before dispatching analysts, picard distills a 3–5 bullet summary from `past-lessons-learned.md`, `sprint-state.md`, and `repo-discoveries/<current_repo>.md` (if exists) and injects it into every analyst's task brief; analysts do not reload these documents independently
 5. **Ready Room analysis — single parallel batch** → picard dispatches picard-thinking, data, worf, troi, barclay, crusher, obrien, and wes in one message; all return before picard proceeds. **Before dispatching wes, switch the Copilot model picker to wes's designated model** (see `wes.agent.md` routing table) so his proposals come from a different reasoning architecture than the rest of the crew.
 6. **PRIORITY triage** → picard aggregates all `[PRIORITY]` tags
 7. **MDR + Acceptance Criteria — parallel** → picard dispatches picard-thinking (MDR synthesis) and troi (AC drafting) simultaneously — both draw from the same Ready Room findings, no dependency between them; picard reviews both outputs, reconciles any divergence, issues `[AC-APPROVED: <mission-slug>]`, then `[READY-ROOM-CLOSED: <mission-slug>]`
@@ -133,7 +133,8 @@ picard rejects any `[KB-UPDATED]` signal that does not meet this standard and re
 1. List every `[NEW DISCOVERY]` flag raised this mission
 2. For each flag: confirm a matching `[KB-UPDATED]` signal exists from the named agent **and** that the signal description is specific (Quality Standard above)
 3. Any `[NEW DISCOVERY]` with no valid `[KB-UPDATED]` blocks mission close — picard re-invokes the owning agent
-4. After all flags are resolved: picard notifies guinan that KB documents have been updated; guinan runs cross-session synthesis and updates `knowledge_base/current/session-continuity.md`
+4. **Repo discovery verification**: If the mission touched a spoke repo (`current_repo`), confirm data emitted a `[KB-UPDATED]` for `knowledge_base/documents/repo-discoveries/<current_repo>.md` — unless the mission produced no repo-specific architectural findings (data emits `[KB-NO-CHANGE]` in that case)
+5. After all flags are resolved: picard notifies guinan that KB documents have been updated; guinan runs cross-session synthesis and updates `knowledge_base/current/session-continuity.md`
 
 **Progressive KB updates** — agents do not have to wait for the Step 10 mission close batch to update the KB. When an agent raises `[NEW DISCOVERY]` during Ready Room analysis or Bridge execution, they should update the relevant KB document immediately if:
 - The finding is time-sensitive (a security vulnerability, a reliability risk, a breaking change)
@@ -269,7 +270,7 @@ Agents have no inherent speed advantage on single sequential tasks — their str
 | Phase | Parallel batch |
 |-------|---------------|
 | Ready Room Step 3 overlap | picard reads KB docs while guinan scans history simultaneously |
-| Ready Room Step 4 context briefing | picard distills `past-lessons-learned.md` + `sprint-state.md` into a shared brief — one read, injected into all analyst briefs |
+| Ready Room Step 4 context briefing | picard distills `past-lessons-learned.md` + `sprint-state.md` + `repo-discoveries/<current_repo>.md` into a shared brief — one read, injected into all analyst briefs |
 | Ready Room Step 5 (analysis) | picard-thinking, data, worf, troi, barclay, crusher, obrien, wes — all in one batch |
 | Ready Room Step 7 (MDR + AC) | picard-thinking (MDR synthesis) and troi (AC drafting) — dispatched in parallel after analysis batch returns |
 | Track C + KB updates (Step 10) | worf, troi, crusher (review) and all domain specialists (KB updates) — all in one batch |
