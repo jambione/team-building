@@ -32,19 +32,19 @@ Canonical summary of the latest GitHub Agents health review.
 
 ### Critical Findings
 
-| ID | Finding | Owner | Sprint |
-|----|---------|-------|--------|
-| W-1 | `security-scan.yml` does not exist — Trivy + CodeQL not running despite KB claiming complete | worf + geordi | 3 |
-| G-5 | `STATUS.md` missing — `validate-agent-structure.py` fails, `agent-structure-check.yml` broken | geordi | 3 (immediate) |
+| ID  | Finding                                                                                       | Owner         | Sprint        |
+| --- | --------------------------------------------------------------------------------------------- | ------------- | ------------- |
+| W-1 | `security-scan.yml` does not exist — Trivy + CodeQL not running despite KB claiming complete  | worf + geordi | 3             |
+| G-5 | `STATUS.md` missing — `validate-agent-structure.py` fails, `agent-structure-check.yml` broken | geordi        | 3 (immediate) |
 
 ### High Priority Findings
 
-| ID | Finding | Owner | Sprint |
-|----|---------|-------|--------|
-| W-2 / C-1 | `deploy-staging.yml` + `deploy-production.yml` absent — zero deployment automation | geordi + crusher | 3 |
-| D-1 / D-2 | ADR storage dual-mode conflict + 8 KB docs unindexed | data + picard | 3 |
-| T-1 / T-2 | No test artifacts uploaded, no coverage gate in CI | troi | 3 |
-| G-1 | `npm ci` redundantly executes in every CI job | geordi | 3 |
+| ID        | Finding                                                                            | Owner            | Sprint |
+| --------- | ---------------------------------------------------------------------------------- | ---------------- | ------ |
+| W-2 / C-1 | `deploy-staging.yml` + `deploy-production.yml` absent — zero deployment automation | geordi + crusher | 3      |
+| D-1 / D-2 | ADR storage dual-mode conflict + 8 KB docs unindexed                               | data + picard    | 3      |
+| T-1 / T-2 | No test artifacts uploaded, no coverage gate in CI                                 | troi             | 3      |
+| G-1       | `npm ci` redundantly executes in every CI job                                      | geordi           | 3      |
 
 ### Cross-Cutting Themes
 
@@ -72,30 +72,30 @@ Canonical summary of the latest GitHub Agents health review.
 
 ### Resolved Since First Pass
 
-| Prior ID | Finding | Resolution |
-|----------|---------|------------|
-| W-1 | `security-scan.yml` absent | RESOLVED — created with CodeQL + Trivy |
-| G-5 | `STATUS.md` absent | RESOLVED — incoming commit f9fa388 |
-| W-2/C-1 | Deploy workflows absent | RESOLVED — staging + production created |
-| D-1 | ADR dual-mode storage | RESOLVED — 4 separate ADR files, index-only architecture-decision-records.md |
-| W-3 | JSON injection in Teams notifications | RESOLVED — jq-safe payloads across all workflows |
-| NEW-1/2/3/4 | AC gate gaps | RESOLVED — STEP 5B in copilot-instructions.md, directory, indexed, MDR checklist |
+| Prior ID    | Finding                               | Resolution                                                                       |
+| ----------- | ------------------------------------- | -------------------------------------------------------------------------------- |
+| W-1         | `security-scan.yml` absent            | RESOLVED — created with CodeQL + Trivy                                           |
+| G-5         | `STATUS.md` absent                    | RESOLVED — incoming commit f9fa388                                               |
+| W-2/C-1     | Deploy workflows absent               | RESOLVED — staging + production created                                          |
+| D-1         | ADR dual-mode storage                 | RESOLVED — 4 separate ADR files, index-only architecture-decision-records.md     |
+| W-3         | JSON injection in Teams notifications | RESOLVED — jq-safe payloads across all workflows                                 |
+| NEW-1/2/3/4 | AC gate gaps                          | RESOLVED — STEP 5B in copilot-instructions.md, directory, indexed, MDR checklist |
 
 ### New Findings — Second Pass
 
-| ID | Finding | Owner | Sprint | Severity |
-|----|---------|-------|--------|----------|
-| G-NEW-3 | No Dependabot config — action version pins go stale silently | geordi | 3 | HIGH |
-| T-NEW-1 | No coverage gate in CI (TD-004 past-due from Sprint 2) | troi | 2 | HIGH |
-| W-NEW-1 | security-hardening.md KB stale — showing resolved items as open | worf | IMMEDIATE | MEDIUM |
-| C-NEW-1 | monitoring-observability.md stale — showing resolved telemetry gap as open | crusher | IMMEDIATE | MEDIUM |
-| G-NEW-1 | kb-staleness-check.yml missing timeout-minutes | geordi | 3 | MEDIUM |
-| G-NEW-2 | deploy-staging.yml rollback notification missing actor field | geordi | 3 | MEDIUM |
-| W-NEW-3 | Production environment protection gate not configured in GitHub Settings | picard | 3 | MEDIUM |
-| T-NEW-2 | No test result artifact uploads from CI (TD-005) | troi | 3 | MEDIUM |
-| D-NEW-1 | architecture-principles.md stale "As of" header date | data | IMMEDIATE | LOW |
-| D-NEW-2 | validate-workspace.py false-positive: pending backlog backtick entries satisfy index check | data | 3 | LOW |
-| D-NEW-3 | adr-workflow.yml ADR number generation uses file count, not max number | data | 3 | LOW |
+| ID      | Finding                                                                                    | Owner   | Sprint    | Severity |
+| ------- | ------------------------------------------------------------------------------------------ | ------- | --------- | -------- |
+| G-NEW-3 | No Dependabot config — action version pins go stale silently                               | geordi  | 3         | HIGH     |
+| T-NEW-1 | No coverage gate in CI (TD-004 past-due from Sprint 2)                                     | troi    | 2         | HIGH     |
+| W-NEW-1 | security-hardening.md KB stale — showing resolved items as open                            | worf    | IMMEDIATE | MEDIUM   |
+| C-NEW-1 | monitoring-observability.md stale — showing resolved telemetry gap as open                 | crusher | IMMEDIATE | MEDIUM   |
+| G-NEW-1 | kb-staleness-check.yml missing timeout-minutes                                             | geordi  | 3         | MEDIUM   |
+| G-NEW-2 | deploy-staging.yml rollback notification missing actor field                               | geordi  | 3         | MEDIUM   |
+| W-NEW-3 | Production environment protection gate not configured in GitHub Settings                   | picard  | 3         | MEDIUM   |
+| T-NEW-2 | No test result artifact uploads from CI (TD-005)                                           | troi    | 3         | MEDIUM   |
+| D-NEW-1 | architecture-principles.md stale "As of" header date                                       | data    | IMMEDIATE | LOW      |
+| D-NEW-2 | validate-workspace.py false-positive: pending backlog backtick entries satisfy index check | data    | 3         | LOW      |
+| D-NEW-3 | adr-workflow.yml ADR number generation uses file count, not max number                     | data    | 3         | LOW      |
 
 ### Fixes Applied This Pass
 
@@ -114,10 +114,11 @@ Canonical summary of the latest GitHub Agents health review.
 
 1. **Add coverage gate to ci.yml** — `pytest --cov --cov-fail-under=70` (TD-004, High, Sprint 2 deadline 2026-04-19)
 2. **Configure GitHub Settings environment protection** — production environment, required reviewers (manual step, picard)
-3. **TD-008 closure check** — verify deploy-production.yml manual-only dispatch satisfies the promotion workflow intent
+3. **Track promotion workflow first run** — validate `.github/workflows/promote-main-to-production.yml` opens/refreshes PRs as expected on next `main` push or manual dispatch
 
 ## Version History
 
 - 2026-04-08: picard — Converted to canonical summary and archived long-form report.
 - 2026-04-12: picard — Sprint Health Check debrief appended (first pass). Status downgraded GREEN → AMBER. Two critical findings: security-scan.yml absent, STATUS.md absent. 15 total findings logged across 5 domains.
 - 2026-04-12: picard — Sprint Health Check debrief appended (second pass). AMBER holding. 11 new findings, predominantly KB drift. Dependabot created, 9 KB/workflow fixes applied. 2 High items remain.
+- 2026-04-17: picard — TD-008 closed via new promotion workflow; Path to GREEN updated to production-gate + promotion-run verification.

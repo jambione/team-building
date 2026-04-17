@@ -34,12 +34,12 @@ Key discovery: CDK overlay panels append to `document.body` — they cannot rece
 
 ## Current Sprint Context
 
-| Field      | Value                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------- |
-| **Sprint** | Sprint 2                                                                                  |
-| **Dates**  | 2026-04-06 – 2026-04-19                                                                   |
-| **Goal**   | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review   |
-| **Health** | AMBER — all diagnostic fixes applied 2026-04-12; pending PROD-GATE manual step and TD-008 |
+| Field      | Value                                                                                    |
+| ---------- | ---------------------------------------------------------------------------------------- |
+| **Sprint** | Sprint 2                                                                                 |
+| **Dates**  | 2026-04-06 – 2026-04-19                                                                  |
+| **Goal**   | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review  |
+| **Health** | AMBER — all diagnostic fixes applied 2026-04-12; pending PROD-GATE repository-admin step |
 
 ---
 
@@ -64,9 +64,10 @@ _guinan's observations across all closed sessions:_
 All sprint-health-diagnostic items resolved (2026-04-12). Remaining open items in priority order:
 
 1. **Resolve unrelated Phoenix spec type errors** — `kc-lib` test verification remains noisy until the existing procedure-renderer spec typing issues are fixed.
-2. **Complete PROD-GATE** — Manual GitHub Settings step: Settings → Environments → production → Required reviewers. One-time action; cannot be automated. See github-actions-security-hardening.md for step-by-step.
-3. **TD-008 deploy promotion workflow** — Define `main` → `production` branch promotion; currently the highest open tech-debt item (High severity, geordi, Sprint 2).
-4. **CF-001 rate-limit handling** — Only Sprint 2 P3 carry-forward still open (obrien + geordi).
+2. **Complete PROD-GATE** — Manual GitHub Settings step: Settings → Environments → production → Required reviewers. One-time action requiring repo admin rights. See github-actions-security-hardening.md for step-by-step.
+3. **CF-001 rate-limit handling** — Only Sprint 2 P3 carry-forward still open (obrien + geordi).
+
+**Update 2026-04-17**: TD-008 is now resolved by `.github/workflows/promote-main-to-production.yml` (automated PR workflow from `main` to `production`).
 
 ---
 

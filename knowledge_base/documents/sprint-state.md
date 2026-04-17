@@ -4,19 +4,19 @@
 > Every agent reads this before beginning Ready Room analysis or Bridge execution.
 
 **Owner**: picard  
-**Last Updated**: 2026-04-12
+**Last Updated**: 2026-04-17
 
 ---
 
 ## Current Sprint
 
-| Field                        | Value                                                                                   |
-| ---------------------------- | --------------------------------------------------------------------------------------- |
-| **Sprint**                   | Sprint 2                                                                                |
-| **Sprint Dates**             | 2026-04-06 – 2026-04-19                                                                 |
-| **Sprint Goal**              | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review |
-| **Health**                   | AMBER — security-scan.yml created; all deploy workflows created (2026-04-12); pending first CI run |
-| **Active Repos This Sprint** | `team-building` _(add spoke repos as they are onboarded)_                               |
+| Field                        | Value                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Sprint**                   | Sprint 2                                                                                                      |
+| **Sprint Dates**             | 2026-04-06 – 2026-04-19                                                                                       |
+| **Sprint Goal**              | Consolidate CI/CD hardening gains; deliver rate-limit handling for Claude API PR review                       |
+| **Health**                   | AMBER — deployment and promotion workflows are in place; pending PROD-GATE environment reviewer configuration |
+| **Active Repos This Sprint** | `team-building` _(add spoke repos as they are onboarded)_                                                     |
 
 ---
 
@@ -68,14 +68,14 @@ Items not resolved last sprint. Every agent should know these exist before start
 
 Current debt health from `tech-debt-register.md` — top active items only.
 
-| ID     | Item                                                                           | Severity | Owner  | Target Sprint |
-| ------ | ------------------------------------------------------------------------------ | -------- | ------ | ------------- |
-| TD-003 | No Dependabot configuration — action versions updated manually                 | High     | geordi | Sprint 3      |
-| TD-004 | No test coverage gate — coverage can regress silently                          | High     | troi   | Sprint 2      |
-| TD-005 | No test result artifact uploads from CI                                        | Medium   | troi   | Sprint 3      |
-| TD-008 | No main → production branch promotion workflow (partially addressed by deploy workflows) | Medium | geordi | Sprint 3 |
+| ID     | Item                                                                                      | Severity | Owner   | Target Sprint |
+| ------ | ----------------------------------------------------------------------------------------- | -------- | ------- | ------------- |
+| TD-002 | Matrix testing (Node 18/20/22 × OS) drafted in `.tmp` but not migrated to active `ci.yml` | Medium   | geordi  | Sprint 2      |
+| TD-007 | `onboarding-guide.md` listed as pending in KB index — new member onboarding undocumented  | Medium   | picard  | Sprint 3      |
+| TD-009 | Validation script fragmentation — 3 separate tools, no unified runner                     | Medium   | barclay | Sprint 3      |
+| TD-010 | No unit tests for validation scripts (`kb-lint.py`, etc.)                                 | Medium   | barclay | Sprint 3      |
 
-> TD-001 (ci.yml.tmp stray file) — RESOLVED 2026-04-11. See tech-debt-register.md for full history.
+> TD-001 (ci.yml.tmp stray file) — RESOLVED 2026-04-11. TD-008 (main → production promotion workflow) — RESOLVED 2026-04-17. See tech-debt-register.md for full history.
 
 > For full register, read `knowledge_base/documents/tech-debt-register.md`.
 

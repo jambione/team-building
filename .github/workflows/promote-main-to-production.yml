@@ -1,0 +1,97 @@
+# Main -> Production Promotion Workflow
+#
+# Creates or updates a pull request from `main` to `production` so production
+# promotion is tracked, reviewable, and auditable.
+
+name: Promote Main -> Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for promotion request"
+        required: true
+        default: ""
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: promote-main-to-production
+  cancel-in-progress: true
+
+jobs:
+  promote:
+    name: Open or update promotion PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify production branch exists
+        run: |
+          if ! git show-ref --verify --quiet refs/remotes/origin/production; then
+            echo "Error: production branch does not exist on origin."
+            exit 1
+          fi
+
+      - name: Open or refresh promotion PR
+        uses: actions/github-script@v7
+        env:
+          REASON: ${{ github.event.inputs.reason }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const head = 'main';
+            const base = 'production';
+
+            const prs = await github.rest.pulls.list({
+              owner,
+              repo,
+              state: 'open',
+              head: `${owner}:${head}`,
+              base
+            });
+
+            const trigger = context.eventName === 'workflow_dispatch'
+              ? `manual dispatch by @${context.actor} (reason: ${process.env.REASON || 'not provided'})`
+              : `push to ${head} by @${context.actor}`;
+
+            if (prs.data.length > 0) {
+              const pr = prs.data[0];
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pr.number,
+                body: `Promotion refresh requested via ${trigger}.`
+              });
+              core.notice(`Promotion PR already open: #${pr.number}`);
+              return;
+            }
+
+            const created = await github.rest.pulls.create({
+              owner,
+              repo,
+              title: 'Promote main to production',
+              head,
+              base,
+              body: [
+                'Automated promotion pull request created by the promotion workflow.',
+                '',
+                `Trigger: ${trigger}`,
+                '',
+                '- Review and approve before merge.',
+                '- Merge method should follow release policy.'
+              ].join('\n')
+            });
+
+            core.notice(`Created promotion PR #${created.data.number}`);
