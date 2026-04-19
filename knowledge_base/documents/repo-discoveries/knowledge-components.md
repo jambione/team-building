@@ -1,6 +1,6 @@
 # Repo Discovery — knowledge-components
 
-**Owner**: data | **Last Updated**: 2026-04-16 (phoenix-code-summary-context-menu-style)
+**Owner**: data | **Last Updated**: 2026-04-19 (phoenix-scss-mixin-consolidation)
 
 ---
 
@@ -22,22 +22,24 @@ Healthcare coding application with ASP.NET Core microservices backend and Angula
 
 _What the crew has explored. Updated after every mission that touches this repo._
 
-| Feature Area                       | Location                                                                                   | Purpose                                                                                     | Key Services / Components                                                                                     | Last Explored |
-| ---------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------- |
-| Encoder — Coding Logic             | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/encoder/coding-logic/`             | Search normalization, code lookup, and initial terminology resolution for the encoder UI    | `InitialTerminologyService`, `initial-terminology.service.spec.ts`                                            | 2026-04-16    |
-| Encoder — Cell Renderers           | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/encoder/`                          | ag-Grid cell renderers for encoder result display                                           | `px-simple-renderer`, `hcpcs-simple-renderer`                                                                 | 2026-04-15    |
-| Code Summary Sidebar               | `KnowledgeComponents/AngularApp/projects/kc-app/`                                          | Sidebar component displaying selected code summaries                                        | `code-summary-sidebar.component`                                                                              | 2026-04-15    |
-| Context Menus (Phoenix)            | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/shared/context-menus/`             | Custom CDK-overlay context menu system used by Phoenix code-summary grids                   | `ContextMenuService`, `MenuComponent`, `DiagnosisMenuOptionsComponent`, `ProcedureMenuOptionsComponent` et al | 2026-04-16    |
-| Phoenix code-summary — simple-grid | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/phoenix/code-summary/simple-grid/` | ag-Grid component that hosts Phoenix code rows and triggers context menus                   | `SimpleGridComponent`, `buildPhoenixContextEvent()`                                                           | 2026-04-16    |
-| Shared Library (kc-lib)            | `KnowledgeComponents/AngularApp/projects/kc-lib/`                                          | Reusable Angular components, services, and utilities shared across kc-app and kc-auth-admin | Exports via `public-api.ts`                                                                                   | 2026-04-15    |
-| Auth Admin UI                      | `KnowledgeComponents/AngularApp/projects/kc-auth-admin/`                                   | Authentication and administration interface                                                 | —                                                                                                             | —             |
-| SMART Launch                       | `KnowledgeComponents/AngularApp/projects/smartapp-launch/`                                 | SMART on FHIR launch application                                                            | —                                                                                                             | —             |
-| Backend — CodingLogic              | `KnowledgeComponents.CodingLogic/`                                                         | ICD-9/ICD-10 coding logic, validation, and code search (ASP.NET Core Web API)               | —                                                                                                             | —             |
-| Backend — CodingBook               | `KnowledgeComponents.CodingBook/`                                                          | Coding reference data, tabular services, and code books                                     | —                                                                                                             | —             |
-| Backend — EGP                      | `KnowledgeComponents.EditGroupPrice/`                                                      | Claims grouping and pricing engine                                                          | —                                                                                                             | —             |
-| Backend — AutoEGP                  | `KnowledgeComponents.AutoEditGroupPrice/`                                                  | Automated grouping workflows and batch processing                                           | —                                                                                                             | —             |
-| Backend — Label                    | `KnowledgeComponents.Label/`                                                               | Coding label services and management                                                        | —                                                                                                             | —             |
-| Backend — Shared                   | `KnowledgeComponents.Shared/`                                                              | Common utilities, models, logging, DB helpers, WebAPI clients, auth, caching                | `IRequestLog`, `ISqlHelper`, WebAPI typed clients                                                             | —             |
+| Feature Area                                  | Location                                                                                                                                    | Purpose                                                                                                                   | Key Services / Components                                                                                                          | Last Explored |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Encoder — Coding Logic                        | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/encoder/coding-logic/`                                                              | Search normalization, code lookup, and initial terminology resolution for the encoder UI                                  | `InitialTerminologyService`, `initial-terminology.service.spec.ts`                                                                 | 2026-04-16    |
+| Encoder — Cell Renderers                      | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/encoder/`                                                                           | ag-Grid cell renderers for encoder result display                                                                         | `px-simple-renderer`, `hcpcs-simple-renderer`                                                                                      | 2026-04-15    |
+| Code Summary Sidebar                          | `KnowledgeComponents/AngularApp/projects/kc-app/`                                                                                           | Sidebar component displaying selected code summaries                                                                      | `code-summary-sidebar.component`                                                                                                   | 2026-04-15    |
+| Context Menus (Phoenix)                       | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/shared/context-menus/`                                                              | Custom CDK-overlay context menu system used by Phoenix code-summary grids                                                 | `ContextMenuService`, `MenuComponent`, `DiagnosisMenuOptionsComponent`, `ProcedureMenuOptionsComponent` et al                      | 2026-04-16    |
+| Phoenix code-summary — renderer/editor family | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/phoenix/code-summary/diagnosis-renderer/`, `hcpcs-renderer/`, `procedure-renderer/` | Six ag-Grid cell renderer/editor components (DX, HCPCS, PX); all styles managed via `_mixins.scss` canonical mixin system | `dx-simple-renderer`, `dx-simple-editor`, `hcpcs-simple-renderer`, `hcpcs-simple-editor`, `px-simple-renderer`, `px-simple-editor` | 2026-04-19    |
+| Phoenix SCSS mixin system                     | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/phoenix/_mixins.scss`                                                               | Two-tier canonical + alias mixin system for code-cell design language                                                     | `phoenix-code-input-grid`, `phoenix-code-renderer-grid`, `phoenix-simple-date-chip`, etc.                                          | 2026-04-19    |
+| Legacy code-summary (boundary)                | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/code-summary/`                                                                      | Legacy Optum-styled code summary — separate from Phoenix; uses `shared.scss`, Bootstrap, HTML tables                      | `code-summary.component`, `associated-code-dialog`, `critical-edits-modal`, `rem-codes-dialog`                                     | 2026-04-19    |
+| Shared Library (kc-lib)                       | `KnowledgeComponents/AngularApp/projects/kc-lib/`                                                                                           | Reusable Angular components, services, and utilities shared across kc-app and kc-auth-admin                               | Exports via `public-api.ts`                                                                                                        | 2026-04-15    |
+| Auth Admin UI                                 | `KnowledgeComponents/AngularApp/projects/kc-auth-admin/`                                                                                    | Authentication and administration interface                                                                               | —                                                                                                                                  | —             |
+| SMART Launch                                  | `KnowledgeComponents/AngularApp/projects/smartapp-launch/`                                                                                  | SMART on FHIR launch application                                                                                          | —                                                                                                                                  | —             |
+| Backend — CodingLogic                         | `KnowledgeComponents.CodingLogic/`                                                                                                          | ICD-9/ICD-10 coding logic, validation, and code search (ASP.NET Core Web API)                                             | —                                                                                                                                  | —             |
+| Backend — CodingBook                          | `KnowledgeComponents.CodingBook/`                                                                                                           | Coding reference data, tabular services, and code books                                                                   | —                                                                                                                                  | —             |
+| Backend — EGP                                 | `KnowledgeComponents.EditGroupPrice/`                                                                                                       | Claims grouping and pricing engine                                                                                        | —                                                                                                                                  | —             |
+| Backend — AutoEGP                             | `KnowledgeComponents.AutoEditGroupPrice/`                                                                                                   | Automated grouping workflows and batch processing                                                                         | —                                                                                                                                  | —             |
+| Backend — Label                               | `KnowledgeComponents.Label/`                                                                                                                | Coding label services and management                                                                                      | —                                                                                                                                  | —             |
+| Backend — Shared                              | `KnowledgeComponents.Shared/`                                                                                                               | Common utilities, models, logging, DB helpers, WebAPI clients, auth, caching                                              | `IRequestLog`, `ISqlHelper`, WebAPI typed clients                                                                                  | —             |
 
 ---
 
@@ -50,6 +52,54 @@ _What the crew has explored. Updated after every mission that touches this repo.
 - The service lives in `kc-lib` (shared library), meaning both `kc-app` and potentially `kc-auth-admin` can access it.
 - **Pattern**: Angular standalone components (Angular 19+ — no NgModules). Services are injectable singletons.
 - **Risk flagged (deferred)**: Hyphens can carry medical meaning (e.g., HER-2). A blanket strip could affect clinical accuracy. Deferred as CF-009 to Sprint 3 for data + troi to evaluate token-based normalization.
+
+### Phoenix SCSS Mixin Architecture (2026-04-19, phoenix-scss-mixin-consolidation)
+
+The Phoenix code-summary renderer family (`phoenix/code-summary/`) is built on a two-tier mixin system in `_mixins.scss`:
+
+**Tier 1 — Canonical base mixins** (use these for any new component):
+
+| Mixin                                         | Purpose                                                                                                       |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `phoenix-code-input-grid`                     | Editable code `<input>` cell: grid row/col, navy colors, uppercase, `::placeholder`                           |
+| `phoenix-code-renderer-grid`                  | Read-only code tag: navy hover glow (`box-shadow: 0 0 0 1px var(--navy)`), transparent border baseline        |
+| `phoenix-grid-label`                          | Row-1 col-2 description label: font, color, ellipsis                                                          |
+| `phoenix-row2-content`                        | Row-2 flex container: gap 8px, min-height 16px                                                                |
+| `phoenix-simple-date-chip($padding: 1px 4px)` | Inline date pill with parameterized padding — pass `1px 4px 1px 10px` for editor (date-picker indent) variant |
+| `phoenix-pill-empty`                          | Empty/unfilled state for chips and pills: tertiary bg, muted border + text                                    |
+| `phoenix-mod-chip`                            | Orange modifier badge (status-warning palette)                                                                |
+
+**Tier 2 — Per-type alias mixins** (backward-compat wrappers, keep existing component files unchanged):
+
+- `phoenix-hcpcs-code-input` / `phoenix-hcpcs-code-renderer` / `phoenix-hcpcs-label` / `phoenix-hcpcs-row2-content` → each delegates to its canonical counterpart (hcpcs-label adds `width: 100%`)
+- `phoenix-px-code-input` / `phoenix-px-code-renderer` / `phoenix-px-label` / `phoenix-px-row2-content` → each delegates to its canonical counterpart
+- `phoenix-dx-code-renderer` → `phoenix-code-renderer-grid` + `color: var(--text-dark)` + `padding: 2px 5px`
+- `phoenix-dx-code-input` → `phoenix-code-input-grid` + narrower padding + `phoenix-input-hover/focus` states
+
+**Component coverage** — all 6 renderer/editor files are fully on the mixin system as of 2026-04-19:
+`dx-simple-renderer`, `dx-simple-editor`, `hcpcs-simple-renderer`, `hcpcs-simple-editor`, `px-simple-renderer`, `px-simple-editor`
+
+**Silent bug fixed**: `hcpcs-simple-editor.component.scss` had `icon-bank` written inline (identical to the existing `phoenix-dx-icon-bank` mixin) — replaced with `@include`.
+
+### `lib/code-summary` vs `phoenix/code-summary` — Style Universe Boundary (2026-04-19)
+
+These two directories are entirely separate style systems, not versions of the same thing:
+
+|                      | `phoenix/code-summary/`                                         | `lib/code-summary/`                                                      |
+| -------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Style import         | `@use '../../_mixins' as mixins`                                | `@use '../shared/shared.scss' as *`                                      |
+| Color system         | Phoenix CSS custom properties (`var(--navy)`, `var(--surface)`) | Optum SCSS variables (`$optumGray2`, `$optumOrange5`, `$kcWhite0`)       |
+| Layout               | CSS Grid (ag-Grid cell renderers)                               | HTML `<table>` + Bootstrap button groups + Angular Material progress bar |
+| Interactive patterns | `phoenix-btn-*`, `phoenix-toggle-*` mixins                      | `.btn-primary` Bootstrap, `::ng-deep` Angular Material overrides         |
+
+**Applying Phoenix styles to `lib/code-summary` requires** (future mission):
+
+1. Optum `$optum*` / `$kc*` SCSS variable → Phoenix CSS custom property token mapping
+2. Admit panel restructure from `<table>` rows to CSS Grid (or keep isolated as legacy)
+3. Bootstrap button group → Phoenix button system (requires TS/HTML template changes, not just SCSS)
+4. `::ng-deep` CDK/Material overrides review
+
+This is a meaningful multi-step migration, not an afternoon task.
 
 ### Encoder — Cell Renderers (2026-04-15, Phoenix Labels)
 

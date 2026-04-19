@@ -10,13 +10,17 @@
 
 ## Last Mission Outcome
 
-**Mission**: `phoenix-code-summary-context-menu-style` — Sprint 2 — 2026-04-16 — **success**
+**Mission**: `phoenix-scss-mixin-consolidation` — Sprint 2 — 2026-04-19 — **success**
+
+DRY pass on the Phoenix code-summary renderer/editor SCSS family. Identified 10 duplicate-body patterns across DX/HCPCS/PX renderers and editors. Added 7 canonical mixins to `_mixins.scss` (`phoenix-code-input-grid`, `phoenix-code-renderer-grid`, `phoenix-grid-label`, `phoenix-row2-content`, `phoenix-simple-date-chip($padding)`, `phoenix-pill-empty`, `phoenix-mod-chip`). Collapsed all HCPCS and PX mixin bodies to thin wrappers. Added `phoenix-dx-code-renderer` + `phoenix-dx-code-input` and brought the diagnosis renderer (the last inline code block) fully onto the Phoenix mixin system. Fixed a silent `icon-bank` duplicate bug in `hcpcs-simple-editor`. All 6 renderer/editor component files now resolve to canonical mixins. Gates: lint ✅ · build-kc-library ✅.
+
+Key discovery: `lib/code-summary` (legacy) and `phoenix/code-summary` are completely separate style universes — different `@use` chains, layout models, and component paradigms. Applying Phoenix there is a multi-step migration (Optum → Phoenix token mapping + restructure), not a simple style swap. Captured in repo-discoveries/knowledge-components.md.
+
+**Prior mission**: `phoenix-code-summary-context-menu-style` — Sprint 2 — 2026-04-16 — **success**
 
 Styled the Phoenix code-summary context menus to match the Phoenix design system. Single SCSS change: appended `.phoenix-context-menu` and `.ag-context-sub-menu` CSS blocks to `_phoenix.scss` at file root (outside `:host`) so CDK overlay panels receive the styles. Phoenix palette applied (navy shadow, clean borders, hover `#f1f5ff`, Enterprise Sans VF font). `kc-lib` builds clean. Committed `d2f731deed` to `mission/phoenix-code-summary-context-menu-style`.
 
 Key discovery: CDK overlay panels append to `document.body` — they cannot receive `:host`-scoped SCSS. Phoenix CSS variables are not accessible outside `:host`; hex literals must be used. This is now captured in repo-discoveries/knowledge-components.md.
-
-**Prior mission**: `us288669-logic-encoder-ignore-characters` — Sprint 2 — 2026-04-16 — **cancelled**
 
 ---
 
