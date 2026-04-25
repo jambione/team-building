@@ -21,11 +21,11 @@
 
 > picard sets these fields at the start of each mission. Agents read them to scope their work, KB updates, and issue creation.
 
-| Field            | Value                                      |
-| ---------------- | ------------------------------------------ |
-| **current_repo** | `knowledge-components`                     |
-| **mission_slug** | `phoenix-code-summary-context-menu-style`  |
-| **mission_type** | `frontend styling / Phoenix design system` |
+| Field            | Value                                        |
+| ---------------- | -------------------------------------------- |
+| **current_repo** | `knowledge-components`                       |
+| **mission_slug** | `phoenix-code-summary-features-observations` |
+| **mission_type** | `frontend feature + observation remediation` |
 
 **How to set `current_repo`**: At the start of a Ready Room, picard reads the requester's context. If invoked inside a spoke repo with a `.tng-context.md`, that repo is `current_repo`. Otherwise picard asks. Then picard updates this field before dispatching crew.
 

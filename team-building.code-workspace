@@ -21,6 +21,9 @@
     },
     {
       "path": "../../../../inetpub/wwwroot/knowledge-components"
+    },
+    {
+      "path": "../../../../inetpub/wwwroot/optum-ecac-web-ui"
     }
   ],
 

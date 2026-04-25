@@ -1,6 +1,6 @@
 # Repo Discovery — knowledge-components
 
-**Owner**: data | **Last Updated**: 2026-04-19 (phoenix-scss-mixin-consolidation)
+**Owner**: data | **Last Updated**: 2026-04-24 (kc-lib-ecac-integration-familiarization)
 
 ---
 
@@ -32,6 +32,7 @@ _What the crew has explored. Updated after every mission that touches this repo.
 | Phoenix SCSS mixin system                     | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/phoenix/_mixins.scss`                                                               | Two-tier canonical + alias mixin system for code-cell design language                                                     | `phoenix-code-input-grid`, `phoenix-code-renderer-grid`, `phoenix-simple-date-chip`, etc.                                          | 2026-04-19    |
 | Legacy code-summary (boundary)                | `KnowledgeComponents/AngularApp/projects/kc-lib/src/lib/code-summary/`                                                                      | Legacy Optum-styled code summary — separate from Phoenix; uses `shared.scss`, Bootstrap, HTML tables                      | `code-summary.component`, `associated-code-dialog`, `critical-edits-modal`, `rem-codes-dialog`                                     | 2026-04-19    |
 | Shared Library (kc-lib)                       | `KnowledgeComponents/AngularApp/projects/kc-lib/`                                                                                           | Reusable Angular components, services, and utilities shared across kc-app and kc-auth-admin                               | Exports via `public-api.ts`                                                                                                        | 2026-04-15    |
+| Shared Library Packaging (kc-lib npm)         | `KnowledgeComponents/AngularApp/projects/kc-lib/`, `KnowledgeComponents/AngularApp/angular.json`, `.github/workflows/kc-build.yml`          | ng-packagr packaging of kc-lib as npm artifact consumed by external repos                                                 | `ng-package.json`, `package.json` (`@optum-knowledge-components/knowledge-components`), `build-kc-library` workflow step           | 2026-04-24    |
 | Auth Admin UI                                 | `KnowledgeComponents/AngularApp/projects/kc-auth-admin/`                                                                                    | Authentication and administration interface                                                                               | —                                                                                                                                  | —             |
 | SMART Launch                                  | `KnowledgeComponents/AngularApp/projects/smartapp-launch/`                                                                                  | SMART on FHIR launch application                                                                                          | —                                                                                                                                  | —             |
 | Backend — CodingLogic                         | `KnowledgeComponents.CodingLogic/`                                                                                                          | ICD-9/ICD-10 coding logic, validation, and code search (ASP.NET Core Web API)                                             | —                                                                                                                                  | —             |
@@ -52,6 +53,21 @@ _What the crew has explored. Updated after every mission that touches this repo.
 - The service lives in `kc-lib` (shared library), meaning both `kc-app` and potentially `kc-auth-admin` can access it.
 - **Pattern**: Angular standalone components (Angular 19+ — no NgModules). Services are injectable singletons.
 - **Risk flagged (deferred)**: Hyphens can carry medical meaning (e.g., HER-2). A blanket strip could affect clinical accuracy. Deferred as CF-009 to Sprint 3 for data + troi to evaluate token-based normalization.
+
+### kc-lib Packaging and Distribution (2026-04-24, kc-lib-ecac-integration-familiarization)
+
+- `kc-lib` is built through Angular's `@angular-devkit/build-angular:ng-packagr` target (`AngularApp/angular.json`) with project config in `projects/kc-lib/ng-package.json`.
+- Output destination is `KnowledgeComponents/Web/angularLib` via `dest` in `ng-package.json` (this repo's build artifact location), while npm package identity is declared in `projects/kc-lib/package.json` as `@optum-knowledge-components/knowledge-components`.
+- Public export surface is rooted at `projects/kc-lib/src/public_api.ts`, which re-exports `./lib/index.ts`; this is the canonical contract external consumers compile against (`.../angularLib` import path).
+- `projects/kc-lib/package.json` pins publish registry to `knowledgecomponents-npm-vir` and references `knowledge-components-dist` as package repository metadata.
+- KC CI (`.github/workflows/kc-build.yml`) authenticates to JFrog and runs `npm run build-kc-library`; this workflow builds and stages artifacts but does not execute `npm publish` for the kc-lib package.
+
+### kc-lib Segmented Import Export Map (2026-04-24, kc-lib-segmented-imports)
+
+- Secondary entrypoint folders (`projects/kc-lib/core`, `projects/kc-lib/patient`) were tested but did not emit distinct bundles in current `ng build kc-lib` output for this workspace layout.
+- A pragmatic export-map strategy works with current packaging: add package subpath exports in `projects/kc-lib/package.json` for `./core` and `./patient`, both pointing at the same generated FESM and DTS outputs.
+- This preserves current bundle behavior while allowing consumers to adopt segmented import paths now (`@optum-knowledge-components/knowledge-components/core`, `.../patient`) and supports incremental migration.
+- Validation: `npm run lib:build` completed successfully after export-map updates.
 
 ### Phoenix SCSS Mixin Architecture (2026-04-19, phoenix-scss-mixin-consolidation)
 
@@ -140,15 +156,16 @@ This is a meaningful multi-step migration, not an afternoon task.
 
 ## Integration Points
 
-| Integration                 | Direction | Description                                                                     |
-| --------------------------- | --------- | ------------------------------------------------------------------------------- |
-| kc-lib → kc-app             | internal  | Shared library consumed by main encoder application                             |
-| kc-lib → kc-auth-admin      | internal  | Shared library consumed by auth/admin UI                                        |
-| CodingLogic ↔ Shared        | internal  | Backend service uses Shared for logging, DB, auth                               |
-| Label ↔ Shared.WebApiClient | internal  | Inter-service REST calls via typed clients                                      |
-| kc-builds → KC              | external  | Builds artifacts (rates files, coding data, PPS tables, dacpacs) consumed by KC |
-| kc-deployments → KC         | external  | Deployment automation for KC to Azure and on-premises                           |
-| kc-pipeline → KC            | external  | Version config files that trigger automated deployments                         |
+| Integration                    | Direction | Description                                                                                                       |
+| ------------------------------ | --------- | ----------------------------------------------------------------------------------------------------------------- |
+| kc-lib → kc-app                | internal  | Shared library consumed by main encoder application                                                               |
+| kc-lib → kc-auth-admin         | internal  | Shared library consumed by auth/admin UI                                                                          |
+| kc-lib npm → optum-ecac-web-ui | external  | eCAC Angular app consumes `@optum-knowledge-components/knowledge-components` and imports `.../angularLib` exports |
+| CodingLogic ↔ Shared           | internal  | Backend service uses Shared for logging, DB, auth                                                                 |
+| Label ↔ Shared.WebApiClient    | internal  | Inter-service REST calls via typed clients                                                                        |
+| kc-builds → KC                 | external  | Builds artifacts (rates files, coding data, PPS tables, dacpacs) consumed by KC                                   |
+| kc-deployments → KC            | external  | Deployment automation for KC to Azure and on-premises                                                             |
+| kc-pipeline → KC               | external  | Version config files that trigger automated deployments                                                           |
 
 ---
 
@@ -176,6 +193,7 @@ This is a meaningful multi-step migration, not an afternoon task.
 
 - **`appsettings.specific.json` is gitignored** — must be created manually for local dev with environment-specific DB connections and service URLs.
 - **Library build order matters**: `kc-lib` must be built before `kc-app`/`kc-auth-admin`. Forgetting this causes import resolution failures.
+- **Packaging docs lag behavior**: `projects/kc-lib/README.md` still references `dist/kc-lib` publishing flow, while active packaging destination is `Web/angularLib` through ng-packagr config.
 - **Unrelated spec failures can block verification**: Phoenix TypeScript spec errors in one area blocked Track C verification of unrelated encoder changes (discovered 2026-04-16).
 - **CDK overlay styles must be global**: Do NOT write context menu / overlay panel styles inside `:host {}` blocks. They will be invisible to panels appended to `document.body`. Write at file root in `_phoenix.scss` or a global stylesheet.
 - **Phoenix CSS vars don't cascade to CDK overlays**: `var(--navy)` and friends are defined on `:host` — they cascade to children of that host element, not to document.body children. Use hex literals.
@@ -190,6 +208,8 @@ This is a meaningful multi-step migration, not an afternoon task.
 | ---------- | ---------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-04-15 | phoenix-labels-loading-dots              | Encoder — Cell Renderers | ag-Grid `refresh()` + CD propagation pattern; falsy guard for label values; CSS animation co-location; inline template refresh behavior                    |
 | 2026-04-16 | us288669-logic-encoder-ignore-characters | Encoder — Coding Logic   | `InitialTerminologyService` normalization flow; punctuation stripping at request-build time; hyphen-as-medical-meaning risk; standalone component patterns |
+| 2026-04-24 | kc-lib-ecac-integration-familiarization  | Shared Library Packaging | Confirmed ng-packagr packaging chain (`public_api.ts` -> `lib/index.ts`), JFrog registry metadata, and external eCAC npm consumption path                  |
+| 2026-04-24 | kc-lib-segmented-imports                 | Shared Library Packaging | Implemented `./core` and `./patient` subpath exports in kc-lib package metadata and verified library build passes with the segmented export map            |
 
 ---
 

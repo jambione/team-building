@@ -19,9 +19,20 @@
 - Perform QA checks before merging or deploying code.
 - Report bugs and issues promptly with clear reproduction steps.
 
+### Visual Regression Gate for Styling Refactors (added 2026-04-19)
+
+When refactoring design tokens, SCSS variables, mixins, or shared style layers with an explicit goal of visual parity:
+
+1. Do not rely on a single manual spot-check. Use a checklist that includes component states: default, hover, focus-visible, active/pressed, disabled, and error.
+2. Capture before/after screenshots for at least the highest-risk UI surfaces and interactions (for example, encoder tabs/buttons and code-summary sidebars/pills).
+3. Require a second reviewer for visual parity sign-off (front-end engineer or product design partner).
+4. Validate both build health and runtime health: no build warnings/errors, and no browser console CSS warnings or variable-resolution errors.
+5. Track style debt explicitly: verify no fallback to hardcoded token values in refactored files unless documented as intentional exceptions.
+
 ### CI Test Requirements (added 2026-04-12)
 
 All CI test runs must:
+
 1. Produce a JUnit-compatible test result file (or framework equivalent)
 2. Upload test results as a workflow artifact (`actions/upload-artifact`)
 3. Enforce a minimum coverage threshold via `--coverageThreshold` (Jest), `--cov-fail-under` (pytest), or equivalent

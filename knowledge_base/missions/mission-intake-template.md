@@ -6,23 +6,24 @@
 
 ---
 
-## Mission Intake — [Rally ID or short title]
+## Mission Intake — DE61356 rally-context-retrieval-and-mission-kickoff
 
-**Mission:** _What you need delivered — be specific. Include the Rally ID (DE/US/TA) if applicable._
+**Mission:** Fix DE61356 in AGP so blank line-level HCPCS and PX dates do not default to current date and instead trigger the required field validation behavior.
 
-**Target repo:** _Which repo the work lands in (e.g. `knowledge-components`, `team-building`)_
+**Target repo:** knowledge-components
 
-**Done when:** _Observable outcomes — what does "complete" look like? List testable, verifiable outcomes._
+**Done when:**
 
-- _Outcome 1_
-- _Outcome 2_
-- _Outcome 3_
+- Rally context for DE61356 is retrieved from WSAPI live mode with authenticated evidence captured.
+- Mission branch mission/de61356-rally-context-retrieval-and-mission-kickoff is created in knowledge-components before implementation work starts.
+- AGP no longer defaults blank line-level HCPCS and PX dates to current date in request processing.
+- Validation returns required field errors for missing HCPCS and PX dates while preserving existing defaults for Thru Date, Facility, and Grouper ID.
 
-**Constraints:** _Time, risk, or tech constraints that bound the solution._
+**Constraints:**
 
-- _e.g. No schema changes_
-- _e.g. Must not break existing SSO flows_
-- _e.g. Fix must be production-ready by Sprint N_
+- Defect context (live Rally): State Submitted, Schedule State Refining, Owner Larisa Dubb, Severity 3-Minor Problem, Project KC CXT.
+- Work must use knowledge-components Rally PowerShell scripts (.github/agents/scripts/kc-rally-agent.ps1 and get-rally-context.ps1).
+- Do not regress current defaulting behavior for Thru Date, Facility, and Grouper ID.
 
 ---
 
