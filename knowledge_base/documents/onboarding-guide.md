@@ -12,7 +12,7 @@ Standardized onboarding procedures for new team members. Maintained by picard, r
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/jambione/team-building.git
+git clone https://github.com/<your-org>/team-building.git
 cd team-building
 
 # 2. Verify knowledge base access
@@ -79,7 +79,7 @@ echo "2. CI/CD docs reviewed: $(test -f knowledge_base/documents/ci-cd-pipeline-
 echo "3. Rally patterns studied: $(test -f knowledge_base/documents/rally-patterns.md && echo '✓' || echo '✗')"
 
 # Generate onboarding report
-gh api /repos/jambione/team-building/contents/knowledge_base/documents | jq '.[].name' > onboard-checklist.txt
+gh api /repos/<your-org>/team-building/contents/knowledge_base/documents | jq '.[].name' > onboard-checklist.txt
 ```
 
 ---

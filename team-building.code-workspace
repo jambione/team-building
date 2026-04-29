@@ -18,13 +18,8 @@
     {
       "name": "team-building (hub)",
       "path": "."
-    },
-    {
-      "path": "../../../../inetpub/wwwroot/knowledge-components"
-    },
-    {
-      "path": "../../../../inetpub/wwwroot/optum-ecac-web-ui"
     }
+    // Add spoke repos here. See HOW TO ADD A SPOKE REPO above.
   ],
 
   "settings": {

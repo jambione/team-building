@@ -6,42 +6,40 @@
 
 ---
 
-## Mission Intake — DE61356 rally-context-retrieval-and-mission-kickoff
+## Mission Intake — [DEFECT/STORY ID] [short-slug]
 
-**Mission:** Fix DE61356 in AGP so blank line-level HCPCS and PX dates do not default to current date and instead trigger the required field validation behavior.
+**Mission:** [One sentence describing the objective.]
 
-**Target repo:** knowledge-components
+**Target repo:** [repo-name]
 
 **Done when:**
 
-- Rally context for DE61356 is retrieved from WSAPI live mode with authenticated evidence captured.
-- Mission branch mission/de61356-rally-context-retrieval-and-mission-kickoff is created in knowledge-components before implementation work starts.
-- AGP no longer defaults blank line-level HCPCS and PX dates to current date in request processing.
-- Validation returns required field errors for missing HCPCS and PX dates while preserving existing defaults for Thru Date, Facility, and Grouper ID.
+- [Acceptance criterion 1]
+- [Acceptance criterion 2]
+- [Acceptance criterion 3]
 
 **Constraints:**
 
-- Defect context (live Rally): State Submitted, Schedule State Refining, Owner Larisa Dubb, Severity 3-Minor Problem, Project KC CXT.
-- Work must use knowledge-components Rally PowerShell scripts (.github/agents/scripts/kc-rally-agent.ps1 and get-rally-context.ps1).
-- Do not regress current defaulting behavior for Thru Date, Facility, and Grouper ID.
+- [Constraint 1 — e.g. no regression on existing behavior X]
+- [Constraint 2 — e.g. severity/priority from Rally or issue tracker]
+- [Constraint 3 — e.g. must not break Y]
 
 ---
 
 ## Example (filled)
 
-**Mission:** Fix the KC Cloud token service to handle concurrent authentication requests from the same user — DE35854. Currently only the 1st of N concurrent requests succeeds; all remaining fail when the same username/password is submitted simultaneously across ~50 Load Runner instances.
+**Mission:** Fix the authentication service to handle concurrent login requests from the same user — DE00001. Currently only the first of N concurrent requests succeeds; all remaining fail when the same credentials are submitted simultaneously.
 
-**Target repo:** `knowledge-components`
+**Target repo:** `your-spoke-repo`
 
 **Done when:**
 
-- Token service returns HTTP 200 for all concurrent requests when the same credentials are used across multiple simultaneous instances
-- Performance test at 50 concurrent instances with identical user/password all pass
+- Auth service returns HTTP 200 for all concurrent requests when the same credentials are used across multiple simultaneous instances
+- Load test at 50 concurrent instances with identical credentials all pass
 - No regression on single-instance login behavior
 
 **Constraints:**
 
 - Severity 3-Minor / Priority Normal — no emergency timeline
-- Schedule State: Refining — investigation phase first, no direct implementation until root cause confirmed
-- Reproducing requires Load Runner or equivalent concurrency harness (50 instance run)
-- Fix must not break existing SSO token flows or session behavior
+- Investigation phase first; no implementation until root cause confirmed
+- Fix must not break existing SSO or session flows

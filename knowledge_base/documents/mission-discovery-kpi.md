@@ -35,16 +35,11 @@ Tracks mission discovery performance over time so bottlenecks can be identified 
 
 ## Benchmark History
 
-| Date       | Runs | Roots                                | Max Files | Baseline (ms) | Optimized (ms) | Speedup (x) | Faster (%) | Saved (ms) |
-| ---------- | ---- | ------------------------------------ | --------- | ------------: | -------------: | ----------: | ---------: | ---------: |
-| 2026-04-15 | 3    | team-building + knowledge-components | 8000      |       50083.2 |        35527.0 |        1.41 |       29.1 |    14556.3 |
+| Date | Runs | Roots | Max Files | Baseline (ms) | Optimized (ms) | Speedup (x) | Faster (%) | Saved (ms) |
+| ---- | ---- | ----- | --------- | ------------: | -------------: | ----------: | ---------: | ---------: |
 
 ---
 
-## Latest Benchmark Notes (2026-04-15)
+## Latest Benchmark Notes
 
-- Measurement command:
-  - `python scripts/benchmark_discovery.py --runs 3 --roots . "c:\inetpub\wwwroot\knowledge-components" --max-files 8000`
-- Context packet coverage: `4/4` docs included.
-- Largest gain came from faster workspace scan under ignored-path policy.
-- Result confirms discovery acceleration with current defaults.
+_(no benchmarks recorded yet)_

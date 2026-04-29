@@ -66,9 +66,8 @@ Central navigation for all team knowledge base documents. Updated quarterly by p
 
 | Document                                   | Description                                                                              | Last Updated | Owner |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------- | ------------ | ----- |
-| `repo-discoveries/README.md`               | Purpose, ownership rules, and usage guide for repo discovery documents                   | 2026-04-16   | data  |
-| `repo-discoveries/_template.md`            | Standardized 7-section template for new repo discovery docs                              | 2026-04-16   | data  |
-| `repo-discoveries/knowledge-components.md` | Healthcare coding app — feature map, architecture patterns, build/test commands, gotchas | 2026-04-16   | data  |
+| `repo-discoveries/README.md`    | Purpose, ownership rules, and usage guide for repo discovery documents  | 2026-04-16   | data  |
+| `repo-discoveries/_template.md` | Standardized 7-section template for new repo discovery docs             | 2026-04-16   | data  |
 
 ---
 
@@ -166,7 +165,7 @@ Version History:
     - 2026-04-12: picard — Added spec-driven-development.md to new Quality Gates section (NEW-3 fix)
     - 2026-04-12: data — Added individual ADR files (adr-0001 through adr-0004) to Architecture index; ADR Coherence Rule applied
     - 2026-04-12: picard — Moved database-migration-strategies.md from Pending backlog to Observability section (file was complete; D-NEW-4 finding); cleared Pending Additions backlog
-    - 2026-04-16: data — Added Repo Discoveries section with README, template, and knowledge-components.md (per-repo feature maps and architecture knowledge capture)
+    - 2026-04-16: data — Added Repo Discoveries section with README and template (per-repo feature maps and architecture knowledge capture)
 ---
 ```
 

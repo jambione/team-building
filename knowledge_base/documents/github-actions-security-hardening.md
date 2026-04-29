@@ -63,7 +63,7 @@ is needed most.
 
 ### PROD-GATE Automation Attempt (2026-04-17)
 
-- Attempted API-based configuration using `gh api -X PUT repos/jambione/team-building/environments/production ...`
+- Attempted API-based configuration using `gh api -X PUT repos/<owner>/team-building/environments/production ...`
 - Result: `HTTP 403 Must have admin rights to Repository`
 - Disposition: blocked by repository admin permissions; must be completed by a repo admin in GitHub Settings
 
@@ -75,7 +75,7 @@ This is a one-time manual step in GitHub Settings. It cannot be automated from w
 2. Click **New environment** (or click the existing `production` environment if it was auto-created by the workflow)
 3. Name it exactly `production` (must match `environment: name: production` in `deploy-production.yml`)
 4. Under **Deployment protection rules**, enable **Required reviewers**
-5. Add at least 1 required reviewer (e.g. `jambione`)
+5. Add at least 1 required reviewer (e.g. your GitHub username or a team)
 6. Optionally set a **Wait timer** (e.g. 5 minutes) for emergency cancellation
 7. Click **Save protection rules**
 

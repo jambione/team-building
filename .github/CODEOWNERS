@@ -15,75 +15,75 @@
 #   obrien   → monitoring, observability, operational config
 #   riker    → execution coordination, cross-team tasks
 #
-# Replace @jambione/<agent> with actual GitHub team names when teams are configured.
+# Replace @your-org/<agent> with actual GitHub team names when teams are configured.
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Default owner (picard) ────────────────────────────────────────────────────
-*                                           @jambione
+*                                           @your-org
 
 # ── CI/CD Workflows (geordi) ──────────────────────────────────────────────────
-.github/workflows/                          @jambione/geordi
-.github/workflows/ci.yml                   @jambione/geordi
-.github/workflows/kb-staleness-check.yml   @jambione/geordi
-.github/workflows/adr-workflow.yml         @jambione/geordi @jambione/data
+.github/workflows/                          @your-org/geordi
+.github/workflows/ci.yml                   @your-org/geordi
+.github/workflows/kb-staleness-check.yml   @your-org/geordi
+.github/workflows/adr-workflow.yml         @your-org/geordi @your-org/data
 
 # ── Security Configuration (worf) ─────────────────────────────────────────────
-.github/CODEOWNERS                         @jambione/worf @jambione/picard
+.github/CODEOWNERS                         @your-org/worf @your-org/picard
 
 # ── Agent Definitions (picard + domain owner) ─────────────────────────────────
-.github/agents/                            @jambione
-.github/agents/picard*.agent.md            @jambione
-.github/agents/data.agent.md               @jambione/data
-.github/agents/geordi.agent.md             @jambione/geordi
-.github/agents/worf.agent.md               @jambione/worf
-.github/agents/troi.agent.md               @jambione/troi
-.github/agents/crusher.agent.md            @jambione/crusher
-.github/agents/riker.agent.md              @jambione/riker
-.github/agents/barclay.agent.md            @jambione/barclay
-.github/agents/guinan.agent.md             @jambione/guinan
-.github/agents/obrien.agent.md             @jambione/obrien
+.github/agents/                            @your-org
+.github/agents/picard*.agent.md            @your-org
+.github/agents/data.agent.md               @your-org/data
+.github/agents/geordi.agent.md             @your-org/geordi
+.github/agents/worf.agent.md               @your-org/worf
+.github/agents/troi.agent.md               @your-org/troi
+.github/agents/crusher.agent.md            @your-org/crusher
+.github/agents/riker.agent.md              @your-org/riker
+.github/agents/barclay.agent.md            @your-org/barclay
+.github/agents/guinan.agent.md             @your-org/guinan
+.github/agents/obrien.agent.md             @your-org/obrien
 
 # ── Prompt Templates (picard + requesting domain) ─────────────────────────────
-.github/prompts/                           @jambione
+.github/prompts/                           @your-org
 
 # ── Clinerules (mirrors agent ownership) ──────────────────────────────────────
-.clinerules/                               @jambione
+.clinerules/                               @your-org
 
 # ── Knowledge Base (domain specialist per document) ───────────────────────────
-knowledge_base/                            @jambione
-knowledge_base/documents/index.md          @jambione
+knowledge_base/                            @your-org
+knowledge_base/documents/index.md          @your-org
 
 # Architecture domain → data
-knowledge_base/documents/architecture-*.md            @jambione/data
-knowledge_base/documents/system-design-*.md           @jambione/data
-knowledge_base/documents/architecture-decision-*.md   @jambione/data @jambione/guinan
+knowledge_base/documents/architecture-*.md            @your-org/data
+knowledge_base/documents/system-design-*.md           @your-org/data
+knowledge_base/documents/architecture-decision-*.md   @your-org/data @your-org/guinan
 
 # DevOps domain → geordi
-knowledge_base/documents/ci-cd-*.md                   @jambione/geordi
-knowledge_base/documents/devops-*.md                  @jambione/geordi
-knowledge_base/documents/github-actions-*.md          @jambione/geordi
+knowledge_base/documents/ci-cd-*.md                   @your-org/geordi
+knowledge_base/documents/devops-*.md                  @your-org/geordi
+knowledge_base/documents/github-actions-*.md          @your-org/geordi
 
 # Security domain → worf
-knowledge_base/documents/github-actions-security-*.md @jambione/worf @jambione/geordi
+knowledge_base/documents/github-actions-security-*.md @your-org/worf @your-org/geordi
 
 # Testing domain → troi
-knowledge_base/documents/best-practices.md            @jambione/troi
-knowledge_base/documents/defect-*.md                  @jambione/troi
+knowledge_base/documents/best-practices.md            @your-org/troi
+knowledge_base/documents/defect-*.md                  @your-org/troi
 
 # Reliability domain → crusher
-knowledge_base/documents/incident-*.md                @jambione/crusher
+knowledge_base/documents/incident-*.md                @your-org/crusher
 
 # Technical debt → barclay
-knowledge_base/documents/tech-debt-*.md               @jambione/barclay
+knowledge_base/documents/tech-debt-*.md               @your-org/barclay
 
 # Observability → obrien
-knowledge_base/documents/monitoring-*.md              @jambione/obrien
+knowledge_base/documents/monitoring-*.md              @your-org/obrien
 
 # Session journals → guinan
-knowledge_base/sessions/                              @jambione/guinan
+knowledge_base/sessions/                              @your-org/guinan
 
 # Governance → picard
-knowledge_base/documents/knowledge-base-governance.md @jambione
-knowledge_base/documents/team-conventions.md          @jambione
-knowledge_base/documents/past-lessons-learned.md      @jambione/guinan
-knowledge_base/documents/agent-performance-log.md     @jambione
+knowledge_base/documents/knowledge-base-governance.md @your-org
+knowledge_base/documents/team-conventions.md          @your-org
+knowledge_base/documents/past-lessons-learned.md      @your-org/guinan
+knowledge_base/documents/agent-performance-log.md     @your-org

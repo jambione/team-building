@@ -156,7 +156,7 @@ Benchmark scope:
 
 - Tool: `scripts/benchmark_discovery.py`
 - Runs: 3
-- Roots: `team-building` and `knowledge-components`
+- Roots: `team-building` (and any active spoke repos)
 - Max scanned files per run: 8000
 - Optimization mode: context packet + default ignored discovery paths
 

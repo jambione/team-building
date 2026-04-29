@@ -14,9 +14,9 @@ tags: [computer, scan, discoveries, kb-audit, knowledge-base]
 
 ## Execution Steps
 
-### 1. Scan Both Workspaces
+### 1. Scan All Workspaces
 
-Scan `knowledge-components` and `team-building` for uncommitted changes (modified, added, deleted, untracked files).
+Scan `team-building` and any active spoke repos (see `knowledge_base/current/workspace-context.md` — Active Repos table) for uncommitted changes (modified, added, deleted, untracked files).
 
 ### 2. Assess for NEW DISCOVERY Items
 
@@ -62,11 +62,11 @@ Otherwise, the discovery is flagged for the identified KB domain owner to update
 ```
 **Scan Result** — <timestamp>
 
-Workspace: knowledge-components
+Workspace: team-building
 - <count> uncommitted files scanned
 - <count> NEW DISCOVERY items identified
 
-Workspace: team-building
+Workspace: <spoke-repo> (repeat for each active spoke repo)
 - <count> uncommitted files scanned
 - <count> NEW DISCOVERY items identified
 

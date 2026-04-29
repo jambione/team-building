@@ -4,19 +4,15 @@
 > picard adds a row here when filing each mission log at mission close.
 > guinan reads this index for cross-mission pattern detection.
 
-**Last Updated**: 2026-04-16  
+**Last Updated**: _(set at first mission close)_  
 **Owner**: picard
 
 ---
 
 ## Mission Registry
 
-| Date       | Slug                                       | Mission                                                                               | Sprint   | Repo(s)                                         | Status    | Crew                                                                                       | P1s          | Open Items | Log                                                         | Manifest                                                                  |
-| ---------- | ------------------------------------------ | ------------------------------------------------------------------------------------- | -------- | ----------------------------------------------- | --------- | ------------------------------------------------------------------------------------------ | ------------ | ---------- | ----------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 2026-04-16 | `us288669-logic-encoder-ignore-characters` | Update Logic Encoder search normalization to ignore additional punctuation characters | Sprint 2 | `knowledge-components`                          | cancelled | picard, guinan, data, troi, crusher, barclay, riker, geordi, wes                           | 1/1 resolved | 1          | [→](2026-04-16-us288669-logic-encoder-ignore-characters.md) | —                                                                         |
-| 2026-04-11 | `compare-team-building-vs-oio-agents`      | Compare framework features and build maturity to issue overall recommendation         | Sprint 2 | `team-building`, `IntegrityOne-OIO.Agents-main` | success   | picard, guinan, picard-thinking, data, riker, geordi, worf, troi, crusher, barclay, obrien | 0/0 resolved | 1          | [→](2026-04-11-compare-team-building-vs-oio-agents.md)      | [→](manifests/2026-04-11-compare-team-building-vs-oio-agents.manifest.md) |
-| 2026-04-05 | `claude-api-pr-review`                     | Add automated PR code review via Claude API to CI pipeline                            | Sprint 1 | `team-building`                                 | success   | picard, guinan, picard-thinking, data, worf, troi, barclay, crusher, obrien, wes, riker    | 2/2 resolved | 3          | [→](2026-04-05-claude-api-pr-review.md)                     | —                                                                         |
-| 2026-04-11 | `code-review-improvements`                 | Comprehensive code review — resolve security, reliability, and maintainability issues | Sprint 2 | `team-building`                                 | success   | picard, guinan, picard-thinking, data, barclay, worf, troi, crusher, riker                 | 9/9 resolved | 4          | [→](2026-04-11-code-review-improvements.md)                 | —                                                                         |
+| Date | Slug | Mission | Sprint | Repo(s) | Status | Crew | P1s | Open Items | Log | Manifest |
+| ---- | ---- | ------- | ------ | ------- | ------ | ---- | --- | ---------- | --- | -------- |
 
 ---
 
@@ -35,15 +31,15 @@
 
 | Metric                           | Count |
 | -------------------------------- | ----- |
-| Total missions                   | 4     |
-| Missions succeeded               | 3     |
-| Missions partial                 | 1     |
+| Total missions                   | 0     |
+| Missions succeeded               | 0     |
+| Missions partial                 | 0     |
 | Missions blocked                 | 0     |
 | Missions cancelled               | 0     |
-| Total P1 items raised            | 5     |
-| Total P1 items resolved          | 5     |
-| Total open items carried forward | 9     |
-| Total KB documents updated       | 21    |
+| Total P1 items raised            | 0     |
+| Total P1 items resolved          | 0     |
+| Total open items carried forward | 0     |
+| Total KB documents updated       | 0     |
 
 ---
 
