@@ -229,3 +229,4 @@ GO / NO-GO
 | Feature Kickoff | `.github/prompts/feature-kickoff.prompt.md` |
 | Incident Postmortem | `.github/prompts/incident-postmortem.prompt.md` |
 | Team Retrospective | `.github/prompts/team-retrospective.prompt.md` |
+| Pre-mortem Analysis | `.github/prompts/premortem.prompt.md` |
